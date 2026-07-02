@@ -30,13 +30,13 @@ export const translations: Translations = {
     or: "Or",
 
     // DASHBOARD
-    crop_recommendation: "Crop Recommendation",
+    crop_recommendation: "Detailed Crop Recommendations",
     crop_rec_desc: "Get crop advice based on soil and season.",
     weather_forecast: "Weather",
     weather_desc: "Real-time weather updates and alerts.",
     disease_detection: "Disease Detection",
     disease_desc: "Identify plant diseases by photo.",
-    farming_tips: "Farming Tips",
+    farming_tips: "Detailed Farming Tips",
     farming_desc: "Expert advice for better yield.",
     market_prices: "Market Prices",
     market_desc: "Live market prices for crops.",

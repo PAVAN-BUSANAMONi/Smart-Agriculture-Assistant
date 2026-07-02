@@ -17,7 +17,7 @@ function resolveBackendOrigin() {
   }
 
   if (import.meta.env.PROD) {
-    return DEFAULT_RENDER_BACKEND_URL;
+    return '';
   }
 
   return '';

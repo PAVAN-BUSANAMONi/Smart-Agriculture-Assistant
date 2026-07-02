@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { Lightbulb, Sprout, ChevronDown, ChevronUp } from 'lucide-react';
+import { CROP_IMAGES } from '../utils/cropImages';
 
 type TipItem = {
   key: string;
@@ -59,40 +60,61 @@ export function FarmingTips() {
   };
 
   return (
-    <div className="container mx-auto p-4 max-w-4xl">
-      <h1 className="text-3xl font-bold mb-6 flex items-center gap-2">
-        <Lightbulb className="text-yellow-500" />
-        {t('farming_tips')}
-      </h1>
-
-      <p className="mb-4 text-sm text-gray-600">{labels.total}: {TIP_DATA.length}</p>
-
-      <div className="grid md:grid-cols-2 gap-4">
-        {TIP_DATA.map((crop) => (
-          <div key={crop.key} className="bg-white rounded-xl shadow-md overflow-hidden border border-yellow-50 hover:shadow-lg transition-all">
-            <button 
-              onClick={() => setExpanded(expanded === crop.key ? null : crop.key)}
-              className="w-full flex items-center justify-between p-4 bg-yellow-50 text-yellow-900 font-bold hover:bg-yellow-100 transition-colors"
-            >
-              <div className="flex items-center gap-3">
-                <Sprout size={20} className="text-green-600" />
-                {t(crop.key)}
-                <span className="rounded-full bg-white px-2 py-0.5 text-xs font-medium text-gray-600">
-                  {crop.category}
-                </span>
-              </div>
-              {expanded === crop.key ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
-            </button>
-            
-            {expanded === crop.key && (
-              <div className="p-4 bg-white space-y-3 animate-fade-in text-gray-700 text-sm">
-                <p><strong>{labels.sowing}:</strong> {crop.sowing[language]}</p>
-                <p><strong>{labels.irrigation}:</strong> {crop.irrigation[language]}</p>
-                <p><strong>{labels.fertilizer}:</strong> {crop.fertilizer[language]}</p>
-                <p><strong>{labels.protection}:</strong> {crop.protection[language]}</p>
-              </div>
-            )}
+    <div className="mx-auto max-w-5xl animate-fade-in p-4 space-y-6">
+      <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
+        <h1 className="flex items-center gap-3 text-3xl font-bold font-display text-gray-900">
+          <div className="bg-amber-100 p-2.5 rounded-xl text-amber-500 shadow-sm">
+            <Lightbulb size={28} />
           </div>
+          {t('farming_tips')}
+        </h1>
+        <div className="glass-panel py-1.5 px-4 rounded-full border-amber-200/50 bg-amber-50/50 text-amber-800 font-semibold text-sm">
+          {labels.total}: {TIP_DATA.length}
+        </div>
+      </div>
+
+      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {TIP_DATA.map((crop) => (
+          <article 
+            key={crop.key} 
+            className={`glass-card p-0 flex flex-col overflow-hidden cursor-pointer transition-all duration-300 border-amber-100/50 hover:shadow-lg ${expanded === crop.key ? 'ring-2 ring-amber-400 scale-[1.02]' : 'hover:scale-[1.02]'}`}
+            onClick={() => setExpanded(expanded === crop.key ? null : crop.key)}
+          >
+            <div className="h-40 w-full relative">
+              <img 
+                src={CROP_IMAGES[crop.key.toLowerCase()] || CROP_IMAGES.default} 
+                alt={t(crop.key)}
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end p-4">
+                <div className="flex w-full items-center justify-between">
+                  <h4 className="text-xl font-bold font-display text-white drop-shadow-md">{t(crop.key)}</h4>
+                  <span className="rounded-full bg-white/20 backdrop-blur-md border border-white/40 px-2 py-0.5 text-xs font-bold text-white uppercase tracking-wider shadow-sm">
+                    {crop.category}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div className="p-5 bg-white/50 backdrop-blur-sm flex-1 flex flex-col">
+              <div className="flex justify-between items-center mb-2">
+                <span className="text-sm font-semibold text-amber-900 flex items-center gap-2">
+                  <Sprout size={16} className="text-emerald-600" />
+                  View Farming Guide
+                </span>
+                {expanded === crop.key ? <ChevronUp size={20} className="text-amber-600" /> : <ChevronDown size={20} className="text-amber-600" />}
+              </div>
+
+              <div className={`overflow-hidden transition-all duration-500 ease-in-out ${expanded === crop.key ? 'max-h-[500px] opacity-100 mt-2' : 'max-h-0 opacity-0'}`}>
+                <div className="space-y-4 animate-fade-in text-gray-700 text-sm font-medium border-t border-amber-100/50 pt-4">
+                  <div className="flex gap-3"><div className="w-1.5 h-1.5 rounded-full bg-emerald-500 mt-1.5 shrink-0"></div><p><strong className="text-gray-900">{labels.sowing}:</strong> {crop.sowing[language]}</p></div>
+                  <div className="flex gap-3"><div className="w-1.5 h-1.5 rounded-full bg-blue-500 mt-1.5 shrink-0"></div><p><strong className="text-gray-900">{labels.irrigation}:</strong> {crop.irrigation[language]}</p></div>
+                  <div className="flex gap-3"><div className="w-1.5 h-1.5 rounded-full bg-amber-500 mt-1.5 shrink-0"></div><p><strong className="text-gray-900">{labels.fertilizer}:</strong> {crop.fertilizer[language]}</p></div>
+                  <div className="flex gap-3"><div className="w-1.5 h-1.5 rounded-full bg-rose-500 mt-1.5 shrink-0"></div><p><strong className="text-gray-900">{labels.protection}:</strong> {crop.protection[language]}</p></div>
+                </div>
+              </div>
+            </div>
+          </article>
         ))}
       </div>
     </div>

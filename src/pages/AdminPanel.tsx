@@ -146,21 +146,20 @@ export function AdminPanel() {
     setError('');
     setMessage('');
     try {
-      const payload: RegisterPayload =
+      const payload: any =
         newUser.role === 'farmer'
           ? {
               role: 'farmer',
               name: newUser.name.trim(),
               phone: newUser.phone.trim(),
-              email: '',
-              password: '',
+              ...(newUser.email.trim() ? { email: newUser.email.trim() } : {}),
             }
           : {
               role: 'admin',
               name: newUser.name.trim(),
-              phone: '',
               email: newUser.email.trim(),
               password: newUser.password,
+              ...(newUser.phone.trim() ? { phone: newUser.phone.trim() } : {}),
             };
 
       await api.createAdminUser(payload, proofToken);
