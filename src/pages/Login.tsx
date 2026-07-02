@@ -511,6 +511,23 @@ export function Login() {
                 />
               </PillField>
 
+              {mode === 'login' && (
+                <div className="flex justify-end mt-2">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setForgotPasswordStep('email');
+                      setResetEmail(adminForm.email);
+                      setError('');
+                      setNotice('');
+                    }}
+                    className="text-[0.85rem] font-bold text-gray-900 dark:text-white drop-shadow-sm transition hover:text-white/80"
+                  >
+                    Forgot password?
+                  </button>
+                </div>
+              )}
+
               {error && <div className="rounded-2xl border border-red-400/60 bg-red-400/40 px-4 py-3 text-sm font-bold text-red-900 backdrop-blur-md shadow-[inset_0_2px_4px_rgba(255,255,255,0.5)]">{error}</div>}
 
               {/* ADVANCED GLOSSY EMERALD BUTTON */}
