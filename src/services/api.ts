@@ -612,8 +612,9 @@ async function request<T>(path: string, init?: ApiRequestInit): Promise<T> {
         ...(init?.headers || {}),
       },
     });
-  } catch {
-    throw new Error('Unable to reach the backend. Please make sure the API server is running.');
+  } catch (error) {
+    const errorDetails = error instanceof Error ? error.message : String(error);
+    throw new Error(`Unable to reach the backend (${errorDetails}). Please make sure the API server is running.`);
   }
 
   if (!response.ok) {

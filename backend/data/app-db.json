@@ -35,6 +35,30 @@
       "createdAt": "2026-07-02T14:26:16.366Z",
       "updatedAt": "2026-07-02T14:26:16.366Z",
       "lastLoginAt": null
+    },
+    {
+      "id": "eabd5885-cc65-4b86-b542-d0dcab6e2c94",
+      "role": "admin",
+      "name": "ABCD",
+      "phone": null,
+      "email": "peeterforsri@gmail.com",
+      "passwordHash": "00d492f872c5f225b5d35b41f8384c29:08b1a358bf45994ba305198fc436b28aef601868164ea5d4de8b8fba811457a78308225484296b2da09672e8fd12960a9d441d8ecf4a1d15e13246affce83d7e",
+      "status": "pending",
+      "createdAt": "2026-07-02T22:47:25.868Z",
+      "updatedAt": "2026-07-02T22:47:25.868Z",
+      "lastLoginAt": null
+    },
+    {
+      "id": "98121bce-a32b-49e9-8286-895fe9e1dd2f",
+      "role": "admin",
+      "name": "ABCD",
+      "phone": null,
+      "email": "peeterforsri2@gmail.com",
+      "passwordHash": "484cb32b5963210897dcfd1ae48cd9b5:8bd22fb76e476659c209f645a28f41806fbdfad36f58b4925e8700fcaf78d5479a3d75fc062e718da62607eba02870f08a3182a7351eef6f1ba7bf764b7da4de",
+      "status": "pending",
+      "createdAt": "2026-07-02T22:48:17.088Z",
+      "updatedAt": "2026-07-02T22:48:17.088Z",
+      "lastLoginAt": null
     }
   ],
   "sessions": [],
@@ -99,6 +123,90 @@
     }
   },
   "alerts": [
+    {
+      "id": "8912a88a-92cc-4d09-ad3a-821ed7ad1f8c",
+      "userId": "a1a2202e-0dd9-4176-8b3b-947eb97b08f0",
+      "type": "weather",
+      "level": "high",
+      "title": "Irrigation Hold Reminder",
+      "message": "Heavy rain likely. Pause irrigation and open drainage channels today.",
+      "source": "scheduler-weather",
+      "metadata": {
+        "rainChance24h": 95,
+        "rainMm24h": 5.3,
+        "maxTemp": 28
+      },
+      "read": false,
+      "createdAt": "2026-07-02T22:45:55.089Z"
+    },
+    {
+      "id": "dba40e45-c9be-443b-bcbb-eb3dd5497908",
+      "userId": "a1a2202e-0dd9-4176-8b3b-947eb97b08f0",
+      "type": "crop",
+      "level": "medium",
+      "title": "Personalized Recommendation",
+      "message": "For rice in Hyderabad, review market trend and schedule next irrigation using weather advisory.",
+      "source": "scheduler-personalized",
+      "metadata": {},
+      "read": false,
+      "createdAt": "2026-07-02T22:45:54.783Z"
+    },
+    {
+      "id": "a8c64d9d-7c5a-4c40-848d-25980fd588ee",
+      "userId": "a1a2202e-0dd9-4176-8b3b-947eb97b08f0",
+      "type": "lifecycle",
+      "level": "medium",
+      "title": "RICE Nutrient Reminder",
+      "message": "Day 14: inspect crop stand and apply first top-dressing based on soil test recommendation.",
+      "source": "scheduler-lifecycle",
+      "metadata": {
+        "cropPlans": 1
+      },
+      "read": false,
+      "createdAt": "2026-07-02T22:45:54.779Z"
+    },
+    {
+      "id": "e28f3bea-f03b-4fcb-98c2-9cc6d378f164",
+      "userId": "4c7652d6-5d65-4af2-927b-c3d8937da720",
+      "type": "weather",
+      "level": "high",
+      "title": "Irrigation Hold Reminder",
+      "message": "Heavy rain likely. Pause irrigation and open drainage channels today.",
+      "source": "scheduler-weather",
+      "metadata": {
+        "rainChance24h": 95,
+        "rainMm24h": 5.3,
+        "maxTemp": 28
+      },
+      "read": false,
+      "createdAt": "2026-07-02T22:45:54.773Z"
+    },
+    {
+      "id": "4a315114-ebd8-4e62-93d6-db1ff12c48bb",
+      "userId": "4c7652d6-5d65-4af2-927b-c3d8937da720",
+      "type": "crop",
+      "level": "medium",
+      "title": "Personalized Recommendation",
+      "message": "For rice in Hyderabad, review market trend and schedule next irrigation using weather advisory.",
+      "source": "scheduler-personalized",
+      "metadata": {},
+      "read": false,
+      "createdAt": "2026-07-02T22:45:53.822Z"
+    },
+    {
+      "id": "22b46b96-f43e-439d-b7ef-ba39ffb83d3a",
+      "userId": "4c7652d6-5d65-4af2-927b-c3d8937da720",
+      "type": "lifecycle",
+      "level": "medium",
+      "title": "RICE Nutrient Reminder",
+      "message": "Day 14: inspect crop stand and apply first top-dressing based on soil test recommendation.",
+      "source": "scheduler-lifecycle",
+      "metadata": {
+        "cropPlans": 1
+      },
+      "read": false,
+      "createdAt": "2026-07-02T22:45:53.818Z"
+    },
     {
       "id": "a4824009-dc55-46a5-9c94-6a476bae6691",
       "userId": "a1a2202e-0dd9-4176-8b3b-947eb97b08f0",
@@ -2698,6 +2806,28 @@
   ],
   "otpChallenges": [
     {
+      "id": "db8dd0fa-cf13-4193-a249-f0fc9cc98790",
+      "userId": "98121bce-a32b-49e9-8286-895fe9e1dd2f",
+      "purpose": "admin_register",
+      "otpCode": "242184",
+      "expiresAt": "2026-07-02T22:53:17.090Z",
+      "attempts": 0,
+      "maxAttempts": 3,
+      "consumedAt": null,
+      "createdAt": "2026-07-02T22:48:17.090Z"
+    },
+    {
+      "id": "738a323e-1aa0-4d97-b9a0-21c0e4537e73",
+      "userId": "eabd5885-cc65-4b86-b542-d0dcab6e2c94",
+      "purpose": "admin_register",
+      "otpCode": "266964",
+      "expiresAt": "2026-07-02T22:52:25.872Z",
+      "attempts": 0,
+      "maxAttempts": 3,
+      "consumedAt": null,
+      "createdAt": "2026-07-02T22:47:25.872Z"
+    },
+    {
       "id": "f0d01042-3b2f-48d1-899b-f6df0f96fdca",
       "userId": "a1a2202e-0dd9-4176-8b3b-947eb97b08f0",
       "purpose": "system_control",
@@ -3629,6 +3759,54 @@
     }
   ],
   "emailLog": [
+    {
+      "id": "13ba5377-7def-4fee-b803-c299b094b486",
+      "to": "smart.agriculture.assist@gmail.com",
+      "subject": "Smart Agriculture pending admin signup: ABCD",
+      "category": "owner-admin-signup-pending",
+      "transport": "smtp:primary",
+      "messageId": "<f79b62bb-62f7-0fec-0813-73130eb0da37@gmail.com>",
+      "delivered": true,
+      "errorMessage": null,
+      "payloadPreview": "New admin signup pending approval A new admin signup is waiting for owner review. Admin name: ABCD Admin email: peeterforsri2@gmail.com Admin phone: Not available Requested at (India): Friday, 3 July 2026 at 4:18:21 am Requested at (UTC): 2026-07-02T22:48:21.223Z Initial OTP deli",
+      "createdAt": "2026-07-02T22:48:25.094Z"
+    },
+    {
+      "id": "8a3b7215-3bf8-43e2-8f52-5dc20a7ab265",
+      "to": "peeterforsri2@gmail.com",
+      "subject": "Smart Agriculture OTP verification",
+      "category": "otp",
+      "transport": "smtp:primary",
+      "messageId": "<680d7492-35eb-581c-89ee-a34247fc7e15@gmail.com>",
+      "delivered": true,
+      "errorMessage": null,
+      "payloadPreview": "OTP verification email generated for secure admin verification.",
+      "createdAt": "2026-07-02T22:48:21.220Z"
+    },
+    {
+      "id": "32f40a36-b3bd-449d-90c7-c0ec0638d787",
+      "to": "smart.agriculture.assist@gmail.com",
+      "subject": "Smart Agriculture pending admin signup: ABCD",
+      "category": "owner-admin-signup-pending",
+      "transport": "smtp:primary",
+      "messageId": "<e5bd14bf-b873-35f8-3d78-ed94d256bed4@gmail.com>",
+      "delivered": true,
+      "errorMessage": null,
+      "payloadPreview": "New admin signup pending approval A new admin signup is waiting for owner review. Admin name: ABCD Admin email: peeterforsri@gmail.com Admin phone: Not available Requested at (India): Friday, 3 July 2026 at 4:17:30 am Requested at (UTC): 2026-07-02T22:47:30.077Z Initial OTP deliv",
+      "createdAt": "2026-07-02T22:47:34.207Z"
+    },
+    {
+      "id": "21d5c235-31a6-4daf-b8ea-51300ae8febb",
+      "to": "peeterforsri@gmail.com",
+      "subject": "Smart Agriculture OTP verification",
+      "category": "otp",
+      "transport": "smtp:primary",
+      "messageId": "<f889939f-b7e0-d4b5-6ddc-32c4bdb58103@gmail.com>",
+      "delivered": true,
+      "errorMessage": null,
+      "payloadPreview": "OTP verification email generated for secure admin verification.",
+      "createdAt": "2026-07-02T22:47:30.066Z"
+    },
     {
       "id": "d9035424-6fbb-4f00-b5d0-94b55a62cd04",
       "to": "peeterforsri@gmail.com",
