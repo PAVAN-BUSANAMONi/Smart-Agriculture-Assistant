@@ -263,7 +263,7 @@ export function Login() {
         <div className="absolute inset-0 bg-white/10 dark:bg-black/40 dark:bg-black/60 transition-colors duration-500" />
       </div>
 
-      <div className="absolute top-4 right-4 z-50">
+      <div className="absolute top-2 right-2 sm:top-4 sm:right-4 z-50">
         <button
           onClick={toggleTheme}
           className="rounded-full bg-white/40 dark:bg-black/50 dark:bg-black/40 p-2 text-gray-900 dark:text-white dark:text-white/90 shadow-lg backdrop-blur-md transition hover:scale-105 hover:bg-white/60 dark:hover:bg-black/60 border border-white/20"
@@ -275,7 +275,7 @@ export function Login() {
       <div className="relative z-10 flex min-h-screen items-center justify-center px-4 py-8">
         
         {/* ADVANCED GLOSSY GLASSMORPHISM CARD */}
-        <div className="relative w-full min-w-[340px] max-w-[420px] rounded-[42px] bg-white/20 dark:bg-black/30 bg-gradient-to-br from-white/40 via-white/5 to-transparent px-6 py-8 shadow-[0_20px_60px_rgba(0,0,0,0.5),inset_0_2px_4px_rgba(255,255,255,0.8),inset_0_-1px_3px_rgba(255,255,255,0.4),0_0_0_1px_rgba(255,255,255,0.4)] backdrop-blur-2xl sm:px-8 sm:py-10">
+        <div className="relative w-full w-full max-w-[420px] sm:min-w-[340px] rounded-[42px] bg-white/20 dark:bg-black/30 bg-gradient-to-br from-white/40 via-white/5 to-transparent px-6 py-8 shadow-[0_20px_60px_rgba(0,0,0,0.5),inset_0_2px_4px_rgba(255,255,255,0.8),inset_0_-1px_3px_rgba(255,255,255,0.4),0_0_0_1px_rgba(255,255,255,0.4)] backdrop-blur-2xl sm:px-8 sm:py-10">
           
           <div className="relative z-10 flex flex-col items-center gap-5">
             

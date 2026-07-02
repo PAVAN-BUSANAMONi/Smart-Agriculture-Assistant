@@ -222,11 +222,21 @@ export async function analyzeDiseaseImage(imageData, crop) {
 
   const prompt = `
 You are an expert agricultural botanist and plant pathologist.
-Analyze the following plant leaf image for the crop: ${crop || 'unknown'}.
+Analyze the following image. First, determine if it is actually a picture of a plant or crop.
+If the image is NOT a plant (e.g., a screenshot, a person, a random object), you MUST respond strictly in JSON format matching this schema exactly:
+{
+  "diseaseKey": "not_a_plant",
+  "confidence": 100,
+  "cause": "The uploaded image does not appear to be a plant.",
+  "treatment": ["Please upload a clear picture of a plant leaf."],
+  "prevention": []
+}
+
+If it IS a plant, identify any visible diseases or nutritional deficiencies for the crop: ${crop || 'unknown'}.
 Identify any visible diseases or nutritional deficiencies.
 Respond strictly in JSON format matching this schema exactly:
 {
-  "diseaseKey": "leaf_blight" | "powdery_mildew" | "rust" | "healthy" | "unknown",
+  "diseaseKey": "leaf_blight" | "powdery_mildew" | "rust" | "healthy" | "unknown" | "not_a_plant",
   "confidence": <number between 0 and 100>,
   "cause": "<Short description of the cause>",
   "treatment": ["<treatment step 1>", "<treatment step 2>"],

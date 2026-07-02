@@ -54,6 +54,12 @@ const diseaseCatalog = {
       'Maintain preventive scouting every 3-5 days.',
     ],
   },
+  not_a_plant: {
+    name: 'Invalid Image',
+    cause: 'The uploaded image does not appear to be a plant or crop.',
+    treatment: ['Please upload a clear picture of a plant leaf.'],
+    prevention: [],
+  },
   unknown: {
     name: 'Uncertain Detection',
     cause: 'Image confidence is low due to lighting/background/leaf visibility.',
