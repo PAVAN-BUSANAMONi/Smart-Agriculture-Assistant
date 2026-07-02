@@ -14,6 +14,7 @@ import {
   updateAdminProfileLocal,
   updateUserByAdminLocal,
   verifyAdminCredentialsLocal,
+  resetAdminPasswordLocal,
 } from '../../lib/local-store.js';
 import { hashPassword, verifyPassword } from '../../lib/passwords.js';
 
@@ -242,6 +243,41 @@ export async function verifyAdminCredentials(email, password, options = {}) {
       return sanitizeUser(user);
     },
     () => verifyAdminCredentialsLocal(normalizedEmail, password, { allowPending }),
+  );
+}
+
+export async function resetAdminPassword(email, password) {
+  const normalizedEmail = normalizeEmail(email);
+  if (!normalizedEmail) {
+    throw new AppError(400, 'Email is required.');
+  }
+  if (String(password).length < 8) {
+    throw new AppError(400, 'Password must be at least 8 characters long.');
+  }
+
+  return withLocalFallback(
+    async () => {
+      const user = await fetchOne('SELECT * FROM users WHERE role = ? AND email = ?', ['admin', normalizedEmail]);
+      if (!user) {
+        throw new AppError(404, 'Admin not found.');
+      }
+      if (user.status === 'disabled') {
+        throw new AppError(403, 'This admin account is disabled.');
+      }
+
+      const { salt, hash } = hashPassword(String(password));
+      await query(
+        `
+          UPDATE users
+          SET password_hash = ?, updated_at = NOW()
+          WHERE id = ?
+        `,
+        [`${salt}:${hash}`, user.id],
+      );
+
+      return getUserById(user.id);
+    },
+    () => resetAdminPasswordLocal(normalizedEmail, password),
   );
 }
 

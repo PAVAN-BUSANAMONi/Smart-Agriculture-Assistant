@@ -242,6 +242,36 @@ export function createAdminLocal(payload, status = 'pending') {
   return created;
 }
 
+export function resetAdminPasswordLocal(email, password) {
+  const normalizedEmail = normalizeEmail(email);
+  if (!normalizedEmail) {
+    throw new AppError(400, 'Email is required.');
+  }
+
+  let updated = null;
+  updateDb((db) => {
+    const user = db.users.find((entry) => entry.role === 'admin' && normalizeEmail(entry.email) === normalizedEmail);
+    if (!user) {
+      throw new AppError(404, 'Admin not found.');
+    }
+    if (user.status === 'disabled') {
+      throw new AppError(403, 'This admin account is disabled.');
+    }
+
+    if (String(password).length < 8) {
+      throw new AppError(400, 'Password must be at least 8 characters long.');
+    }
+    const { salt, hash } = hashPassword(String(password));
+    
+    user.passwordHash = `${salt}:${hash}`;
+    user.updatedAt = nowIso();
+    updated = sanitizeUser(user);
+    return updated;
+  });
+
+  return updated;
+}
+
 export function verifyAdminCredentialsLocal(email, password, options = {}) {
   const normalizedEmail = normalizeEmail(email);
   const allowPending = Boolean(options.allowPending);

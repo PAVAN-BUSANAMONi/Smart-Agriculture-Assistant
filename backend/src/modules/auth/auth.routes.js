@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { z } from 'zod';
-import { createAdmin, getUserById, touchLastLogin, updateAdminProfile, verifyAdminCredentials } from './auth.store.js';
+import { createAdmin, getUserById, getUserByEmail, touchLastLogin, updateAdminProfile, verifyAdminCredentials, resetAdminPassword } from './auth.store.js';
 import { issueAccessToken, issueOtpChallengeToken, verifyToken } from './token.service.js';
 import { createOtpChallenge, createOtpTokenHash } from '../otp/otp.store.js';
 import { sendAccountChangeAlert, sendOTPEmailWithDeadline, sendSystemEmail } from '../notifications/mailer.service.js';
@@ -33,6 +33,16 @@ const adminRegisterSchema = z.object({
 const adminLoginSchema = z.object({
   email: z.string().trim().email(),
   password: z.string().min(8).max(120),
+}).strict();
+
+const adminForgotPasswordSchema = z.object({
+  email: z.string().trim().email(),
+}).strict();
+
+const adminResetPasswordSchema = z.object({
+  email: z.string().trim().email(),
+  password: z.string().min(8).max(120),
+  otpProofToken: z.string().trim().min(16),
 }).strict();
 
 const adminProfileUpdateSchema = z.object({
@@ -216,6 +226,44 @@ router.post('/admin/login', validateRequest({ body: adminLoginSchema }), async (
       delivery,
     ),
   );
+});
+
+router.post('/admin/forgot-password', validateRequest({ body: adminForgotPasswordSchema }), async (req, res) => {
+  const user = await getUserByEmail(req.body?.email);
+  if (!user || user.role !== 'admin') {
+    return res.status(202).json({
+      message: 'If the email exists, an OTP will be sent for password reset.',
+      otpSessionToken: null,
+      delivered: false,
+    });
+  }
+
+  const otp = await createOtpChallenge(user.id, 'admin_reset_password');
+  const otpHash = createOtpTokenHash(user.id, 'admin_reset_password', otp);
+  const delivery = await sendOTPEmailWithDeadline(user.email, otp);
+
+  res.status(202).json(
+    buildOtpResponse(
+      issueOtpChallengeToken(user.id, 'admin_reset_password', { otpHash }),
+      'OTP sent to admin email for password reset.',
+      'OTP email delivery failed. Please use Resend OTP.',
+      delivery,
+    ),
+  );
+});
+
+router.post('/admin/reset-password', validateRequest({ body: adminResetPasswordSchema }), async (req, res) => {
+  const proof = readActionProof(req, 'admin_reset_password');
+  const user = await getUserByEmail(req.body?.email);
+  
+  if (!user || user.id !== proof.sub) {
+    throw new AppError(403, 'OTP proof does not match the provided email.');
+  }
+
+  await resetAdminPassword(user.email, req.body.password);
+  await sendAccountChangeAlert(user.email, 'password was reset');
+
+  res.json({ message: 'Password reset successfully. Please log in with your new password.' });
 });
 
 router.get('/me', requireAuth, async (req, res) => {

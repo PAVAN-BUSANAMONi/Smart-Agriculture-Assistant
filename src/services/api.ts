@@ -657,6 +657,10 @@ export const api = {
     request<OtpChallengeResponse>('/auth/admin/register', { method: 'POST', body: JSON.stringify(payload), auth: false }),
   adminLogin: (payload: AdminLoginPayload) =>
     request<OtpChallengeResponse>('/auth/admin/login', { method: 'POST', body: JSON.stringify(payload), auth: false }),
+  adminForgotPassword: (payload: { email: string }) =>
+    request<OtpChallengeResponse>('/auth/admin/forgot-password', { method: 'POST', body: JSON.stringify(payload), auth: false }),
+  adminResetPassword: (payload: { email: string; password: string; otpProofToken: string }) =>
+    request<{ message: string }>('/auth/admin/reset-password', { method: 'POST', body: JSON.stringify(payload), auth: false }),
   ownerLogin: (payload: OwnerLoginPayload) =>
     request<AuthSessionResponse>('/owner/login', {
       method: 'POST',
