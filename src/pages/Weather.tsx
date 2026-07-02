@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { AlertTriangle, CloudRain, Droplets, LocateFixed, Thermometer, Wind, BotMessageSquare } from 'lucide-react';
+import { AlertTriangle, CloudRain, Droplets, LocateFixed, Thermometer, Wind } from 'lucide-react';
 import { api, WeatherDecisionResponse } from '../services/api';
 import { useLanguage } from '../contexts/LanguageContext';
 import { createAlert, shouldTriggerAlert } from '../utils/alertEngine';
@@ -496,13 +496,13 @@ export function Weather() {
       : 'border-emerald-200 bg-emerald-50 text-emerald-800';
 
   return (
-    <div className="mx-auto max-w-6xl animate-fade-in space-y-6">
-      <div className="flex flex-wrap items-center justify-between gap-4">
-        <h1 className="text-3xl font-bold font-display text-gray-900">{t('weather_forecast')}</h1>
+    <div className="container mx-auto p-4">
+      <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
+        <h1 className="text-3xl font-bold">{t('weather_forecast')}</h1>
         <button
           type="button"
           onClick={() => setDetailedView((prev) => !prev)}
-          className="glass-button-secondary text-sm px-4 py-2"
+          className="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50"
         >
           {detailedView
             ? language === 'te'
@@ -515,139 +515,125 @@ export function Weather() {
       </div>
 
       {isOffline && (
-        <div className="glass-card border-blue-200 bg-blue-50/80 p-4 text-sm text-blue-800">
+        <p className="mb-4 rounded-lg bg-blue-50 p-3 text-sm text-blue-800">
           {language === 'te'
             ? 'ఆఫ్‌లైన్ మోడ్ అందుబాటులో ఉంది. చివరిసారి సింక్ అయిన డేటా ఉపయోగించబడుతుంది.'
             : 'Offline mode enabled. Last synced advisory is used in low-network areas.'}
-        </div>
+        </p>
       )}
 
-      {notice && <div className="glass-card border-blue-200 bg-blue-50/80 p-4 text-sm text-blue-800">{notice}</div>}
-      {error && <div className="glass-card border-amber-200 bg-amber-50/80 p-4 text-sm text-amber-800">{error}</div>}
+      {notice && <p className="mb-4 rounded-lg bg-blue-50 p-3 text-sm text-blue-800">{notice}</p>}
 
-      <div className="grid gap-6 md:grid-cols-2">
-        <div className="glass-panel relative overflow-hidden bg-gradient-to-br from-blue-600 to-blue-800 p-8 text-white border-blue-400/30">
-          <div className="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-blue-400 blur-3xl opacity-30"></div>
-          <div className="mb-6 flex items-center gap-2 text-blue-100 relative z-10">
+      {error && <p className="mb-4 rounded-lg bg-yellow-50 p-3 text-sm text-yellow-800">{error}</p>}
+
+      <div className="mb-6 grid gap-4 md:grid-cols-2">
+        <div className="rounded-2xl bg-gradient-to-br from-blue-500 to-blue-700 p-6 text-white shadow-lg">
+          <div className="mb-4 flex items-center gap-2 text-blue-100">
             <LocateFixed size={18} />
-            <span className="text-sm font-medium">
+            <span className="text-sm">
               {data.city} ({data.latitude.toFixed(2)}, {data.longitude.toFixed(2)})
             </span>
           </div>
-          <p className="text-xl opacity-90 font-medium relative z-10">{weatherLabel}</p>
-          <h2 className="mb-2 text-6xl font-bold font-display tracking-tighter relative z-10">{data.current.tempC}°C</h2>
-          <p className="text-sm text-blue-100 relative z-10">
+          <p className="text-lg opacity-90">{weatherLabel}</p>
+          <h2 className="mb-2 text-5xl font-bold">{data.current.tempC}°C</h2>
+          <p className="text-sm text-blue-100">
             {t('feels_like')}: {data.current.feelsLikeC}°C | {t('last_updated')}: {new Date(data.fetchedAt).toLocaleTimeString()}
           </p>
 
-          <div className="mt-8 grid grid-cols-2 gap-3 text-sm relative z-10">
-            <div className="rounded-xl bg-white/10 backdrop-blur-sm p-3 border border-white/10">
-              <Thermometer className="mb-1 text-blue-200" size={20} />
-              <div className="text-blue-100">{t('humidity')}</div>
-              <div className="font-semibold text-lg">{data.current.humidity}%</div>
+          <div className="mt-5 grid grid-cols-2 gap-3 text-sm">
+            <div className="rounded-lg bg-white/20 p-2">
+              <Thermometer className="mr-1 inline" size={16} />
+              {t('humidity')}: {data.current.humidity}%
             </div>
-            <div className="rounded-xl bg-white/10 backdrop-blur-sm p-3 border border-white/10">
-              <Wind className="mb-1 text-blue-200" size={20} />
-              <div className="text-blue-100">{t('wind_speed')}</div>
-              <div className="font-semibold text-lg">{data.current.windKmph} km/h</div>
+            <div className="rounded-lg bg-white/20 p-2">
+              <Wind className="mr-1 inline" size={16} />
+              {t('wind_speed')}: {data.current.windKmph} km/h
             </div>
-            <div className="rounded-xl bg-white/10 backdrop-blur-sm p-3 border border-white/10">
-              <CloudRain className="mb-1 text-blue-200" size={20} />
-              <div className="text-blue-100">{t('rain_chance')}</div>
-              <div className="font-semibold text-lg">{data.forecast.rainChance24h}%</div>
+            <div className="rounded-lg bg-white/20 p-2">
+              <CloudRain className="mr-1 inline" size={16} />
+              {t('rain_chance')}: {data.forecast.rainChance24h}%
             </div>
-            <div className="rounded-xl bg-white/10 backdrop-blur-sm p-3 border border-white/10">
-              <Droplets className="mb-1 text-blue-200" size={20} />
-              <div className="text-blue-100">Rain (24h)</div>
-              <div className="font-semibold text-lg">{data.forecast.rainMm24h} mm</div>
+            <div className="rounded-lg bg-white/20 p-2">
+              <Droplets className="mr-1 inline" size={16} />
+              Rain (24h): {data.forecast.rainMm24h} mm
             </div>
           </div>
         </div>
 
-        <div className="glass-panel border-emerald-200/50 bg-emerald-50/40 p-8">
-          <h2 className="mb-2 text-2xl font-bold font-display text-emerald-900">
+        <div className="rounded-2xl border border-emerald-200 bg-emerald-50 p-6 shadow-sm">
+          <h2 className="mb-2 text-xl font-bold text-emerald-900">
             {language === 'te' ? 'ఈ రోజు ఏమి చేయాలి?' : 'What to do today'}
           </h2>
-          <p className="mb-6 text-sm text-emerald-700">
+          <p className="mb-3 text-sm text-emerald-700">
             {language === 'te'
               ? 'ఇది ప్రత్యక్ష వాతావరణ డేటా ఆధారంగా రూపొందించిన చర్యల జాబితా.'
               : 'Action checklist generated from real-time weather and farm context.'}
           </p>
-          <ul className="space-y-3 text-emerald-900 font-medium">
+          <ul className="list-disc space-y-1 pl-5 text-sm text-emerald-900">
             {data.decisions.todayActions.map((item) => (
-              <li key={item} className="flex gap-3">
-                <div className="mt-1 h-2 w-2 rounded-full bg-emerald-500 shrink-0"></div>
-                <span>{item}</span>
-              </li>
+              <li key={item}>{item}</li>
             ))}
           </ul>
         </div>
       </div>
 
-      <div className="grid gap-6 md:grid-cols-3">
-        <div className={`glass-card p-6 ${irrigationClass}`}>
-          <h3 className="mb-2 font-bold font-display text-lg">{language === 'te' ? 'పారుదల సూచన' : 'Irrigation Recommendation'}</h3>
-          <p className="text-sm opacity-90">{data.decisions.irrigationRecommendation.message}</p>
+      <div className="grid gap-4 md:grid-cols-3">
+        <div className={`rounded-xl border p-4 ${irrigationClass}`}>
+          <h3 className="mb-1 font-bold">{language === 'te' ? 'పారుదల సూచన' : 'Irrigation Recommendation'}</h3>
+          <p className="text-sm">{data.decisions.irrigationRecommendation.message}</p>
         </div>
 
-        <div className="glass-card border-orange-200/50 bg-orange-50/50 p-6 text-orange-900">
-          <h3 className="mb-2 font-bold font-display text-lg">{language === 'te' ? 'ఉష్ణోగ్రత రక్షణ అలర్ట్' : 'Heat Protection Alert'}</h3>
+        <div className="rounded-xl border border-orange-200 bg-orange-50 p-4 text-orange-900">
+          <h3 className="mb-1 font-bold">{language === 'te' ? 'ఉష్ణోగ్రత రక్షణ అలర్ట్' : 'Heat Protection Alert'}</h3>
           {data.decisions.heatAlert ? (
             <>
-              <p className="text-sm font-medium">{data.decisions.heatAlert.message}</p>
-              <ul className="mt-3 space-y-2 text-sm opacity-90">
+              <p className="text-sm">{data.decisions.heatAlert.message}</p>
+              <ul className="mt-2 list-disc space-y-1 pl-5 text-xs">
                 {data.decisions.heatAlert.protectionTips.map((tip) => (
-                  <li key={tip} className="flex gap-2"><div className="mt-1.5 h-1.5 w-1.5 rounded-full bg-orange-500 shrink-0"></div>{tip}</li>
+                  <li key={tip}>{tip}</li>
                 ))}
               </ul>
             </>
           ) : (
-            <p className="text-sm opacity-90">{language === 'te' ? 'ఈరోజు తీవ్రమైన వేడి ప్రమాదం లేదు.' : 'No severe heat stress risk today.'}</p>
+            <p className="text-sm">{language === 'te' ? 'ఈరోజు తీవ్రమైన వేడి ప్రమాదం లేదు.' : 'No severe heat stress risk today.'}</p>
           )}
         </div>
 
-        <div className="glass-card border-indigo-200/50 bg-indigo-50/50 p-6 text-indigo-900">
-          <h3 className="mb-2 font-bold font-display text-lg">{language === 'te' ? 'విత్తనాల విత్తే సమయం' : 'Sowing Window Prediction'}</h3>
-          <p className="text-sm font-medium">{data.decisions.sowingWindow.message}</p>
+        <div className="rounded-xl border border-indigo-200 bg-indigo-50 p-4 text-indigo-900">
+          <h3 className="mb-1 font-bold">{language === 'te' ? 'విత్తనాల విత్తే సమయం' : 'Sowing Window Prediction'}</h3>
+          <p className="text-sm">{data.decisions.sowingWindow.message}</p>
           {data.decisions.sowingWindow.bestDays.length > 0 && (
-            <div className="mt-4 inline-flex rounded-lg bg-indigo-100/50 px-3 py-1.5 text-xs font-bold text-indigo-800">
+            <p className="mt-2 text-xs font-semibold">
               {language === 'te' ? 'సరైన రోజులు:' : 'Suggested days:'} {data.decisions.sowingWindow.bestDays.join(', ')}
-            </div>
+            </p>
           )}
         </div>
       </div>
 
       {data.decisions.alerts.length > 0 && (
-        <div className="glass-card border-red-200/60 bg-red-50/60 p-6 text-red-900">
-          <h3 className="mb-3 flex items-center gap-2 font-bold font-display text-lg">
-            <AlertTriangle size={20} className="text-red-600" />
+        <div className="mt-5 rounded-xl border border-red-200 bg-red-50 p-4 text-red-800">
+          <h3 className="mb-2 flex items-center gap-2 font-bold">
+            <AlertTriangle size={18} />
             {language === 'te' ? 'సృష్టించిన అలర్ట్లు' : 'Generated Alerts'}
           </h3>
-          <ul className="space-y-2 text-sm font-medium">
+          <ul className="space-y-1 text-sm">
             {data.decisions.alerts.map((item) => (
-              <li key={`${item.title}-${item.message}`} className="flex gap-3">
-                  <div className="mt-1.5 h-1.5 w-1.5 rounded-full bg-red-500 shrink-0"></div>
-                  <span><strong className="text-red-800">{item.title}:</strong> {item.message}</span>
-              </li>
+              <li key={`${item.title}-${item.message}`}>• {item.title}: {item.message}</li>
             ))}
           </ul>
         </div>
       )}
 
-      <div className="glass-panel border-emerald-200/40 bg-emerald-50/30 p-6 text-[#21452a]">
-        <h3 className="mb-3 font-bold font-display text-lg flex items-center gap-2">
-          <BotMessageSquare size={20} className="text-emerald-600" />
+      <div className="mt-5 rounded-xl border border-[#d3e3cf] bg-[linear-gradient(130deg,#f5fff1,#ebf8e7)] p-4 text-[#21452a]">
+        <h3 className="mb-2 font-bold">
           {language === 'te' ? 'AI వాతావరణ సూచన' : 'AI weather-aware suggestion'}
         </h3>
         {aiAdviceLoading ? (
-          <div className="flex gap-2 items-center text-emerald-600">
-            <div className="w-4 h-4 rounded-full border-2 border-emerald-500 border-t-transparent animate-spin"></div>
-            <p className="text-sm font-medium">{language === 'te' ? 'AI సూచన సిద్ధమవుతుంది...' : 'Preparing AI suggestion...'}</p>
-          </div>
+          <p className="text-sm text-[#3b6742]">{language === 'te' ? 'AI సూచన సిద్ధమవుతుంది...' : 'Preparing AI suggestion...'}</p>
         ) : aiAdvice ? (
-          <p className="whitespace-pre-wrap text-sm leading-relaxed font-medium">{aiAdvice}</p>
+          <p className="whitespace-pre-wrap text-sm leading-6 text-[#2b4f2f]">{aiAdvice}</p>
         ) : (
-          <p className="text-sm opacity-80">
+          <p className="text-sm text-[#3b6742]">
             {language === 'te'
               ? 'AI సూచన లభించలేదు. సిస్టమ్ వాతావరణ నియమాలనే ఉపయోగిస్తోంది.'
               : 'AI suggestion unavailable right now. Weather decision rules are still active.'}
@@ -656,51 +642,35 @@ export function Weather() {
       </div>
 
       {detailedView && (
-        <div className="glass-card p-6 border-gray-200">
-          <h3 className="mb-4 font-bold font-display text-lg text-gray-900">{language === 'te' ? 'వివరమైన అంచనా' : 'Detailed Forecast Context'}</h3>
-          <div className="grid gap-4 text-sm text-gray-600 font-medium md:grid-cols-2 lg:grid-cols-3">
-            <div className="bg-gray-50/50 p-3 rounded-lg border border-gray-100">
-                <p className="text-xs text-gray-400 mb-1">24h Rain Prob.</p>
-                <p className="text-gray-900">{data.forecast.rainChance24h}%</p>
-            </div>
-            <div className="bg-gray-50/50 p-3 rounded-lg border border-gray-100">
-                <p className="text-xs text-gray-400 mb-1">24h Expected Rainfall</p>
-                <p className="text-gray-900">{data.forecast.rainMm24h} mm</p>
-            </div>
-            <div className="bg-gray-50/50 p-3 rounded-lg border border-gray-100">
-                <p className="text-xs text-gray-400 mb-1">7-Day Rainfall Outlook</p>
-                <p className="text-gray-900">{data.forecast.rainMm7d} mm</p>
-            </div>
-            <div className="bg-gray-50/50 p-3 rounded-lg border border-gray-100">
-                <p className="text-xs text-gray-400 mb-1">Daily Temp Range</p>
-                <p className="text-gray-900">{data.forecast.minTemp}°C to {data.forecast.maxTemp}°C</p>
-            </div>
-            <div className="bg-gray-50/50 p-3 rounded-lg border border-gray-100">
-                <p className="text-xs text-gray-400 mb-1">Data Source</p>
-                <p className="text-gray-900">{data.source}</p>
-            </div>
-            <div className="bg-gray-50/50 p-3 rounded-lg border border-gray-100">
-                <p className="text-xs text-gray-400 mb-1">Primary Crop</p>
-                <p className="text-gray-900">{crop || (language === 'te' ? 'సెట్ కాలేదు' : 'Not set')}</p>
-            </div>
+        <div className="mt-6 rounded-xl border border-gray-200 bg-white p-4">
+          <h3 className="mb-2 font-bold text-gray-900">{language === 'te' ? 'వివరమైన అంచనా' : 'Detailed Forecast Context'}</h3>
+          <div className="grid gap-2 text-sm text-gray-700 md:grid-cols-2">
+            <p>24h rain probability: {data.forecast.rainChance24h}%</p>
+            <p>24h expected rainfall: {data.forecast.rainMm24h} mm</p>
+            <p>7-day rainfall outlook: {data.forecast.rainMm7d} mm</p>
+            <p>
+              Daily temp range: {data.forecast.minTemp}°C to {data.forecast.maxTemp}°C
+            </p>
+            <p>Data source: {data.source}</p>
+            <p>Primary crop context: {crop || (language === 'te' ? 'సెట్ కాలేదు' : 'Not set')}</p>
           </div>
         </div>
       )}
 
-      <div className="glass-card p-6 border-gray-200">
-        <h3 className="mb-2 font-bold font-display text-lg text-gray-800">{t('manager_alert_setup')}</h3>
-        <p className="mb-4 text-sm text-gray-500">{t('manager_alert_setup_hint')}</p>
-        <div className="flex flex-col gap-3 md:flex-row max-w-2xl">
+      <div className="mt-6 rounded-xl border border-gray-200 bg-white p-4">
+        <h3 className="mb-2 font-semibold text-gray-800">{t('manager_alert_setup')}</h3>
+        <p className="mb-3 text-xs text-gray-500">{t('manager_alert_setup_hint')}</p>
+        <div className="flex flex-col gap-2 md:flex-row">
           <input
             value={webhookInput}
             onChange={(event) => setWebhookInput(event.target.value)}
             placeholder="https://your-webhook-url"
-            className="glass-input flex-1"
+            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm"
           />
           <button
             type="button"
             onClick={() => localStorage.setItem('managerWebhookUrl', webhookInput.trim())}
-            className="glass-button whitespace-nowrap"
+            className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700"
           >
             {t('save_webhook')}
           </button>

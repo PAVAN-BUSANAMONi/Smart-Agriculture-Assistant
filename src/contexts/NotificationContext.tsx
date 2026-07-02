@@ -4,18 +4,14 @@ import { ALERTS_STREAM_URL, BACKEND_ORIGIN } from '../config/backend';
 import { api } from '../services/api';
 import { createAlert, readAlerts } from '../utils/alertEngine';
 import { getNotificationToolLabel, pushBrowserNotification, resolveNotificationTool } from '../utils/browserNotifications';
-import type { NotificationLevel, NotificationMetadata, NotificationType } from '../utils/notificationClassifier';
-import { getNotificationTargetPath } from '../utils/notificationClassifier';
 import { useAuth } from './AuthContext';
 
 export type NotificationItem = {
   id: string;
-  type: NotificationType;
-  level: NotificationLevel;
+  type: 'weather' | 'disease' | 'crop' | 'lifecycle' | 'market' | 'system';
+  level: 'low' | 'medium' | 'high';
   title: string;
   message: string;
-  source?: string;
-  metadata?: NotificationMetadata;
   read: boolean;
   createdAt: string;
 };
@@ -52,9 +48,7 @@ function browserNotify(alert: NotificationItem) {
     title: alert.title,
     message: alert.message,
     createdAt: alert.createdAt,
-    path: getNotificationTargetPath(alert),
-    source: alert.source,
-    metadata: alert.metadata,
+    path: '/dashboard',
   });
 }
 
@@ -71,15 +65,10 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
       level: item.level,
       title: `${getNotificationToolLabel(resolveNotificationTool({
         type: item.type,
-        level: item.level,
         title: '',
         message: item.message,
-        source: 'local-fallback',
-        metadata: {},
       }))} Update`,
       message: item.message,
-      source: 'local-fallback',
-      metadata: {},
       read: false,
       createdAt: item.createdAt,
     }));
@@ -108,8 +97,6 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
         level: item.level,
         title: item.title,
         message: item.message,
-        source: item.source,
-        metadata: item.metadata,
         read: item.read,
         createdAt: item.createdAt,
       }));

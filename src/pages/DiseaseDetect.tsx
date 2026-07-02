@@ -275,26 +275,21 @@ export function DiseaseDetect() {
   };
 
   return (
-    <div className="mx-auto max-w-5xl animate-fade-in p-4 space-y-6">
-      <h1 className="mb-6 flex items-center gap-3 text-3xl font-bold font-display text-gray-900">
-        <div className="bg-rose-100 p-2.5 rounded-xl text-rose-600 shadow-sm">
-          <Bug size={28} />
-        </div>
+    <div className="container mx-auto max-w-5xl p-4">
+      <h1 className="mb-6 flex items-center gap-2 text-3xl font-bold">
+        <Bug className="text-red-600" />
         {t('disease_detection')}
       </h1>
 
       <div className="grid gap-6 lg:grid-cols-3">
-        <div className="glass-panel p-6 lg:col-span-2 relative overflow-hidden">
+        <div className="rounded-xl border border-red-50 bg-white p-6 shadow-lg lg:col-span-2">
           {!image ? (
             <div
               onClick={() => fileInputRef.current?.click()}
-              className="flex h-72 cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed border-gray-300/60 bg-gray-50/30 transition-all hover:bg-gray-50/60 hover:border-gray-400 group relative z-10"
+              className="flex h-64 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 transition-colors hover:bg-gray-50"
             >
-              <div className="bg-white p-4 rounded-full shadow-sm mb-4 group-hover:scale-110 transition-transform">
-                <Upload size={40} className="text-gray-500" />
-              </div>
-              <span className="font-semibold text-gray-600 font-display text-lg">{t('upload_image')}</span>
-              <p className="text-sm text-gray-400 mt-1">Tap to browse or take a photo</p>
+              <Upload size={48} className="mb-2 text-gray-400" />
+              <span className="font-medium text-gray-500">{t('upload_image')}</span>
               <input
                 type="file"
                 ref={fileInputRef}
@@ -304,14 +299,14 @@ export function DiseaseDetect() {
               />
             </div>
           ) : (
-            <div className="relative overflow-hidden rounded-2xl border border-gray-200/60 shadow-sm z-10 group">
-              <img src={image} alt="Uploaded leaf" className="h-72 w-full object-cover transition-transform group-hover:scale-[1.02]" />
+            <div className="relative overflow-hidden rounded-lg border border-gray-200">
+              <img src={image} alt="Uploaded leaf" className="h-64 w-full object-cover" />
               <button
                 onClick={() => {
                   setImage(null);
                   setResult(null);
                 }}
-                className="absolute right-4 top-4 rounded-full bg-white/90 backdrop-blur p-2.5 text-rose-600 shadow-md hover:bg-white transition-transform hover:scale-110"
+                className="absolute right-2 top-2 rounded-full bg-white/90 p-2 text-red-600 shadow-md hover:bg-white"
               >
                 <RefreshCw size={20} />
               </button>
@@ -322,12 +317,11 @@ export function DiseaseDetect() {
             <button
               onClick={() => void analyze()}
               disabled={analyzing}
-              className="mt-6 w-full glass-button py-3 text-lg font-bold shadow-md disabled:opacity-50 flex items-center justify-center gap-2 relative z-10 bg-gradient-to-r from-rose-500 to-red-600 border-none hover:from-rose-600 hover:to-red-700 text-white"
+              className="mt-6 flex w-full items-center justify-center gap-2 rounded-lg bg-red-600 py-3 font-bold text-white shadow-lg transition-colors hover:bg-red-700 disabled:opacity-50"
             >
               {analyzing ? (
                 <>
-                  <div className="w-5 h-5 rounded-full border-2 border-white/50 border-t-white animate-spin"></div>
-                  {t('analyzing')}
+                  {t('analyzing')} <RefreshCw className="animate-spin" />
                 </>
               ) : (
                 t('analyze_button')
@@ -336,59 +330,50 @@ export function DiseaseDetect() {
           )}
 
           {result && (
-            <div className="animate-fade-in mt-6 glass-card bg-gradient-to-br from-rose-50/80 to-red-50/80 border-rose-200/50 p-8 relative z-10 shadow-sm">
-              <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
-                <h2 className="text-3xl font-extrabold font-display text-rose-900">{t(result.nameKey)}</h2>
-                <span className="rounded-xl bg-white/60 backdrop-blur px-3 py-1.5 text-sm font-bold text-rose-800 shadow-sm border border-rose-100">
+            <div className="animate-fade-in mt-6 rounded-lg border border-red-100 bg-red-50 p-6">
+              <div className="mb-4 flex items-center justify-between gap-3">
+                <h2 className="text-2xl font-bold text-red-800">{t(result.nameKey)}</h2>
+                <span className="rounded-full bg-red-200 px-3 py-1 text-sm font-bold text-red-800">
                   {result.confidence}% {t('confidence')}
                 </span>
               </div>
 
-              <div className="space-y-5">
+              <div className="space-y-4">
                 <div>
-                  <h4 className="mb-1.5 font-bold font-display text-gray-800 text-lg">{t('observation')}:</h4>
-                  <p className="text-gray-700 font-medium">{t(result.obsKey)}</p>
+                  <h4 className="mb-1 font-bold text-gray-700">{t('observation')}:</h4>
+                  <p className="text-gray-600">{t(result.obsKey)}</p>
                 </div>
 
-                <div className="rounded-xl border border-emerald-200/50 bg-emerald-50/60 p-5 shadow-sm">
-                  <h4 className="mb-2 font-bold font-display text-emerald-800 text-lg">{t('recommended_cure')}:</h4>
-                  <ul className="space-y-2 text-emerald-900 font-medium">
-                    <li className="flex gap-3">
-                      <div className="mt-2 h-1.5 w-1.5 rounded-full bg-emerald-500 shrink-0"></div>
-                      <span>{t(result.cureKey)}</span>
-                    </li>
+                <div className="rounded-lg border border-red-100 bg-white p-4 shadow-sm">
+                  <h4 className="mb-2 font-bold text-green-700">{t('recommended_cure')}:</h4>
+                  <ul className="list-inside list-disc space-y-1 text-gray-700">
+                    <li>{t(result.cureKey)}</li>
                     {(result.treatment || []).slice(0, 2).map((tip, idx) => (
-                      <li key={`${tip}-${idx}`} className="flex gap-3">
-                        <div className="mt-2 h-1.5 w-1.5 rounded-full bg-emerald-500 shrink-0"></div>
-                        <span>{tip}</span>
-                      </li>
+                      <li key={`${tip}-${idx}`}>{tip}</li>
                     ))}
                   </ul>
                 </div>
 
-                <div className="flex items-center justify-between pt-2">
-                  <p className="text-xs text-gray-500 font-medium">
+                <div className="flex items-center justify-between">
+                  <p className="text-xs text-gray-500">
                     {language === 'te' ? 'డేటా మూలం' : 'Inference source'}: {result.source || 'unknown'}
                   </p>
                   <button
                     type="button"
                     onClick={() => setShowDetails((value) => !value)}
-                    className="glass-button-secondary text-xs px-3 py-1.5"
+                    className="rounded-lg border border-gray-300 px-3 py-1.5 text-xs font-semibold text-gray-700 hover:bg-gray-50"
                   >
                     {showDetails ? (language === 'te' ? 'వివరాలు దాచు' : 'Hide details') : (language === 'te' ? 'వివరాలు చూపు' : 'Show details')}
                   </button>
                 </div>
 
                 {showDetails && (
-                  <div className="rounded-xl border border-gray-200/50 bg-white/50 backdrop-blur-sm p-5 text-sm text-gray-700 shadow-sm">
-                    <p className="mb-3"><span className="font-semibold text-gray-900">Cause:</span> {result.cause || '-'}</p>
-                    <p className="mb-2 font-semibold text-gray-900">Prevention:</p>
-                    <ul className="space-y-2 font-medium">
+                  <div className="rounded-lg border border-gray-200 bg-white p-4 text-sm text-gray-700">
+                    <p className="mb-2"><span className="font-semibold">Cause:</span> {result.cause || '-'}</p>
+                    <p className="mb-1 font-semibold">Prevention:</p>
+                    <ul className="list-inside list-disc space-y-1">
                       {(result.prevention || []).map((tip) => (
-                        <li key={tip} className="flex gap-2">
-                          <div className="mt-1.5 h-1.5 w-1.5 rounded-full bg-gray-400 shrink-0"></div>
-                          <span>{tip}</span>
-                        </li>
+                        <li key={tip}>{tip}</li>
                       ))}
                     </ul>
                   </div>
@@ -398,24 +383,22 @@ export function DiseaseDetect() {
           )}
         </div>
 
-        <aside className="glass-card p-6 h-max">
-          <h3 className="mb-4 flex items-center gap-2 text-lg font-bold font-display text-gray-900">
-            <History size={20} className="text-gray-500" />
+        <aside className="rounded-xl border border-gray-200 bg-white p-4 shadow-sm">
+          <h3 className="mb-3 flex items-center gap-2 text-lg font-semibold text-gray-800">
+            <History size={18} />
             {language === 'te' ? 'తాజా స్కాన్‌లు' : 'Recent scans'}
           </h3>
-          <div className="space-y-3">
+          <div className="space-y-2">
             {scanHistory.length === 0 ? (
-              <p className="text-sm text-gray-500 font-medium py-4 text-center">{language === 'te' ? 'చరిత్ర అందుబాటులో లేదు.' : 'No scan history yet.'}</p>
+              <p className="text-sm text-gray-500">{language === 'te' ? 'చరిత్ర అందుబాటులో లేదు.' : 'No scan history yet.'}</p>
             ) : (
               scanHistory.map((scan) => {
                 const mapped = DISEASE_KEY_MAP[scan.diseaseKey] || DISEASE_KEY_MAP.unknown;
                 return (
-                  <div key={scan.id} className="rounded-xl border border-gray-100 bg-gray-50/50 p-3 shadow-sm hover:bg-gray-50 transition-colors">
-                    <div className="flex justify-between items-start mb-1">
-                      <p className="font-bold text-gray-900">{t(mapped.nameKey)}</p>
-                      <span className="text-xs font-bold text-gray-500 bg-white px-2 py-0.5 rounded-md border border-gray-200">{scan.confidence}%</span>
-                    </div>
-                    <p className="text-xs text-gray-400 font-medium">{new Date(scan.createdAt).toLocaleString()}</p>
+                  <div key={scan.id} className="rounded-lg border border-gray-100 bg-gray-50 p-3 text-sm">
+                    <p className="font-semibold text-gray-800">{t(mapped.nameKey)}</p>
+                    <p className="text-xs text-gray-600">{scan.confidence}% confidence</p>
+                    <p className="text-xs text-gray-500">{new Date(scan.createdAt).toLocaleString()}</p>
                   </div>
                 );
               })

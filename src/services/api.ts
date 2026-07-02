@@ -722,8 +722,6 @@ export const api = {
   saveMarketQuery: (payload: MarketIntelligenceParams) => request('/market/queries', { method: 'POST', body: JSON.stringify(payload) }),
   getMarketQueryHistory: () => request<{ history: MarketQueryHistoryItem[] }>('/market/queries/history'),
   getSchemes: () => request('/schemes'),
-  getFertilizerPlan: (payload: { land: number; crop: string; soilType: string; farmingType: string }) => 
-    request<any>('/ai/fertilizer', { method: 'POST', body: JSON.stringify(payload) }),
   analyzeDisease: (payload: { imageData: string; crop?: string }) =>
     request<DiseaseAnalyzeResponse>('/disease/analyze', { method: 'POST', body: JSON.stringify(payload) }),
   logDiseaseScan: (payload: DiseaseScanPayload) => request('/disease/scans', { method: 'POST', body: JSON.stringify(payload) }),

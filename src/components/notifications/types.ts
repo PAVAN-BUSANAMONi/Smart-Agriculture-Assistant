@@ -1,23 +1,20 @@
-import type {
-  NotificationLevel,
-  NotificationMetadata,
-  NotificationType,
-  NotificationVisualKind,
-} from '../../utils/notificationClassifier';
-
-export type { NotificationLevel, NotificationMetadata, NotificationType, NotificationVisualKind } from '../../utils/notificationClassifier';
-
 export type NotificationCardItem = {
   id: string;
-  type: NotificationType;
-  level: NotificationLevel;
+  type: 'weather' | 'disease' | 'crop' | 'lifecycle' | 'market' | 'system';
+  level: 'low' | 'medium' | 'high';
   title: string;
   message: string;
-  source?: string;
-  metadata?: NotificationMetadata;
   read: boolean;
   createdAt: string;
 };
+
+export type NotificationVisualKind =
+  | 'weather'
+  | 'crop'
+  | 'soil'
+  | 'market'
+  | 'pest'
+  | 'disease';
 
 export type NotificationCardProps = {
   item: NotificationCardItem;

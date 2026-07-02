@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { z } from 'zod';
 import { AppError } from '../../lib/errors.js';
 import { fetchWeatherSummary } from '../weather/weather.provider.js';
-import { generateGeminiFarmingAnswer, generateFertilizerPlan } from './gemini.service.js';
+import { generateGeminiFarmingAnswer } from './gemini.service.js';
 import { saveChatTurn, getChatHistory } from './chat.store.js';
 import { addAlert, shouldStoreAlert } from '../alerts/alerts.store.js';
 import { sendSystemEmail } from '../notifications/mailer.service.js';
@@ -12,12 +12,11 @@ import { validateRequest } from '../../lib/validate.js';
 const router = Router();
 
 const askBodySchema = z.object({
-  query: z.string().trim().min(1).max(2500).optional(),
-  message: z.string().trim().min(1).max(2500).optional(),
+  query: z.string().trim().min(3).max(2500).optional(),
+  message: z.string().trim().min(3).max(2500).optional(),
   lat: z.number().min(-90).max(90).optional(),
   lng: z.number().min(-180).max(180).optional(),
   crop: z.string().trim().min(1).max(80).optional(),
-  emitAlert: z.boolean().optional(),
 }).strict().superRefine((value, ctx) => {
   if (!value.query && !value.message) {
     ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['query'], message: 'query or message is required.' });
@@ -61,16 +60,12 @@ function deriveTitle(level) {
   return 'AI assistant update';
 }
 
-function shouldSuppressImplicitAlert(message) {
-  return /^give concise farming actions for the next 24 hours using current weather conditions\.?$/i.test(String(message || '').trim());
-}
-
 router.post('/ask', validateRequest({ body: askBodySchema }), async (req, res) => {
   const message = String(req.body?.query || req.body?.message || '').trim();
   if (!message) {
     throw new AppError(400, 'Query is required.');
   }
-  if (message.length < 1) {
+  if (message.length < 3) {
     throw new AppError(400, 'Query is too short.');
   }
   if (message.length > 2500) {
@@ -100,36 +95,33 @@ router.post('/ask', validateRequest({ body: askBodySchema }), async (req, res) =
 
   const level = classifyAlertLevel(ai.answer, weatherSummary);
   const title = deriveTitle(level);
-  const compactAnswer = ai.answer.replace(/\s+/g, ' ').slice(0, 180);
-  const shouldEmitAlert = req.body?.emitAlert !== false && !shouldSuppressImplicitAlert(message);
+  const compactAnswer = ai.answer.replace(/\s+/g, ' ').slice(0, 300);
 
-  if (shouldEmitAlert) {
-    const alertPayload = {
-      userId: req.auth.user.id,
-      type: 'system',
-      level,
+  const alertPayload = {
+    userId: req.auth.user.id,
+    type: 'system',
+    level,
+    title,
+    message: compactAnswer,
+    source: 'ai-assistant',
+    metadata: {
+      fingerprint: `ai:${req.auth.user.id}:${new Date().toISOString().slice(0, 13)}:${level}`,
+      model: ai.model,
+      provider: ai.provider,
+    },
+  };
+
+  if (shouldStoreAlert(alertPayload)) {
+    await addAlert(alertPayload);
+  }
+
+  if (req.auth.user.role === 'admin' && req.auth.user.email && level === 'high') {
+    await sendSystemEmail({
+      email: req.auth.user.email,
+      subject: 'Smart Agriculture important AI alert',
       title,
       message: compactAnswer,
-      source: 'ai-assistant',
-      metadata: {
-        fingerprint: `ai:${req.auth.user.id}:${new Date().toISOString().slice(0, 13)}:${level}`,
-        model: ai.model,
-        provider: ai.provider,
-      },
-    };
-
-    if (shouldStoreAlert(alertPayload)) {
-      await addAlert(alertPayload);
-    }
-
-    if (req.auth.user.role === 'admin' && req.auth.user.email && level === 'high') {
-      await sendSystemEmail({
-        email: req.auth.user.email,
-        subject: 'Smart Agriculture important AI alert',
-        title,
-        message: compactAnswer,
-      });
-    }
+    });
   }
 
   const entry = await saveChatTurn({
@@ -164,22 +156,6 @@ router.get('/history', validateRequest({ query: historyQuerySchema }), async (re
   const limit = Number(req.query.limit || 40);
   const history = await getChatHistory(req.auth.user.id, limit);
   return res.json({ history });
-});
-
-const fertilizerBodySchema = z.object({
-  land: z.number().min(0.1).max(1000),
-  crop: z.string().trim().min(1).max(80),
-  soilType: z.string().trim().min(1).max(80),
-  farmingType: z.string().trim().min(1).max(80),
-});
-
-router.post('/fertilizer', validateRequest({ body: fertilizerBodySchema }), async (req, res) => {
-  try {
-    const plan = await generateFertilizerPlan(req.body);
-    return res.json(plan);
-  } catch (error) {
-    throw new AppError(500, error.message || 'Failed to generate fertilizer plan');
-  }
 });
 
 export const aiRouter = router;

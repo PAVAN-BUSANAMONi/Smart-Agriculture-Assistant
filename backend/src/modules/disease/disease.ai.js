@@ -1,5 +1,3 @@
-import { analyzeDiseaseImage } from '../ai/gemini.service.js';
-
 const DEFAULT_TIMEOUT_MS = 12000;
 
 const diseaseCatalog = {
@@ -107,22 +105,6 @@ function normalizeModelResponse(payload) {
 }
 
 export async function inferDisease({ imageData, crop }) {
-  try {
-    const geminiResult = await analyzeDiseaseImage(imageData, crop);
-    const details = diseaseCatalog[geminiResult.diseaseKey] || diseaseCatalog.unknown;
-    return {
-      diseaseKey: geminiResult.diseaseKey,
-      confidence: geminiResult.confidence,
-      diseaseName: details.name,
-      cause: geminiResult.cause || details.cause,
-      treatment: Array.isArray(geminiResult.treatment) ? geminiResult.treatment : details.treatment,
-      prevention: Array.isArray(geminiResult.prevention) ? geminiResult.prevention : details.prevention,
-      source: geminiResult.source,
-    };
-  } catch (err) {
-    // Continue to next fallback strategy if Gemini fails
-  }
-
   const endpoint = process.env.AI_DISEASE_ENDPOINT;
   const apiKey = process.env.AI_DISEASE_API_KEY;
 

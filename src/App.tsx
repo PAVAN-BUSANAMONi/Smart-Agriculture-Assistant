@@ -1,9 +1,11 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { ReactNode } from 'react';
 import { LanguageProvider } from './contexts/LanguageContext';
 import { AppSettingsProvider, useAppSettings } from './contexts/AppSettingsContext';
 import { AuthProvider } from './contexts/AuthContext';
 import { NotificationProvider } from './contexts/NotificationContext';
-import { AppLayout } from './components/AppLayout';
+import { Header } from './components/Header';
+import { GlossyBackdrop } from './components/GlossyBackdrop';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { Login } from './pages/Login';
 import { Dashboard } from './pages/Dashboard';
@@ -21,12 +23,17 @@ import { NotificationsDebug } from './pages/NotificationsDebug';
 import { AIAssistant } from './pages/AIAssistant';
 import { OwnerAccess } from './pages/OwnerAccess';
 
+function AppFrame({ children }: { children: ReactNode }) {
+  return <div className="app-frame animate-float-in">{children}</div>;
+}
+
 function AppShell() {
   const { simpleMode } = useAppSettings();
 
   return (
     <Router>
-      <div className={`flex flex-col min-h-screen ${simpleMode ? 'simple-mode' : ''}`}>
+      <div className={`glossy-app min-h-screen bg-[radial-gradient(circle_at_top,#f7f8ff_0%,#edf2f7_34%,#efe8f4_62%,#f7efe8_100%)] flex flex-col ${simpleMode ? 'simple-mode' : ''}`}>
+        <GlossyBackdrop />
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Login />} />
@@ -36,9 +43,10 @@ function AppShell() {
             path="/"
             element={
               <ProtectedRoute>
-                <AppLayout>
+                <AppFrame>
+                  <Header />
                   <Dashboard />
-                </AppLayout>
+                </AppFrame>
               </ProtectedRoute>
             }
           />
@@ -47,9 +55,10 @@ function AppShell() {
             path="/dashboard"
             element={
               <ProtectedRoute>
-                <AppLayout>
+                <AppFrame>
+                  <Header />
                   <Dashboard />
-                </AppLayout>
+                </AppFrame>
               </ProtectedRoute>
             }
           />
@@ -58,9 +67,10 @@ function AppShell() {
             path="/profile"
             element={
               <ProtectedRoute featureKey="farmerProfile">
-                <AppLayout>
+                <AppFrame>
+                  <Header />
                   <Profile />
-                </AppLayout>
+                </AppFrame>
               </ProtectedRoute>
             }
           />
@@ -69,9 +79,10 @@ function AppShell() {
             path="/weather"
             element={
               <ProtectedRoute featureKey="weather">
-                <AppLayout>
+                <AppFrame>
+                  <Header />
                   <Weather />
-                </AppLayout>
+                </AppFrame>
               </ProtectedRoute>
             }
           />
@@ -80,9 +91,10 @@ function AppShell() {
             path="/crop-recommend"
             element={
               <ProtectedRoute featureKey="cropRecommendation">
-                <AppLayout>
+                <AppFrame>
+                  <Header />
                   <CropRecommend />
-                </AppLayout>
+                </AppFrame>
               </ProtectedRoute>
             }
           />
@@ -91,9 +103,10 @@ function AppShell() {
             path="/disease-detect"
             element={
               <ProtectedRoute featureKey="diseaseDetection">
-                <AppLayout>
+                <AppFrame>
+                  <Header />
                   <DiseaseDetect />
-                </AppLayout>
+                </AppFrame>
               </ProtectedRoute>
             }
           />
@@ -102,9 +115,10 @@ function AppShell() {
             path="/farming-tips"
             element={
               <ProtectedRoute>
-                <AppLayout>
+                <AppFrame>
+                  <Header />
                   <FarmingTips />
-                </AppLayout>
+                </AppFrame>
               </ProtectedRoute>
             }
           />
@@ -113,9 +127,10 @@ function AppShell() {
             path="/market-prices"
             element={
               <ProtectedRoute featureKey="marketPrices">
-                <AppLayout>
+                <AppFrame>
+                  <Header />
                   <MarketPrices />
-                </AppLayout>
+                </AppFrame>
               </ProtectedRoute>
             }
           />
@@ -124,9 +139,10 @@ function AppShell() {
             path="/profit-estimator"
             element={
               <ProtectedRoute featureKey="profitEstimator">
-                <AppLayout>
+                <AppFrame>
+                  <Header />
                   <ProfitEstimator />
-                </AppLayout>
+                </AppFrame>
               </ProtectedRoute>
             }
           />
@@ -135,9 +151,10 @@ function AppShell() {
             path="/fertilizer-calc"
             element={
               <ProtectedRoute featureKey="fertilizerCalculator">
-                <AppLayout>
+                <AppFrame>
+                  <Header />
                   <FertilizerCalc />
-                </AppLayout>
+                </AppFrame>
               </ProtectedRoute>
             }
           />
@@ -146,9 +163,10 @@ function AppShell() {
             path="/ai-assistant"
             element={
               <ProtectedRoute>
-                <AppLayout>
+                <AppFrame>
+                  <Header />
                   <AIAssistant />
-                </AppLayout>
+                </AppFrame>
               </ProtectedRoute>
             }
           />
@@ -157,9 +175,10 @@ function AppShell() {
             path="/govt-schemes"
             element={
               <ProtectedRoute featureKey="govtSchemes">
-                <AppLayout>
+                <AppFrame>
+                  <Header />
                   <GovtSchemes />
-                </AppLayout>
+                </AppFrame>
               </ProtectedRoute>
             }
           />
@@ -168,9 +187,10 @@ function AppShell() {
             path="/admin"
             element={
               <ProtectedRoute roles={['admin']}>
-                <AppLayout>
+                <AppFrame>
+                  <Header />
                   <AdminPanel />
-                </AppLayout>
+                </AppFrame>
               </ProtectedRoute>
             }
           />
@@ -179,9 +199,10 @@ function AppShell() {
             path="/admin/notifications-debug"
             element={
               <ProtectedRoute roles={['admin']} featureKey="notificationsDebug">
-                <AppLayout>
+                <AppFrame>
+                  <Header />
                   <NotificationsDebug />
-                </AppLayout>
+                </AppFrame>
               </ProtectedRoute>
             }
           />

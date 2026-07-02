@@ -1,18 +1,11 @@
-import {
-  getNotificationVisualKind,
-  type NotificationClassifierInput,
-  type NotificationLevel as BrowserNotificationLevel,
-  type NotificationType as BrowserNotificationType,
-  type NotificationVisualKind,
-} from './notificationClassifier';
-
+export type BrowserNotificationType = 'weather' | 'disease' | 'crop' | 'lifecycle' | 'market' | 'system';
+export type BrowserNotificationLevel = 'low' | 'medium' | 'high';
 export type NotificationToolKey =
-  | 'weatherWise'
-  | 'cropTrak'
-  | 'soilProbeMax'
-  | 'marketMate'
-  | 'pestAlert'
+  | 'rainRadar'
   | 'cropDoctor'
+  | 'fieldPlanner'
+  | 'growthTracker'
+  | 'mandiWatch'
   | 'farmDesk';
 
 type NotificationInput = {
@@ -23,8 +16,6 @@ type NotificationInput = {
   createdAt?: string;
   path?: string;
   tag?: string;
-  source?: string;
-  metadata?: Record<string, unknown>;
 };
 
 type NotificationPayload = {
@@ -38,100 +29,39 @@ export const APP_DISPLAY_NAME = 'AgriField Tools';
 export const APP_SHORT_NAME = 'FieldKit';
 export const NOTIFICATION_ICON = '/images/agri-tools-mark.svg';
 
-const TOOL_DETAILS: Record<NotificationToolKey, { label: string; headline: string; icon: string }> = {
-  weatherWise: {
-    label: 'WeatherWise',
-    headline: 'WATER ALERT',
-    icon: '/images/notifications/weather-wise.svg',
-  },
-  cropTrak: {
-    label: 'CropTrak',
-    headline: 'Crop reminder',
-    icon: '/images/notifications/crop-trak.svg',
-  },
-  soilProbeMax: {
-    label: 'SoilProbe Max',
-    headline: 'SOIL UPDATE',
-    icon: '/images/notifications/soil-probe-max.svg',
-  },
-  marketMate: {
-    label: 'MarketMate',
-    headline: 'MARKET INSIGHT',
-    icon: '/images/notifications/market-mate.svg',
-  },
-  pestAlert: {
-    label: 'PestAlert',
-    headline: 'URGENT',
-    icon: '/images/notifications/pest-alert.svg',
-  },
-  cropDoctor: {
-    label: 'Crop Doctor',
-    headline: 'Disease detection',
-    icon: '/images/notifications/crop-doctor.svg',
-  },
-  farmDesk: {
-    label: 'Farm Desk',
-    headline: 'System notice',
-    icon: '/images/notifications/farm-desk.svg',
-  },
+const TOOL_DETAILS: Record<NotificationToolKey, { label: string; headline: string }> = {
+  rainRadar: { label: 'Rain Radar', headline: 'Field weather watch' },
+  cropDoctor: { label: 'Crop Doctor', headline: 'Plant care insight' },
+  fieldPlanner: { label: 'Field Planner', headline: 'Crop action reminder' },
+  growthTracker: { label: 'Growth Tracker', headline: 'Stage follow-up note' },
+  mandiWatch: { label: 'Mandi Watch', headline: 'Market pulse update' },
+  farmDesk: { label: 'Farm Desk', headline: 'Farm operations update' },
 };
 
-const VISUAL_KIND_TO_TOOL: Record<NotificationVisualKind, NotificationToolKey> = {
-  weather: 'weatherWise',
+const TYPE_TO_TOOL: Record<BrowserNotificationType, NotificationToolKey> = {
+  weather: 'rainRadar',
   disease: 'cropDoctor',
-  pest: 'pestAlert',
-  crop: 'cropTrak',
-  soil: 'soilProbeMax',
-  market: 'marketMate',
+  crop: 'fieldPlanner',
+  lifecycle: 'growthTracker',
+  market: 'mandiWatch',
   system: 'farmDesk',
 };
 
-const LEVEL_LABELS: Record<NotificationVisualKind, Record<BrowserNotificationLevel, string>> = {
-  weather: {
-    low: 'Weather note',
-    medium: 'Weather advisory',
-    high: 'High weather alert',
-  },
-  crop: {
-    low: 'Crop note',
-    medium: 'Crop reminder',
-    high: 'Priority crop reminder',
-  },
-  soil: {
-    low: 'Soil note',
-    medium: 'Soil update',
-    high: 'Priority soil update',
-  },
-  market: {
-    low: 'Market note',
-    medium: 'Market insight',
-    high: 'Priority market insight',
-  },
-  pest: {
-    low: 'Pest watch',
-    medium: 'Pest alert',
-    high: 'Urgent pest alert',
-  },
-  disease: {
-    low: 'Plant health note',
-    medium: 'Disease alert',
-    high: 'High disease alert',
-  },
-  system: {
-    low: 'System note',
-    medium: 'System update',
-    high: 'Important system update',
-  },
+const LEVEL_LABELS: Record<BrowserNotificationLevel, string> = {
+  low: 'Field note',
+  medium: 'Amber watch',
+  high: 'Red priority',
 };
 
-const WEATHER_TEXT_PATTERN = /\b(rain|storm|irrigation|heat|temperature|forecast|wind|humidity|weather)\b/i;
-const DISEASE_TEXT_PATTERN = /\b(disease|pest|blight|mildew|fungus|infection|scouting|aphid|thrips)\b/i;
-const MARKET_TEXT_PATTERN = /\b(market|price|mandi|buyer|procurement|demand|trend)\b/i;
-const SOIL_TEXT_PATTERN = /\b(soil|npk|nitrogen|phosphorus|potassium|top-dressing)\b/i;
-const CROP_TEXT_PATTERN = /\b(crop|sowing|harvest|nutrient|field|recommendation|stage|growth)\b/i;
-const GENERIC_HEADLINE_PATTERN = /^(today farming alert|smart agriculture alert|notification|field alert)$/i;
+const KEYWORD_TO_TOOL: Array<{ pattern: RegExp; tool: NotificationToolKey }> = [
+  { pattern: /\b(rain|storm|irrigation|heat|weather|forecast|temperature|wind)\b/i, tool: 'rainRadar' },
+  { pattern: /\b(disease|pest|blight|mildew|fungus|infection|scouting)\b/i, tool: 'cropDoctor' },
+  { pattern: /\b(nutrient|fertilizer|sowing|harvest|crop|soil|field|seed|recommendation)\b/i, tool: 'fieldPlanner' },
+  { pattern: /\b(stage|growth|flowering|vegetative|lifecycle|follow-up)\b/i, tool: 'growthTracker' },
+  { pattern: /\b(market|price|mandi|demand|buyer|procurement)\b/i, tool: 'mandiWatch' },
+];
 
-function compactText(value?: string, fallback = '') {
+function compactText(value: string, fallback = '') {
   const text = String(value || '').replace(/\s+/g, ' ').trim();
   return text || fallback;
 }
@@ -144,19 +74,16 @@ function trimText(value: string, maxLength: number) {
   return `${value.slice(0, Math.max(0, maxLength - 3)).trimEnd()}...`;
 }
 
-export function resolveNotificationTool(input: Pick<NotificationInput, 'type' | 'level' | 'title' | 'message' | 'source' | 'metadata'>) {
-  const kind = getNotificationVisualKind(input as NotificationClassifierInput);
-  return VISUAL_KIND_TO_TOOL[kind];
-}
+export function resolveNotificationTool(input: Pick<NotificationInput, 'type' | 'title' | 'message'>) {
+  const mergedText = `${compactText(input.title)} ${compactText(input.message)}`.trim();
 
-function inferTypeFromText(title: string, message: string): BrowserNotificationType {
-  const text = `${compactText(title)} ${compactText(message)}`.trim();
+  for (const entry of KEYWORD_TO_TOOL) {
+    if (entry.pattern.test(mergedText)) {
+      return entry.tool;
+    }
+  }
 
-  if (WEATHER_TEXT_PATTERN.test(text)) return 'weather';
-  if (MARKET_TEXT_PATTERN.test(text)) return 'market';
-  if (DISEASE_TEXT_PATTERN.test(text)) return 'disease';
-  if (SOIL_TEXT_PATTERN.test(text) || CROP_TEXT_PATTERN.test(text)) return 'crop';
-  return 'system';
+  return TYPE_TO_TOOL[input.type];
 }
 
 export function getNotificationToolLabel(tool: NotificationToolKey) {
@@ -177,15 +104,10 @@ export function formatNotificationTimestamp(value: string) {
 }
 
 export function formatBrowserNotification(input: NotificationInput): NotificationPayload {
-  const kind = getNotificationVisualKind(input as NotificationClassifierInput);
   const tool = resolveNotificationTool(input);
   const toolMeta = TOOL_DETAILS[tool];
-  const requestedHeadline = compactText(input.title);
-  const headline = !requestedHeadline || GENERIC_HEADLINE_PATTERN.test(requestedHeadline)
-    ? toolMeta.headline
-    : requestedHeadline;
-  const lead = LEVEL_LABELS[kind][input.level];
-  const body = trimText(`${lead}. ${compactText(input.message)}`, 180);
+  const headline = compactText(input.title, toolMeta.headline);
+  const body = trimText(`${LEVEL_LABELS[input.level]}. ${compactText(input.message)}`, 180);
   const title = trimText(`${toolMeta.label} | ${headline}`, 68);
 
   return {
@@ -194,8 +116,8 @@ export function formatBrowserNotification(input: NotificationInput): Notificatio
     tool,
     options: {
       body,
-      icon: toolMeta.icon || NOTIFICATION_ICON,
-      badge: toolMeta.icon || NOTIFICATION_ICON,
+      icon: NOTIFICATION_ICON,
+      badge: NOTIFICATION_ICON,
       tag: input.tag || `agri-${tool}-${input.type}`,
       renotify: input.level === 'high',
       requireInteraction: input.level === 'high',
@@ -203,7 +125,6 @@ export function formatBrowserNotification(input: NotificationInput): Notificatio
       data: {
         path: input.path || '/dashboard',
         tool,
-        kind,
       },
     },
   };
@@ -236,14 +157,12 @@ function normalizeNotificationInput(
   maybeMessage?: string,
 ): NotificationInput {
   if (typeof input === 'string') {
-    const message = compactText(maybeMessage || input);
     return {
-      type: inferTypeFromText(input, message),
+      type: 'system',
       level: 'medium',
       title: input,
-      message,
+      message: compactText(maybeMessage || input),
       path: '/dashboard',
-      source: 'legacy-browser-notification',
     };
   }
 

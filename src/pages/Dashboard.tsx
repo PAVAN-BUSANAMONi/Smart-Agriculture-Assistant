@@ -1,14 +1,17 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
+  Sprout,
   CloudRain,
   Bug,
   Lightbulb,
+  Calculator,
+  TrendingUp,
+  Landmark,
+  UserRound,
+  LineChart,
+  ShieldCheck,
   BotMessageSquare,
-  ArrowRight,
-  Activity,
-  MapPin,
-  Maximize
 } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { VoiceQueryInput } from '../components/VoiceQueryInput';
@@ -17,13 +20,22 @@ import { useNotifications } from '../contexts/NotificationContext';
 import { useAuth } from '../contexts/AuthContext';
 import { api } from '../services/api';
 
+type DashboardFeature = {
+  id: number;
+  title: string;
+  desc: string;
+  path: string;
+  featureKey?: string;
+  adminOnly?: boolean;
+  icon: ReactNode;
+};
+
 export function Dashboard() {
   const navigate = useNavigate();
   const { t, language } = useLanguage();
   const { unreadCount } = useNotifications();
-  const { user } = useAuth();
-  const [weatherSnap, setWeatherSnap] = useState<{ tempC: number; rainChance24h: number; desc: string } | null>(null);
-  const [isLoadingWeather, setIsLoadingWeather] = useState(true);
+  const { user, canAccessAdmin, isFeatureEnabled } = useAuth();
+  const [weatherSnap, setWeatherSnap] = useState<{ tempC: number; rainChance24h: number } | null>(null);
 
   const profileRaw = localStorage.getItem('farmerProfile');
   let profile: { location?: string; landSize?: string; crops?: string } = {};
@@ -51,12 +63,9 @@ export function Dashboard() {
         setWeatherSnap({
           tempC: weather.current.tempC,
           rainChance24h: weather.forecast.rainChance24h,
-          desc: weather.current.condition
         });
       } catch {
         setWeatherSnap(null);
-      } finally {
-        setIsLoadingWeather(false);
       }
     };
 
@@ -65,149 +74,200 @@ export function Dashboard() {
 
   const handleVoiceQuery = (query: string) => {
     const lower = query.toLowerCase();
-    if (lower.includes('weather') || query.includes('వాతావరణ')) return navigate('/weather');
-    if (lower.includes('disease') || query.includes('తెగులు')) return navigate('/disease-detect');
-    if (lower.includes('price') || query.includes('ధర')) return navigate('/market-prices');
+    if (lower.includes('weather') || query.includes('వాతావరణ')) {
+      navigate('/weather');
+      return;
+    }
+    if (lower.includes('disease') || query.includes('తెగులు')) {
+      navigate('/disease-detect');
+      return;
+    }
+    if (lower.includes('price') || query.includes('ధర')) {
+      navigate('/market-prices');
+      return;
+    }
     navigate('/crop-recommend');
   };
 
+  const features: DashboardFeature[] = [
+    {
+      id: 1,
+      title: t('crop_recommendation'),
+      desc: t('crop_rec_desc'),
+      icon: <Sprout size={48} className="text-green-600" />,
+      path: '/crop-recommend',
+      featureKey: 'cropRecommendation',
+    },
+    {
+      id: 2,
+      title: t('weather_forecast'),
+      desc: t('weather_desc'),
+      icon: <CloudRain size={48} className="text-blue-500" />,
+      path: '/weather',
+      featureKey: 'weather',
+    },
+    {
+      id: 3,
+      title: t('disease_detection'),
+      desc: t('disease_desc'),
+      icon: <Bug size={48} className="text-red-500" />,
+      path: '/disease-detect',
+      featureKey: 'diseaseDetection',
+    },
+    {
+      id: 4,
+      title: t('farming_tips'),
+      desc: t('farming_desc'),
+      icon: <Lightbulb size={48} className="text-yellow-500" />,
+      path: '/farming-tips',
+    },
+        {
+      id: 11,
+      title: 'AI Farming Assistant',
+      desc: 'Ask weather-aware farming questions and get real-time AI action steps.',
+      icon: <BotMessageSquare size={48} className="text-teal-600" />,
+      path: '/ai-assistant',
+    },
+    {
+      id: 5,
+      title: t('market_prices'),
+      desc: t('market_desc'),
+      icon: <TrendingUp size={48} className="text-purple-500" />,
+      path: '/market-prices',
+      featureKey: 'marketPrices',
+    },
+    {
+      id: 6,
+      title: t('fertilizer_calc'),
+      desc: t('fertilizer_desc'),
+      icon: <Calculator size={48} className="text-orange-500" />,
+      path: '/fertilizer-calc',
+      featureKey: 'fertilizerCalculator',
+    },
+    {
+      id: 7,
+      title: t('govt_schemes'),
+      desc: t('schemes_desc'),
+      icon: <Landmark size={48} className="text-indigo-500" />,
+      path: '/govt-schemes',
+      featureKey: 'govtSchemes',
+    },
+    {
+      id: 8,
+      title: language === 'te' ? 'రైతు ప్రొఫైల్' : 'Farmer Profile',
+      desc:
+        language === 'te'
+          ? 'స్థానం, భూమి, పంటల ఆధారంగా వ్యక్తిగత సూచనలు.'
+          : 'Personalized insights from location, land and crops.',
+      icon: <UserRound size={48} className="text-cyan-600" />,
+      path: '/profile',
+      featureKey: 'farmerProfile',
+    },
+    {
+      id: 9,
+      title: language === 'te' ? 'లాభ అంచనా' : 'Profit Estimator',
+      desc:
+        language === 'te'
+          ? 'ఖర్చు, దిగుబడి, ధరల ఆధారంగా నికర లాభం.'
+          : 'Estimate net profit from cost, yield and market prices.',
+      icon: <LineChart size={48} className="text-emerald-600" />,
+      path: '/profit-estimator',
+      featureKey: 'profitEstimator',
+    },
+    {
+      id: 10,
+      title: language === 'te' ? 'అడ్మిన్ ప్యానెల్' : 'Admin Panel',
+      desc:
+        language === 'te'
+          ? 'వినియోగదారులు, రోల్స్, ఫీచర్లు, అలర్ట్లు నిర్వహించండి.'
+          : 'Manage users, roles, feature switches and live alerts.',
+      icon: <ShieldCheck size={48} className="text-slate-700" />,
+      path: '/admin',
+      adminOnly: true,
+    },
+  ];
+
+  const visibleFeatures = features.filter((feature) => {
+    if (feature.adminOnly && !canAccessAdmin) {
+      return false;
+    }
+    if (feature.featureKey && !isFeatureEnabled(feature.featureKey) && !canAccessAdmin) {
+      return false;
+    }
+    return true;
+  });
+
   return (
-    <div className="mx-auto max-w-6xl animate-fade-in">
-      {/* Welcome Banner */}
-      <div className="mb-8 rounded-[24px] bg-primary-600 p-8 shadow-lg relative overflow-hidden text-white">
-        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10 mix-blend-overlay"></div>
-        <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-primary-500 blur-3xl opacity-50"></div>
-        
-        <div className="relative z-10">
-          <p className="text-sm font-semibold uppercase tracking-widest text-primary-200 mb-2">Smart Agriculture Workspace</p>
-          <h1 className="text-4xl md:text-5xl font-bold font-display tracking-tight mb-4">
-            {language === 'te' ? `నమస్కారం, ${user?.name || 'రైతు'}` : `Welcome back, ${user?.name || 'Farmer'}`}
-          </h1>
-          <p className="max-w-2xl text-primary-100 text-lg">
-            {language === 'te'
-              ? 'మీ డ్యాష్‌బోర్డ్ సిద్ధంగా ఉంది. ఇక్కడ మీ పొలం గురించిన ముఖ్యాంశాలు చూడండి.'
-              : 'Here is what is happening on your farm today. Stay updated with live weather, alerts, and AI insights.'}
+    <div className="container mx-auto p-4 py-8">
+      <div className="mb-6 rounded-[28px] border border-[#d9ead3] bg-[linear-gradient(135deg,#f6fbf2_0%,#eef5d9_45%,#fff7e2_100%)] p-6 shadow-sm">
+        <p className="text-sm font-semibold uppercase tracking-[0.28em] text-[#6b8b52]">Smart Agriculture Workspace</p>
+        <h1 className="mt-3 text-3xl font-bold text-[#234223]">
+          {language === 'te' ? `స్వాగతం, ${user?.name || t('welcome')}` : `Welcome back, ${user?.name || t('welcome')}`}
+        </h1>
+        <p className="mt-2 max-w-3xl text-[#4c6b4f]">
+          {language === 'te'
+            ? 'మీ ఖాతా రోల్, అలర్ట్లు, మరియు ఎనేబుల్ చేసిన ఫీచర్ల ఆధారంగా ఈ డ్యాష్‌బోర్డ్ సిద్ధమైంది.'
+            : 'This dashboard adapts to your role, live alerts, and the features enabled by the admin team.'}
+        </p>
+      </div>
+
+      <div className="mb-5 grid gap-4 md:grid-cols-5">
+        <div className="rounded-xl border border-gray-200 bg-white p-4 shadow-sm">
+          <p className="text-xs text-gray-500">{language === 'te' ? 'ఖాతా రోల్' : 'Account Role'}</p>
+          <p className="text-lg font-semibold text-gray-900">{user?.role === 'admin' ? 'Admin' : 'Farmer'}</p>
+        </div>
+        <div className="rounded-xl border border-gray-200 bg-white p-4 shadow-sm">
+          <p className="text-xs text-gray-500">{language === 'te' ? 'వ్యక్తిగత స్థానం' : 'Personal Location'}</p>
+          <p className="text-lg font-semibold text-gray-900">{profile.location || (language === 'te' ? 'సెట్ కాలేదు' : 'Not set')}</p>
+        </div>
+        <div className="rounded-xl border border-gray-200 bg-white p-4 shadow-sm">
+          <p className="text-xs text-gray-500">{language === 'te' ? 'భూమి పరిమాణం' : 'Land Size'}</p>
+          <p className="text-lg font-semibold text-gray-900">
+            {profile.landSize ? `${profile.landSize} acres` : language === 'te' ? 'సెట్ కాలేదు' : 'Not set'}
+          </p>
+        </div>
+        <div className="rounded-xl border border-gray-200 bg-white p-4 shadow-sm">
+          <p className="text-xs text-gray-500">{language === 'te' ? 'సక్రియ అలర్ట్లు' : 'Active Alerts'}</p>
+          <p className="text-lg font-semibold text-gray-900">{alertCount}</p>
+        </div>
+        <div className="rounded-xl border border-gray-200 bg-white p-4 shadow-sm">
+          <p className="text-xs text-gray-500">Weather Snapshot</p>
+          <p className="text-lg font-semibold text-gray-900">
+            {weatherSnap ? `${weatherSnap.tempC} C / Rain ${weatherSnap.rainChance24h}%` : 'Loading...'}
           </p>
         </div>
       </div>
 
-      {/* Voice Assistant */}
-      <div className="mb-8">
+      <div className="mb-6">
         <VoiceQueryInput onQuery={handleVoiceQuery} />
       </div>
 
-      {/* Top Widgets Row */}
-      <div className="mb-8 grid gap-6 md:grid-cols-3">
-        
-        {/* Weather Widget */}
-        <div 
-          onClick={() => navigate('/weather')}
-          className="glass-card p-6 flex flex-col justify-between cursor-pointer group min-h-[160px]"
-        >
-          <div className="flex justify-between items-start mb-4">
-            <div className="bg-blue-50 text-blue-600 p-2.5 rounded-xl shadow-sm">
-              <CloudRain size={24} />
-            </div>
-            <ArrowRight size={20} className="text-gray-300 group-hover:text-primary-500 transition-colors" />
-          </div>
-          <div>
-            <p className="text-sm font-semibold text-gray-500 mb-1">Current Weather</p>
-            {isLoadingWeather ? (
-              <div className="h-8 bg-gray-200 rounded animate-pulse w-3/4"></div>
-            ) : weatherSnap ? (
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {visibleFeatures.map((feature) => (
+          <div
+            key={feature.id}
+            onClick={() => navigate(feature.path)}
+            className="cursor-pointer rounded-2xl border border-transparent bg-white p-6 shadow-md transition-all hover:-translate-y-1 hover:border-green-100 hover:shadow-xl"
+          >
+            <div className="mb-4 flex items-center space-x-4">
+              <div className="rounded-full bg-gray-50 p-3 shadow-inner">{feature.icon}</div>
               <div>
-                <div className="text-3xl font-display font-bold text-gray-900">{weatherSnap.tempC}°C</div>
-                <p className="text-sm text-gray-600 mt-1">{weatherSnap.desc} • {weatherSnap.rainChance24h}% Rain Chance</p>
+                <h3 className="text-xl font-bold text-gray-800">{feature.title}</h3>
+                {feature.adminOnly && (
+                  <p className="text-xs font-semibold uppercase tracking-wide text-[#5f7d42]">
+                    {language === 'te' ? 'అడ్మిన్ యాక్సెస్' : 'Admin access'}
+                  </p>
+                )}
               </div>
-            ) : (
-              <p className="text-sm text-gray-400">Location required</p>
-            )}
-          </div>
-        </div>
-
-        {/* Alerts Widget */}
-        <div className="glass-card p-6 flex flex-col justify-between min-h-[160px]">
-          <div className="flex justify-between items-start mb-4">
-            <div className={`p-2.5 rounded-xl shadow-sm ${alertCount > 0 ? 'bg-amber-50 text-amber-600' : 'bg-green-50 text-green-600'}`}>
-              <Activity size={24} />
             </div>
+            <p className="pl-16 text-gray-600">{feature.desc}</p>
           </div>
-          <div>
-            <p className="text-sm font-semibold text-gray-500 mb-1">Active Alerts</p>
-            <div className="text-3xl font-display font-bold text-gray-900">{alertCount}</div>
-            <p className="text-sm text-gray-600 mt-1">{alertCount > 0 ? 'Requires attention' : 'All systems normal'}</p>
-          </div>
-        </div>
-
-        {/* Farm Profile Widget */}
-        <div 
-          onClick={() => navigate('/profile')}
-          className="glass-card p-6 flex flex-col justify-between cursor-pointer group min-h-[160px]"
-        >
-           <div className="flex justify-between items-start mb-4">
-            <div className="bg-purple-50 text-purple-600 p-2.5 rounded-xl shadow-sm">
-              <MapPin size={24} />
-            </div>
-            <ArrowRight size={20} className="text-gray-300 group-hover:text-primary-500 transition-colors" />
-          </div>
-          <div>
-            <p className="text-sm font-semibold text-gray-500 mb-1">Farm Profile</p>
-            <div className="text-xl font-display font-bold text-gray-900 truncate">
-              {profile.location || 'Location Not Set'}
-            </div>
-            <p className="text-sm text-gray-600 mt-1 flex items-center gap-1">
-              <Maximize size={14} />
-              {profile.landSize ? `${profile.landSize} acres` : 'Size Not Set'}
-            </p>
-          </div>
-        </div>
-
-      </div>
-
-      {/* AI Assistant Banner */}
-      <div 
-        onClick={() => navigate('/ai-assistant')}
-        className="mb-8 cursor-pointer overflow-hidden rounded-2xl bg-gradient-to-r from-teal-500 to-emerald-600 shadow-sm transition-all hover:shadow-md hover:scale-[1.01] border border-teal-400/30"
-      >
-        <div className="flex items-center justify-between p-6 md:p-8">
-          <div className="flex items-center gap-6">
-            <div className="hidden rounded-2xl bg-white/20 p-4 backdrop-blur-md shadow-sm border border-white/20 md:block">
-              <BotMessageSquare size={40} className="text-white" />
-            </div>
-            <div>
-              <h2 className="text-2xl font-bold font-display text-white mb-2">Ask AI Farming Assistant</h2>
-              <p className="text-teal-50">Get real-time insights, disease analysis, and step-by-step guidance.</p>
-            </div>
-          </div>
-          <div className="rounded-full bg-white p-3 text-teal-600 shadow-sm">
-            <ArrowRight size={24} />
-          </div>
-        </div>
-      </div>
-
-      {/* Quick Tools Grid */}
-      <div>
-        <h2 className="text-xl font-bold font-display text-gray-900 mb-4">Quick Tools</h2>
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {[
-            { id: 1, title: t('disease_detection'), icon: <Bug size={24}/>, path: '/disease-detect', color: 'text-rose-500', bg: 'bg-rose-50 border-rose-100' },
-            { id: 2, title: t('farming_tips'), icon: <Lightbulb size={24}/>, path: '/farming-tips', color: 'text-amber-500', bg: 'bg-amber-50 border-amber-100' },
-            { id: 3, title: t('govt_schemes'), icon: <Activity size={24}/>, path: '/govt-schemes', color: 'text-indigo-500', bg: 'bg-indigo-50 border-indigo-100' },
-          ].map(tool => (
-            <div 
-              key={tool.id} 
-              onClick={() => navigate(tool.path)}
-              className="glass-card flex items-center p-4 cursor-pointer group"
-            >
-              <div className={`p-3 rounded-xl border ${tool.bg} ${tool.color} mr-4 transition-transform group-hover:scale-110 shadow-sm`}>
-                {tool.icon}
-              </div>
-              <div className="flex-1 font-semibold text-gray-800">{tool.title}</div>
-              <ArrowRight size={18} className="text-gray-300 group-hover:text-primary-500 transition-colors" />
-            </div>
-          ))}
-        </div>
+        ))}
       </div>
     </div>
   );
 }
+
+
+
+
