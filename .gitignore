@@ -8,3 +8,5 @@ backend/.env.*
 !backend/.env.example
 *.log
 .frontend.out.log
+
+dist/

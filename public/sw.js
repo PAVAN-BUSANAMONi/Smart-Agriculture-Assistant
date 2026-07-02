@@ -1,7 +1,19 @@
-const STATIC_CACHE = 'agri-field-static-v2';
+const STATIC_CACHE = 'agri-field-static-v3';
 const DATA_CACHE = 'agri-field-data-v2';
 
-const STATIC_ASSETS = ['/', '/index.html', '/manifest.webmanifest', '/images/agri-tools-mark.svg'];
+const STATIC_ASSETS = [
+  '/',
+  '/index.html',
+  '/manifest.webmanifest',
+  '/images/agri-tools-mark.svg',
+  '/images/notifications/weather-wise.svg',
+  '/images/notifications/crop-trak.svg',
+  '/images/notifications/soil-probe-max.svg',
+  '/images/notifications/market-mate.svg',
+  '/images/notifications/pest-alert.svg',
+  '/images/notifications/crop-doctor.svg',
+  '/images/notifications/farm-desk.svg',
+];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(caches.open(STATIC_CACHE).then((cache) => cache.addAll(STATIC_ASSETS)));

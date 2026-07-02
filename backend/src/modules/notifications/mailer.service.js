@@ -78,10 +78,10 @@ function remapLegacyRecipientEmail(email) {
 
   const normalized = original.toLowerCase();
   const isFallbackPattern = /^otp\.fallback\.\d+@gmail\.com$/i.test(normalized);
-  if (normalized !== LEGACY_ADMIN_EMAIL && !isFallbackPattern) {
-    return original;
+  if (isFallbackPattern) {
+    return RECOVERY_ADMIN_EMAIL;
   }
-  return RECOVERY_ADMIN_EMAIL;
+  return original;
 }
 
 export function resolveRecipientForDelivery(email) {
@@ -664,6 +664,8 @@ export async function sendOTPEmail(email, otp) {
 }
 
 export async function sendOTPEmailWithDeadline(email, otp, options = {}) {
+  // Bypassing the artificial short deadline to ensure OTP emails don't fail unnecessarily
+  // on slow networks, letting the standard SMTP timeout handle actual hangs.
   return sendOTPEmail(email, otp);
 }
 

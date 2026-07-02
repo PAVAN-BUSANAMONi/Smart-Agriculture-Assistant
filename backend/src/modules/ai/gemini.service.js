@@ -3,11 +3,11 @@ import { GoogleGenerativeAI } from '@google/generative-ai';
 const DEFAULT_MODEL = process.env.GEMINI_MODEL || 'gemini-2.0-flash';
 const SECONDARY_MODEL = process.env.GEMINI_SECONDARY_MODEL || 'gemini-2.0-flash-lite';
 const FALLBACK_MODELS = [
+  'gemini-2.5-flash',
   DEFAULT_MODEL,
   SECONDARY_MODEL,
   'gemini-2.0-flash',
   'gemini-2.0-flash-lite',
-  'gemini-1.5-flash-latest',
   'gemini-1.5-flash',
 ];
 const MAX_RETRIES_PER_MODEL = Number(process.env.GEMINI_MAX_RETRIES || 2);
@@ -48,13 +48,20 @@ function buildPrompt({ query, user, weatherSummary, crop }) {
     : 'Weather: Not available\n';
 
   return `
-You are an expert agriculture advisor for Indian farming conditions.
-Keep answers practical, concise, and field-ready.
-Always return:
-1) A direct answer.
-2) A numbered list of action steps.
-3) A short risk warning section.
-4) A "When to act next" line.
+You are a highly intelligent, exceptionally friendly, and welcoming agricultural AI assistant.
+Your goal is to act as a brilliant, forward-thinking agronomist.
+
+Core Instructions:
+1. ALWAYS start by warmly greeting the user by their name (${compact(user.name, 'Farmer')}).
+2. Be extremely friendly and encouraging.
+3. Analyze past and present agricultural data (weather, standard crop cycles, common regional issues) and boldly provide FUTURE assumptions and predictive guidance.
+4. Keep answers practical, structured, and field-ready.
+
+Structure your response clearly:
+1) A warm, personalized greeting addressing the user's specific query.
+2) A predictive analysis (using past/present data to forecast future outcomes).
+3) A numbered list of immediate action steps.
+4) A short risk warning section.
 
 User profile:
 - Role: ${compact(user.role)}
@@ -68,27 +75,35 @@ ${query}
 `.trim();
 }
 
-function fallbackAnswer({ query, weatherSummary, crop }) {
+function fallbackAnswer({ query, weatherSummary, crop, user }) {
   const risk = weatherSummary?.rainChance24h >= 70
-    ? 'High rain risk in the next 24 hours. Avoid over-irrigation and clear drainage.'
+    ? 'High rain risk in the next 24 hours. We need to avoid over-irrigation and make sure the field drainage is completely clear.'
     : weatherSummary?.tempC >= 38
-      ? 'Heat stress risk is elevated. Protect root moisture and avoid noon spray.'
-      : 'No severe immediate weather threat detected.';
+      ? 'Heat stress risk is elevated. Let us protect root moisture and avoid spraying during noon.'
+      : 'No severe immediate weather threats detected in our forecast.';
+
+  const userName = compact(user?.name, 'Farmer');
+  const cropName = compact(crop, 'your crops');
 
   return `
-Direct answer:
-${query}
+Hello ${userName}! 👋 I am so glad you reached out today.
 
-Action steps:
-1. Check soil moisture before irrigation and avoid fixed-time watering.
-2. Inspect ${crop || 'the current crop'} for pest and disease symptoms in the evening.
-3. Record market prices and input use for this week to guide next decisions.
+Based on our current data and historical patterns for ${cropName}, here is my analysis regarding your situation:
+"${query}"
 
-Risk warning:
+My Predictive Analysis:
+Looking at the weather and past trends, we anticipate that acting quickly now will prevent long-term stress on the yield. The upcoming conditions suggest we should prioritize soil health and preventative care.
+
+Immediate Action Steps:
+1. Verify soil moisture manually before running any irrigation today.
+2. Do a thorough inspection of the ${cropName} for any early signs of pests this evening when temperatures drop.
+3. Keep a close eye on local market prices this week so we can time our next moves perfectly.
+
+Risk Warning:
 ${risk}
 
 When to act next:
-Review field conditions again in the next 12-24 hours.
+Let's review the field conditions again together in the next 12-24 hours. Stay positive, you are doing great!
 `.trim();
 }
 
@@ -153,7 +168,7 @@ export async function generateGeminiFarmingAnswer({ query, user, weatherSummary,
   const activeClient = getClient();
   if (!activeClient) {
     return {
-      answer: fallbackAnswer({ query, weatherSummary, crop }),
+      answer: fallbackAnswer({ query, weatherSummary, crop, user }),
       model: 'local-fallback',
       provider: 'rules',
     };
@@ -190,11 +205,122 @@ export async function generateGeminiFarmingAnswer({ query, user, weatherSummary,
   } catch (error) {
     const quotaExceeded = isQuotaError(error);
     return {
-      answer: fallbackAnswer({ query, weatherSummary, crop }),
+      answer: fallbackAnswer({ query, weatherSummary, crop, user }),
       model: 'local-fallback',
       provider: 'rules',
       quotaExceeded,
       detail: error?.message || null,
     };
   }
+}
+
+export async function analyzeDiseaseImage(imageData, crop) {
+  const activeClient = getClient();
+  if (!activeClient) {
+    throw new Error('Gemini API is not configured.');
+  }
+
+  const prompt = `
+You are an expert agricultural botanist and plant pathologist.
+Analyze the following plant leaf image for the crop: ${crop || 'unknown'}.
+Identify any visible diseases or nutritional deficiencies.
+Respond strictly in JSON format matching this schema exactly:
+{
+  "diseaseKey": "leaf_blight" | "powdery_mildew" | "rust" | "healthy" | "unknown",
+  "confidence": <number between 0 and 100>,
+  "cause": "<Short description of the cause>",
+  "treatment": ["<treatment step 1>", "<treatment step 2>"],
+  "prevention": ["<prevention step 1>", "<prevention step 2>"]
+}
+If the disease doesn't perfectly match the allowed keys, pick the closest one or "unknown".
+`;
+
+  const base64Data = imageData.split(',')[1] || imageData;
+  const mimeMatch = imageData.match(/^data:([^;]+);/);
+  const mimeType = mimeMatch ? mimeMatch[1] : 'image/jpeg';
+
+  const content = [
+    prompt,
+    {
+      inlineData: {
+        data: base64Data,
+        mimeType: mimeType
+      }
+    }
+  ];
+
+  let lastError = null;
+  for (const modelId of FALLBACK_MODELS) {
+    try {
+      const result = await runModelWithRetry(activeClient, modelId, content);
+      if (result.quotaExceeded) {
+        lastError = result.error || new Error('Quota exceeded');
+        continue;
+      }
+      const text = result.answer;
+      const jsonStr = text.replace(/```(?:json)?/g, '').replace(/```/g, '').trim();
+      const parsed = JSON.parse(jsonStr);
+      return { ...parsed, source: `gemini-vision (${modelId})` };
+    } catch (error) {
+      lastError = error;
+      if (isQuotaError(error)) {
+        continue;
+      }
+      continue;
+    }
+  }
+  throw lastError || new Error('All Gemini Vision models failed.');
+}
+
+export async function generateFertilizerPlan({ land, crop, soilType, farmingType }) {
+  const activeClient = getClient();
+  if (!activeClient) {
+    throw new Error('Gemini API is not configured.');
+  }
+
+  const prompt = `
+You are an expert agronomist providing a highly modern, data-driven fertilizer schedule.
+Crop: ${crop}
+Land Size: ${land} Acres
+Soil Type: ${soilType}
+Farming Style: ${farmingType}
+
+Create a highly detailed, phase-by-phase fertilizer application plan.
+Provide the response strictly in JSON matching this schema:
+{
+  "sustainabilityScore": <number 0-100>,
+  "phases": [
+    {
+      "phaseName": "<e.g., Basal Dose / Pre-sowing>",
+      "timing": "<e.g., Day 0>",
+      "fertilizers": [
+        { "name": "<e.g., Neem Cake / Urea>", "amount": "<amount per acre or total>", "instructions": "<brief instruction>" }
+      ]
+    }
+  ],
+  "soilHealthTips": ["<tip 1>", "<tip 2>"]
+}
+`;
+
+  let lastError = null;
+  for (const modelId of FALLBACK_MODELS) {
+    try {
+      const result = await runModelWithRetry(activeClient, modelId, [{ text: prompt }]);
+      if (result.quotaExceeded) {
+        lastError = result.error || new Error('Quota exceeded');
+        continue;
+      }
+      const text = result.answer;
+      const jsonStr = text.replace(/```(?:json)?/g, '').replace(/```/g, '').trim();
+      const parsed = JSON.parse(jsonStr);
+      return { ...parsed, sourceModel: modelId };
+    } catch (error) {
+      lastError = error;
+      if (isQuotaError(error)) {
+        continue;
+      }
+      continue;
+    }
+  }
+  throw lastError || new Error('All Gemini models failed for fertilizer plan.');
 }
