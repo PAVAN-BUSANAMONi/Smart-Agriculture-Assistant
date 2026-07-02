@@ -359,7 +359,7 @@ export function Login() {
                 <button
                   type="button"
                   onClick={() => handleRoleSwitch('farmer')}
-                  className={`relative inline-flex items-center gap-2 rounded-full px-6 py-2 text-[0.95rem] font-bold transition overflow-hidden border ${
+                  className={`relative inline-flex items-center gap-2 rounded-full px-6 py-2 text-[0.95rem] font-bold transition overflow-hidden border cursor-pointer ${
                     isFarmer ? 'border-[#3c8e7a]/80 bg-gradient-to-b from-[#4eb69c]/30 to-[#2a6d5d]/20 text-[#1b5042] dark:text-[#a7f3d0] shadow-[inset_0_1px_3px_rgba(255,255,255,0.6)] drop-shadow-md' : 'border-white/30 bg-white/10 dark:bg-black/40 text-gray-900 dark:text-gray-200 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.4)] hover:bg-white/30'
                   }`}
                 >
@@ -370,7 +370,7 @@ export function Login() {
                 <button
                   type="button"
                   onClick={() => handleRoleSwitch('admin')}
-                  className={`relative inline-flex items-center gap-2 rounded-full px-6 py-2 text-[0.95rem] font-bold transition overflow-hidden border ${
+                  className={`relative inline-flex items-center gap-2 rounded-full px-6 py-2 text-[0.95rem] font-bold transition overflow-hidden border cursor-pointer ${
                     !isFarmer ? 'border-[#3c8e7a]/80 bg-gradient-to-b from-[#4eb69c]/30 to-[#2a6d5d]/20 text-[#1b5042] dark:text-[#a7f3d0] shadow-[inset_0_1px_3px_rgba(255,255,255,0.6)] drop-shadow-md' : 'border-white/30 bg-white/10 dark:bg-black/40 text-gray-900 dark:text-gray-200 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.4)] hover:bg-white/30'
                   }`}
                 >
@@ -387,7 +387,7 @@ export function Login() {
                 <button
                   type="button"
                   onClick={() => handleModeSwitch('login')}
-                  className={`relative overflow-hidden rounded-full px-8 py-2.5 text-[0.95rem] font-black transition ${
+                  className={`relative overflow-hidden rounded-full px-8 py-2.5 text-[0.95rem] font-black transition cursor-pointer ${
                     mode === 'login' ? 'bg-gradient-to-b from-white to-gray-200 text-[#1b5042] dark:text-[#a7f3d0] shadow-[0_8px_20px_rgba(0,0,0,0.25),inset_0_2px_4px_rgba(255,255,255,1),inset_0_-2px_4px_rgba(0,0,0,0.1)]' : 'bg-black/10 border border-white/40 text-gray-900 dark:text-gray-200 shadow-[inset_0_2px_4px_rgba(255,255,255,0.5)] hover:bg-white/30'
                   }`}
                 >
@@ -397,7 +397,7 @@ export function Login() {
                 <button
                   type="button"
                   onClick={() => handleModeSwitch('register')}
-                  className={`relative overflow-hidden rounded-full px-8 py-2.5 text-[0.95rem] font-black transition ${
+                  className={`relative overflow-hidden rounded-full px-8 py-2.5 text-[0.95rem] font-black transition cursor-pointer ${
                     mode === 'register' ? 'bg-gradient-to-b from-white to-gray-200 text-[#1b5042] dark:text-[#a7f3d0] shadow-[0_8px_20px_rgba(0,0,0,0.25),inset_0_2px_4px_rgba(255,255,255,1),inset_0_-2px_4px_rgba(0,0,0,0.1)]' : 'bg-black/10 border border-white/40 text-gray-900 dark:text-gray-200 shadow-[inset_0_2px_4px_rgba(255,255,255,0.5)] hover:bg-white/30'
                   }`}
                 >
@@ -672,9 +672,16 @@ export function Login() {
                     setForgotPasswordStep('email');
                     setError('');
                   }}
-                  className="transition hover:text-white"
+                  className="transition hover:text-white cursor-pointer"
                 >
                   Back
+                </button>
+                <button
+                  type="button"
+                  onClick={() => void handleForgotPassword()}
+                  className="transition hover:text-white cursor-pointer"
+                >
+                  Resend OTP
                 </button>
               </div>
             </form>
