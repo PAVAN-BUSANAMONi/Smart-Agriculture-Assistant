@@ -583,11 +583,11 @@ export function Login() {
                     resetOtpState();
                     setError('');
                   }}
-                  className="transition hover:text-white"
+                  className="transition hover:text-white cursor-pointer"
                 >
                   Back
                 </button>
-                <button type="button" onClick={() => void handleResendOtp()} className="transition hover:text-white">
+                <button type="button" onClick={() => void handleResendOtp()} className="transition hover:text-white cursor-pointer">
                   Resend OTP
                 </button>
               </div>

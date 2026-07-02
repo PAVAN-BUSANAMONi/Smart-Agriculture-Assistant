@@ -209,11 +209,11 @@ function buildTransportCandidates() {
 
   if (isGmailService) {
     candidates.push({
-      key: 'gmail-host-starttls',
+      key: 'gmail-host-ssl',
       transport: {
         host: 'smtp.gmail.com',
-        port: 587,
-        secure: false,
+        port: 465,
+        secure: true,
         connectionTimeout: primary.connectionTimeout,
         greetingTimeout: primary.greetingTimeout,
         socketTimeout: primary.socketTimeout,
@@ -221,11 +221,11 @@ function buildTransportCandidates() {
       },
     });
     candidates.push({
-      key: 'gmail-host-ssl',
+      key: 'gmail-host-starttls',
       transport: {
         host: 'smtp.gmail.com',
-        port: 465,
-        secure: true,
+        port: 587,
+        secure: false,
         connectionTimeout: primary.connectionTimeout,
         greetingTimeout: primary.greetingTimeout,
         socketTimeout: primary.socketTimeout,
