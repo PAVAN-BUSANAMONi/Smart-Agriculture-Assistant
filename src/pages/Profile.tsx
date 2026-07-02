@@ -126,10 +126,10 @@ export function Profile() {
 
   return (
     <div className="container mx-auto max-w-3xl p-4">
-      <h1 className="mb-6 text-3xl font-bold text-gray-900">{language === 'te' ? 'రైతు ప్రొఫైల్' : 'Farmer Profile'}</h1>
-      <form onSubmit={onSubmit} className="space-y-4 rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+      <h1 className="mb-6 text-3xl font-bold text-gray-900 dark:text-white drop-shadow-sm">{language === 'te' ? 'రైతు ప్రొఫైల్' : 'Farmer Profile'}</h1>
+      <form onSubmit={onSubmit} className="space-y-4 rounded-2xl border border-gray-200 bg-white/20 dark:bg-black/20 backdrop-blur-2xl p-6 shadow-[0_8px_32px_rgba(0,0,0,0.1)] border border-white/40 dark:border-white/10">
         <div>
-          <label className="mb-2 block text-sm font-semibold text-gray-700">
+          <label className="mb-2 block text-sm font-semibold text-gray-800 dark:text-gray-200">
             <MapPinned className="mr-1 inline" size={16} />
             {language === 'te' ? 'గ్రామం/స్థానం' : 'Village/Location'}
           </label>
@@ -142,7 +142,7 @@ export function Profile() {
         </div>
 
         <div>
-          <label className="mb-2 block text-sm font-semibold text-gray-700">
+          <label className="mb-2 block text-sm font-semibold text-gray-800 dark:text-gray-200">
             <Tractor className="mr-1 inline" size={16} />
             {language === 'te' ? 'భూమి పరిమాణం (ఎకరాలు)' : 'Land Size (Acres)'}
           </label>
@@ -157,7 +157,7 @@ export function Profile() {
         </div>
 
         <div>
-          <label className="mb-2 block text-sm font-semibold text-gray-700">
+          <label className="mb-2 block text-sm font-semibold text-gray-800 dark:text-gray-200">
             {language === 'te' ? 'నాటిన తేదీ (ప్రధాన పంట)' : 'Sowing Date (Primary Crop)'}
           </label>
           <input
@@ -169,7 +169,7 @@ export function Profile() {
         </div>
 
         <div>
-          <label className="mb-2 block text-sm font-semibold text-gray-700">
+          <label className="mb-2 block text-sm font-semibold text-gray-800 dark:text-gray-200">
             {language === 'te' ? 'ప్రస్తుతం సాగు చేస్తున్న పంటలు' : 'Current Crops'}
           </label>
           <input
@@ -180,11 +180,11 @@ export function Profile() {
           />
         </div>
 
-        <div className="rounded-lg border border-gray-200 bg-gray-50 p-3">
-          <p className="mb-2 text-sm font-semibold text-gray-800">
+        <div className="rounded-lg border border-gray-200 bg-white/30 dark:bg-white/5 backdrop-blur-md border border-white/40 dark:border-white/10 shadow-[inset_0_2px_4px_rgba(255,255,255,0.4)] p-3">
+          <p className="mb-2 text-sm font-semibold text-gray-900 dark:text-white drop-shadow-sm">
             {language === 'te' ? 'అలర్ట్ ప్రాధాన్యతలు' : 'Alert Preferences'}
           </p>
-          <div className="grid gap-2 text-sm text-gray-700 md:grid-cols-2">
+          <div className="grid gap-2 text-sm text-gray-800 dark:text-gray-200 md:grid-cols-2">
             {([
               ['weather', language === 'te' ? 'వాతావరణ అలర్ట్స్' : 'Weather alerts'],
               ['disease', language === 'te' ? 'వ్యాధి అలర్ట్స్' : 'Disease alerts'],
@@ -213,14 +213,14 @@ export function Profile() {
 
         <button
           type="submit"
-          className="inline-flex items-center gap-2 rounded-lg bg-green-600 px-4 py-2 font-semibold text-white hover:bg-green-700"
+          className="inline-flex items-center gap-2 rounded-lg bg-gradient-to-br from-[#4eb69c]/90 to-[#235e4f]/90 shadow-[inset_0_2px_4px_rgba(255,255,255,0.6),0_4px_12px_rgba(35,94,79,0.4)] backdrop-blur-md border border-white/30 text-white px-4 py-2 font-semibold text-white hover:opacity-90"
         >
           <Save size={16} />
           {language === 'te' ? 'ప్రొఫైల్ సేవ్ చేయండి' : 'Save Profile'}
         </button>
 
         {saved && (
-          <p className="rounded-md bg-green-50 p-2 text-sm text-green-700">
+          <p className="rounded-md bg-[#4eb69c]/20 backdrop-blur-md border border-[#4eb69c]/30 text-[#111] dark:text-[#4eb69c] p-2 text-sm text-[#2a6d5d] dark:text-[#4eb69c]">
             {language === 'te' ? 'ప్రొఫైల్ విజయవంతంగా సేవ్ అయింది.' : 'Profile saved successfully.'}
           </p>
         )}

@@ -45,7 +45,7 @@ export function FertilizerCalc() {
         <h1 className="text-4xl md:text-5xl font-extrabold font-display bg-clip-text text-transparent bg-gradient-to-r from-emerald-600 via-green-500 to-teal-400 tracking-tight">
           AI Fertilizer Schedule
         </h1>
-        <p className="text-gray-500 max-w-xl mx-auto font-medium text-lg">
+        <p className="text-gray-600 dark:text-gray-400 max-w-xl mx-auto font-medium text-lg">
           Get a hyper-personalized, eco-friendly fertilizer plan powered by Gemini AI. 🌿✨
         </p>
       </div>
@@ -56,13 +56,13 @@ export function FertilizerCalc() {
             <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-300/20 rounded-full blur-3xl -mr-10 -mt-10 group-hover:bg-emerald-400/30 transition-all"></div>
             
             <div className="space-y-5 relative z-10">
-              {error && <div className="text-red-500 text-sm font-bold bg-red-50 p-3 rounded-xl border border-red-100">{error}</div>}
+              {error && <div className="text-red-500 text-sm font-bold bg-red-500/20 backdrop-blur-md border border-red-500/30 text-red-900 dark:text-red-300 p-3 rounded-xl border border-red-100">{error}</div>}
 
               <div>
-                <label className="mb-2 block text-sm font-bold text-gray-700 uppercase tracking-wider">Land Size (Acres) 🏞️</label>
+                <label className="mb-2 block text-sm font-bold text-gray-800 dark:text-gray-200 uppercase tracking-wider">Land Size (Acres) 🏞️</label>
                 <input 
                   type="number"
-                  className="w-full bg-white/70 border-0 ring-1 ring-gray-200 focus:ring-2 focus:ring-emerald-500 rounded-2xl p-4 text-gray-900 font-semibold shadow-inner transition-all"
+                  className="w-full bg-white/70 border-0 ring-1 ring-gray-200 focus:ring-2 focus:ring-emerald-500 rounded-2xl p-4 text-gray-900 dark:text-white drop-shadow-sm font-semibold shadow-inner transition-all"
                   value={land}
                   onChange={(e) => setLand(e.target.value)}
                   placeholder="e.g. 5"
@@ -70,9 +70,9 @@ export function FertilizerCalc() {
               </div>
 
               <div>
-                <label className="mb-2 block text-sm font-bold text-gray-700 uppercase tracking-wider">Crop Type 🌱</label>
+                <label className="mb-2 block text-sm font-bold text-gray-800 dark:text-gray-200 uppercase tracking-wider">Crop Type 🌱</label>
                 <select 
-                  className="w-full bg-white/70 border-0 ring-1 ring-gray-200 focus:ring-2 focus:ring-emerald-500 rounded-2xl p-4 text-gray-900 font-semibold shadow-inner transition-all appearance-none"
+                  className="w-full bg-white/70 border-0 ring-1 ring-gray-200 focus:ring-2 focus:ring-emerald-500 rounded-2xl p-4 text-gray-900 dark:text-white drop-shadow-sm font-semibold shadow-inner transition-all appearance-none"
                   value={crop}
                   onChange={(e) => setCrop(e.target.value)}
                 >
@@ -86,9 +86,9 @@ export function FertilizerCalc() {
               </div>
 
               <div>
-                <label className="mb-2 block text-sm font-bold text-gray-700 uppercase tracking-wider">Soil Type 🪨</label>
+                <label className="mb-2 block text-sm font-bold text-gray-800 dark:text-gray-200 uppercase tracking-wider">Soil Type 🪨</label>
                 <select 
-                  className="w-full bg-white/70 border-0 ring-1 ring-gray-200 focus:ring-2 focus:ring-emerald-500 rounded-2xl p-4 text-gray-900 font-semibold shadow-inner transition-all appearance-none"
+                  className="w-full bg-white/70 border-0 ring-1 ring-gray-200 focus:ring-2 focus:ring-emerald-500 rounded-2xl p-4 text-gray-900 dark:text-white drop-shadow-sm font-semibold shadow-inner transition-all appearance-none"
                   value={soilType}
                   onChange={(e) => setSoilType(e.target.value)}
                 >
@@ -100,17 +100,17 @@ export function FertilizerCalc() {
               </div>
 
               <div>
-                <label className="mb-2 block text-sm font-bold text-gray-700 uppercase tracking-wider">Farming Style 🚜</label>
+                <label className="mb-2 block text-sm font-bold text-gray-800 dark:text-gray-200 uppercase tracking-wider">Farming Style 🚜</label>
                 <div className="grid grid-cols-2 gap-3">
                   <button 
                     onClick={() => setFarmingType('Organic')}
-                    className={`py-3 rounded-xl font-bold transition-all ${farmingType === 'Organic' ? 'bg-green-500 text-white shadow-lg shadow-green-500/30' : 'bg-gray-100 text-gray-500 hover:bg-gray-200'}`}
+                    className={`py-3 rounded-xl font-bold transition-all ${farmingType === 'Organic' ? 'bg-[#4eb69c]/20 backdrop-blur-md border border-[#4eb69c]/30 text-[#111] dark:text-[#4eb69c]0 text-white shadow-lg shadow-green-500/30' : 'bg-gray-100 text-gray-600 dark:text-gray-400 hover:bg-gray-200'}`}
                   >
                     Organic 🌿
                   </button>
                   <button 
                     onClick={() => setFarmingType('Chemical')}
-                    className={`py-3 rounded-xl font-bold transition-all ${farmingType === 'Chemical' ? 'bg-blue-500 text-white shadow-lg shadow-blue-500/30' : 'bg-gray-100 text-gray-500 hover:bg-gray-200'}`}
+                    className={`py-3 rounded-xl font-bold transition-all ${farmingType === 'Chemical' ? 'bg-blue-500/20 backdrop-blur-md border border-blue-500/30 text-blue-900 dark:text-blue-3000 text-white shadow-lg shadow-blue-500/30' : 'bg-gray-100 text-gray-600 dark:text-gray-400 hover:bg-gray-200'}`}
                   >
                     Chemical 🧪
                   </button>
@@ -135,7 +135,7 @@ export function FertilizerCalc() {
               
               <div className="flex flex-col md:flex-row items-center justify-between gap-6 mb-10 pb-8 border-b border-gray-200/60">
                 <div>
-                  <h3 className="text-3xl font-extrabold font-display text-gray-900 mb-2">Your AI Schedule</h3>
+                  <h3 className="text-3xl font-extrabold font-display text-gray-900 dark:text-white drop-shadow-sm mb-2">Your AI Schedule</h3>
                   <p className="text-emerald-700 font-semibold flex items-center gap-2">
                     <Leaf size={18} /> Model: {result.sourceModel}
                   </p>
@@ -153,22 +153,22 @@ export function FertilizerCalc() {
                 {result.phases?.map((phase: any, idx: number) => (
                   <div key={idx} className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
                     <div className="flex justify-between items-end mb-5">
-                      <h4 className="text-xl font-bold text-gray-900">{phase.phaseName}</h4>
+                      <h4 className="text-xl font-bold text-gray-900 dark:text-white drop-shadow-sm">{phase.phaseName}</h4>
                       <span className="text-sm font-bold text-white bg-gray-900 py-1.5 px-4 rounded-full">{phase.timing}</span>
                     </div>
                     
                     <div className="grid gap-3">
                       {phase.fertilizers?.map((fert: any, fIdx: number) => (
-                        <div key={fIdx} className="flex flex-col md:flex-row md:items-center gap-4 bg-gray-50/80 p-4 rounded-2xl border border-gray-100">
+                        <div key={fIdx} className="flex flex-col md:flex-row md:items-center gap-4 bg-white/30 dark:bg-white/5 backdrop-blur-md border border-white/40 dark:border-white/10 shadow-[inset_0_2px_4px_rgba(255,255,255,0.4)]/80 p-4 rounded-2xl border border-gray-100">
                           <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-teal-400 to-emerald-500 flex items-center justify-center shadow-lg shadow-emerald-500/20 shrink-0">
                             <Droplets className="text-white" size={24} />
                           </div>
                           <div className="flex-grow">
                             <div className="flex flex-wrap items-baseline gap-2 mb-1">
-                              <h5 className="font-bold text-lg text-gray-900">{fert.name}</h5>
+                              <h5 className="font-bold text-lg text-gray-900 dark:text-white drop-shadow-sm">{fert.name}</h5>
                               <span className="text-emerald-600 font-bold bg-emerald-100 px-2 py-0.5 rounded-md text-sm">{fert.amount}</span>
                             </div>
-                            <p className="text-gray-600 text-sm font-medium">{fert.instructions}</p>
+                            <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{fert.instructions}</p>
                           </div>
                         </div>
                       ))}
@@ -197,7 +197,7 @@ export function FertilizerCalc() {
 
           {!result && !loading && (
              <div className="h-full min-h-[400px] rounded-3xl border-2 border-dashed border-gray-200 flex flex-col items-center justify-center text-center p-8 bg-white/20 backdrop-blur-sm">
-                <div className="w-24 h-24 bg-gray-50 rounded-full flex items-center justify-center mb-6 shadow-inner">
+                <div className="w-24 h-24 bg-white/30 dark:bg-white/5 backdrop-blur-md border border-white/40 dark:border-white/10 shadow-[inset_0_2px_4px_rgba(255,255,255,0.4)] rounded-full flex items-center justify-center mb-6 shadow-inner">
                   <Calculator size={48} className="text-gray-300" />
                 </div>
                 <h3 className="text-2xl font-bold text-gray-400 font-display">Ready for Analysis</h3>

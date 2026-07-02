@@ -34,7 +34,7 @@ export function GovtSchemes() {
                 <h3 className="text-xl font-bold text-indigo-900">{scheme.title}</h3>
                 <Landmark size={24} className="text-indigo-200 opacity-50" />
               </div>
-              <p className="text-gray-600 text-sm mb-6 leading-relaxed">{scheme.desc}</p>
+              <p className="text-gray-700 dark:text-gray-300 text-sm mb-6 leading-relaxed">{scheme.desc}</p>
             </div>
             
             <a 

@@ -1,33 +1,26 @@
-import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
 
 export function GlossyBackdrop() {
+  const { user } = useAuth();
   const location = useLocation();
-  const isAuthPage = location.pathname === '/login' || location.pathname === '/register';
+  
+  const isAuthPage = location.pathname === '/login' || location.pathname === '/register' || location.pathname === '/owner';
+  
+  // Auth pages manage their own backgrounds, so we skip rendering here
+  if (isAuthPage) return null; 
 
-  useEffect(() => {
-    const root = document.documentElement;
-
-    const handleMouseMove = (event: MouseEvent) => {
-      const x = (event.clientX / window.innerWidth) * 100;
-      const y = (event.clientY / window.innerHeight) * 100;
-      root.style.setProperty('--cursor-x', `${x}%`);
-      root.style.setProperty('--cursor-y', `${y}%`);
-    };
-
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
-    };
-  }, []);
+  const isAdmin = user?.role === 'admin';
+  const bgImage = isAdmin ? '/admin-bg.jpg.png' : '/farmer-bg.jpg.png';
 
   return (
-    <div className={`gloss-backdrop pointer-events-none fixed inset-0 -z-10 overflow-hidden ${isAuthPage ? 'opacity-65' : 'opacity-100'}`}>
-      <div className="gloss-orb gloss-orb-a" />
-      <div className="gloss-orb gloss-orb-b" />
-      <div className="gloss-orb gloss-orb-c" />
-      <div className="gloss-orb gloss-orb-d" />
-      <div className="gloss-cursor-sheen" />
+    <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden bg-slate-900">
+      <div 
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-all duration-1000"
+        style={{ backgroundImage: `url('${bgImage}')` }}
+      />
+      {/* Dark mode overlay to ensure readability */}
+      <div className="absolute inset-0 bg-white/20 dark:bg-black/50 transition-colors duration-500" />
     </div>
   );
 }

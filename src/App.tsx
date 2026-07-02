@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { ThemeProvider } from './contexts/ThemeContext';
 import { LanguageProvider } from './contexts/LanguageContext';
 import { AppSettingsProvider, useAppSettings } from './contexts/AppSettingsContext';
 import { AuthProvider } from './contexts/AuthContext';
@@ -193,15 +194,17 @@ function AppShell() {
 
 function App() {
   return (
-    <LanguageProvider>
-      <AppSettingsProvider>
-        <AuthProvider>
-          <NotificationProvider>
-            <AppShell />
-          </NotificationProvider>
-        </AuthProvider>
-      </AppSettingsProvider>
-    </LanguageProvider>
+    <ThemeProvider>
+      <LanguageProvider>
+        <AppSettingsProvider>
+          <AuthProvider>
+            <NotificationProvider>
+              <AppShell />
+            </NotificationProvider>
+          </AuthProvider>
+        </AppSettingsProvider>
+      </LanguageProvider>
+    </ThemeProvider>
   );
 }
 

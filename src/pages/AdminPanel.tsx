@@ -253,48 +253,48 @@ export function AdminPanel() {
 
   return (
     <div className="container mx-auto space-y-6 p-4">
-      <div className="rounded-[28px] border border-[#d7e2c8] bg-[linear-gradient(135deg,#f6fbf2_0%,#edf5df_52%,#fff5df_100%)] p-6 shadow-sm">
+      <div className="rounded-[28px] border border-white/50 dark:border-white/20 bg-white/20 dark:bg-black/20 backdrop-blur-3xl border-white/40 dark:border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.1),inset_0_2px_4px_rgba(255,255,255,0.6)] p-6 shadow-sm">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
-            <p className="text-sm font-semibold uppercase tracking-[0.28em] text-[#6f8b56]">Admin workspace</p>
-            <h1 className="mt-3 text-3xl font-black text-[#17321f]">System control and live access overview</h1>
-            <p className="mt-3 max-w-3xl text-[#4c6b4f]">
+            <p className="text-sm font-semibold uppercase tracking-[0.28em] text-[#2a6d5d] dark:text-[#4eb69c] drop-shadow-sm">Admin workspace</p>
+            <h1 className="mt-3 text-3xl font-black text-gray-900 dark:text-white drop-shadow-sm">System control and live access overview</h1>
+            <p className="mt-3 max-w-3xl text-gray-700 dark:text-gray-300">
               Admin sign-in is protected by email OTP. Sensitive feature changes below require a fresh OTP before they can be applied.
             </p>
           </div>
-          <div className="rounded-2xl border border-[#d7e2c8] bg-white/80 px-4 py-3 text-sm text-[#35513a]">
+          <div className="rounded-2xl border border-white/50 dark:border-white/20 bg-white/80 px-4 py-3 text-sm text-gray-800 dark:text-gray-200">
             Signed in as <span className="font-bold">{consoleData.currentUser.name}</span>
           </div>
         </div>
       </div>
 
       <div className="grid gap-4 md:grid-cols-4">
-        <div className="rounded-2xl border bg-white p-4 shadow-sm">
-          <p className="text-sm text-gray-500">Total users</p>
-          <p className="mt-2 text-3xl font-black text-[#17321f]">{consoleData.stats.totalUsers}</p>
+        <div className="rounded-2xl border bg-white/20 dark:bg-black/20 backdrop-blur-2xl p-5 shadow-[0_8px_32px_rgba(0,0,0,0.1)] border border-white/40 dark:border-white/10">
+          <p className="text-sm text-gray-600 dark:text-gray-400">Total users</p>
+          <p className="mt-2 text-3xl font-black text-gray-900 dark:text-white drop-shadow-sm">{consoleData.stats.totalUsers}</p>
         </div>
-        <div className="rounded-2xl border bg-white p-4 shadow-sm">
-          <p className="text-sm text-gray-500">Admins</p>
-          <p className="mt-2 text-3xl font-black text-[#17321f]">{consoleData.stats.admins}</p>
+        <div className="rounded-2xl border bg-white/20 dark:bg-black/20 backdrop-blur-2xl p-5 shadow-[0_8px_32px_rgba(0,0,0,0.1)] border border-white/40 dark:border-white/10">
+          <p className="text-sm text-gray-600 dark:text-gray-400">Admins</p>
+          <p className="mt-2 text-3xl font-black text-gray-900 dark:text-white drop-shadow-sm">{consoleData.stats.admins}</p>
         </div>
-        <div className="rounded-2xl border bg-white p-4 shadow-sm">
-          <p className="text-sm text-gray-500">Farmers</p>
-          <p className="mt-2 text-3xl font-black text-[#17321f]">{consoleData.stats.farmers}</p>
+        <div className="rounded-2xl border bg-white/20 dark:bg-black/20 backdrop-blur-2xl p-5 shadow-[0_8px_32px_rgba(0,0,0,0.1)] border border-white/40 dark:border-white/10">
+          <p className="text-sm text-gray-600 dark:text-gray-400">Farmers</p>
+          <p className="mt-2 text-3xl font-black text-gray-900 dark:text-white drop-shadow-sm">{consoleData.stats.farmers}</p>
         </div>
-        <div className="rounded-2xl border bg-white p-4 shadow-sm">
-          <p className="text-sm text-gray-500">Notifications</p>
-          <p className="mt-2 text-3xl font-black text-[#17321f]">{consoleData.stats.totalAlerts}</p>
+        <div className="rounded-2xl border bg-white/20 dark:bg-black/20 backdrop-blur-2xl p-5 shadow-[0_8px_32px_rgba(0,0,0,0.1)] border border-white/40 dark:border-white/10">
+          <p className="text-sm text-gray-600 dark:text-gray-400">Notifications</p>
+          <p className="mt-2 text-3xl font-black text-gray-900 dark:text-white drop-shadow-sm">{consoleData.stats.totalAlerts}</p>
         </div>
       </div>
 
       <div className="grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
         <section className="space-y-6">
-          <div className="rounded-2xl border bg-white p-5 shadow-sm">
-            <div className="flex items-center gap-2 text-[#17321f]">
+          <div className="rounded-2xl border bg-white/20 dark:bg-black/20 backdrop-blur-2xl p-6 shadow-[0_8px_32px_rgba(0,0,0,0.1)] border border-white/40 dark:border-white/10">
+            <div className="flex items-center gap-2 text-gray-900 dark:text-white drop-shadow-sm">
               <Users size={20} />
               <h2 className="text-2xl font-black">Registered users</h2>
             </div>
-            <div className="mt-4 rounded-2xl border border-[#dce9d4] bg-[#f8fcf4] p-4">
+            <div className="mt-4 rounded-2xl border border-white/40 dark:border-white/10 bg-white/30 dark:bg-white/5 backdrop-blur-md p-4">
               <p className="mb-3 flex items-center gap-2 text-sm font-bold text-[#2b4f2e]">
                 <UserPlus size={16} />
                 Add new user
@@ -311,7 +311,7 @@ export function AdminPanel() {
                       password: '',
                     }))
                   }
-                  className="rounded-xl border border-[#ccd9c6] bg-white px-3 py-2 text-sm text-[#254128]"
+                  className="rounded-xl border border-[#ccd9c6] bg-white/40 dark:bg-black/40 px-3 py-2 backdrop-blur-md shadow-[inset_0_2px_4px_rgba(0,0,0,0.05)] text-gray-900 dark:text-white text-sm text-[#254128]"
                 >
                   <option value="farmer">Farmer</option>
                   <option value="admin">Admin</option>
@@ -320,14 +320,14 @@ export function AdminPanel() {
                   value={newUser.name}
                   onChange={(event) => setNewUser((prev) => ({ ...prev, name: event.target.value }))}
                   placeholder="Name"
-                  className="rounded-xl border border-[#ccd9c6] bg-white px-3 py-2 text-sm text-[#254128]"
+                  className="rounded-xl border border-[#ccd9c6] bg-white/40 dark:bg-black/40 px-3 py-2 backdrop-blur-md shadow-[inset_0_2px_4px_rgba(0,0,0,0.05)] text-gray-900 dark:text-white text-sm text-[#254128]"
                 />
                 {newUser.role === 'farmer' ? (
                   <input
                     value={newUser.phone}
                     onChange={(event) => setNewUser((prev) => ({ ...prev, phone: event.target.value }))}
                     placeholder="Phone number"
-                    className="rounded-xl border border-[#ccd9c6] bg-white px-3 py-2 text-sm text-[#254128]"
+                    className="rounded-xl border border-[#ccd9c6] bg-white/40 dark:bg-black/40 px-3 py-2 backdrop-blur-md shadow-[inset_0_2px_4px_rgba(0,0,0,0.05)] text-gray-900 dark:text-white text-sm text-[#254128]"
                   />
                 ) : (
                   <>
@@ -335,14 +335,14 @@ export function AdminPanel() {
                       value={newUser.email}
                       onChange={(event) => setNewUser((prev) => ({ ...prev, email: event.target.value }))}
                       placeholder="Admin email"
-                      className="rounded-xl border border-[#ccd9c6] bg-white px-3 py-2 text-sm text-[#254128]"
+                      className="rounded-xl border border-[#ccd9c6] bg-white/40 dark:bg-black/40 px-3 py-2 backdrop-blur-md shadow-[inset_0_2px_4px_rgba(0,0,0,0.05)] text-gray-900 dark:text-white text-sm text-[#254128]"
                     />
                     <input
                       type="password"
                       value={newUser.password}
                       onChange={(event) => setNewUser((prev) => ({ ...prev, password: event.target.value }))}
                       placeholder="Admin password"
-                      className="rounded-xl border border-[#ccd9c6] bg-white px-3 py-2 text-sm text-[#254128]"
+                      className="rounded-xl border border-[#ccd9c6] bg-white/40 dark:bg-black/40 px-3 py-2 backdrop-blur-md shadow-[inset_0_2px_4px_rgba(0,0,0,0.05)] text-gray-900 dark:text-white text-sm text-[#254128]"
                     />
                   </>
                 )}
@@ -355,7 +355,7 @@ export function AdminPanel() {
                   || !newUser.name.trim()
                   || (newUser.role === 'farmer' ? !newUser.phone.trim() : !newUser.email.trim() || newUser.password.length < 8)
                 }
-                className="mt-3 rounded-xl bg-[#2f6b32] px-4 py-2 text-sm font-bold text-white transition hover:bg-[#28592b] disabled:cursor-not-allowed disabled:opacity-60"
+                className="mt-3 rounded-xl bg-gradient-to-br from-[#4eb69c]/90 to-[#235e4f]/90 shadow-[inset_0_2px_4px_rgba(255,255,255,0.6),0_4px_12px_rgba(35,94,79,0.4)] backdrop-blur-md border border-white/30 text-white px-4 py-2 text-sm font-bold text-white transition hover:bg-[#28592b] disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {saving ? 'Saving...' : 'Create user'}
               </button>
@@ -363,7 +363,7 @@ export function AdminPanel() {
             <div className="mt-4 overflow-auto">
               <table className="w-full min-w-[700px] text-left text-sm">
                 <thead>
-                  <tr className="border-b bg-gray-50">
+                  <tr className="border-b border-white/30 dark:border-white/10 bg-white/40 dark:bg-white/10 backdrop-blur-md">
                     <th className="p-3">Name</th>
                     <th className="p-3">Role</th>
                     <th className="p-3">Phone</th>
@@ -374,7 +374,7 @@ export function AdminPanel() {
                 </thead>
                 <tbody>
                   {consoleData.users.map((user) => (
-                    <tr key={user.id} className="border-b">
+                    <tr key={user.id} className="border-b border-white/30 dark:border-white/10">
                       <td className="p-3">{user.name}</td>
                       <td className="p-3 capitalize">{user.role}</td>
                       <td className="p-3 text-gray-600">{user.phone || '-'}</td>
@@ -408,16 +408,16 @@ export function AdminPanel() {
             </div>
           </div>
 
-          <div className="rounded-2xl border bg-white p-5 shadow-sm">
-            <div className="flex items-center gap-2 text-[#17321f]">
+          <div className="rounded-2xl border bg-white/20 dark:bg-black/20 backdrop-blur-2xl p-6 shadow-[0_8px_32px_rgba(0,0,0,0.1)] border border-white/40 dark:border-white/10">
+            <div className="flex items-center gap-2 text-gray-900 dark:text-white drop-shadow-sm">
               <BellRing size={20} />
               <h2 className="text-2xl font-black">Recent notifications</h2>
             </div>
             <div className="mt-4 space-y-3">
               {consoleData.alerts.map((alert) => (
-                <div key={alert.id} className="rounded-2xl border border-gray-100 bg-gray-50 p-4">
+                <div key={alert.id} className="rounded-2xl border border-white/40 dark:border-white/10 bg-white/30 dark:bg-white/5 backdrop-blur-md p-4 border border-white/40 dark:border-white/10 shadow-[inset_0_2px_4px_rgba(255,255,255,0.4)]">
                   <div className="flex items-center justify-between gap-2">
-                    <p className="font-semibold text-[#17321f]">{alert.title}</p>
+                    <p className="font-semibold text-gray-900 dark:text-white drop-shadow-sm">{alert.title}</p>
                     <div className="flex items-center gap-2">
                       <span className="rounded-full bg-white px-2 py-1 text-xs font-semibold uppercase text-gray-600">{alert.type}</span>
                       <button
@@ -438,34 +438,34 @@ export function AdminPanel() {
             </div>
           </div>
 
-          <div className="rounded-2xl border bg-white p-5 shadow-sm">
-            <h2 className="text-2xl font-black text-[#17321f]">Audit trail</h2>
+          <div className="rounded-2xl border bg-white/20 dark:bg-black/20 backdrop-blur-2xl p-6 shadow-[0_8px_32px_rgba(0,0,0,0.1)] border border-white/40 dark:border-white/10">
+            <h2 className="text-2xl font-black text-gray-900 dark:text-white drop-shadow-sm">Audit trail</h2>
             <div className="mt-3 max-h-[360px] space-y-2 overflow-auto">
               {consoleData.auditLog.length ? (
                 consoleData.auditLog.map((entry) => (
-                  <article key={entry.id} className="rounded-xl border border-gray-100 bg-gray-50 p-3">
-                    <p className="text-sm font-semibold text-[#17321f]">{entry.action}</p>
+                  <article key={entry.id} className="rounded-xl border border-white/40 dark:border-white/10 bg-white/30 dark:bg-white/5 backdrop-blur-md p-3 border border-white/40 dark:border-white/10 shadow-[inset_0_2px_4px_rgba(255,255,255,0.4)]">
+                    <p className="text-sm font-semibold text-gray-900 dark:text-white drop-shadow-sm">{entry.action}</p>
                     <p className="text-xs text-gray-700">{entry.detail}</p>
-                    <p className="mt-1 text-[11px] text-gray-500">{new Date(entry.createdAt).toLocaleString()}</p>
+                    <p className="mt-1 text-[11px] text-gray-600 dark:text-gray-400">{new Date(entry.createdAt).toLocaleString()}</p>
                   </article>
                 ))
               ) : (
-                <p className="rounded-xl bg-gray-50 p-3 text-sm text-gray-500">No audit records yet.</p>
+                <p className="rounded-xl bg-white/30 dark:bg-white/5 backdrop-blur-md p-3 border border-white/40 dark:border-white/10 shadow-[inset_0_2px_4px_rgba(255,255,255,0.4)] text-sm text-gray-600 dark:text-gray-400">No audit records yet.</p>
               )}
             </div>
           </div>
 
-          <div className="rounded-2xl border bg-white p-5 shadow-sm">
-            <h2 className="text-2xl font-black text-[#17321f]">Email activity</h2>
+          <div className="rounded-2xl border bg-white/20 dark:bg-black/20 backdrop-blur-2xl p-6 shadow-[0_8px_32px_rgba(0,0,0,0.1)] border border-white/40 dark:border-white/10">
+            <h2 className="text-2xl font-black text-gray-900 dark:text-white drop-shadow-sm">Email activity</h2>
             <div className="mt-3 max-h-[360px] space-y-2 overflow-auto">
               {consoleData.emailLog.length ? (
                 consoleData.emailLog.map((entry) => (
-                  <article key={entry.id} className="rounded-xl border border-gray-100 bg-gray-50 p-3">
+                  <article key={entry.id} className="rounded-xl border border-white/40 dark:border-white/10 bg-white/30 dark:bg-white/5 backdrop-blur-md p-3 border border-white/40 dark:border-white/10 shadow-[inset_0_2px_4px_rgba(255,255,255,0.4)]">
                     <div className="flex items-center justify-between gap-3">
-                      <p className="text-sm font-semibold text-[#17321f]">{entry.subject}</p>
+                      <p className="text-sm font-semibold text-gray-900 dark:text-white drop-shadow-sm">{entry.subject}</p>
                       <span
                         className={`rounded-full px-2 py-1 text-[11px] font-bold uppercase ${
-                          entry.delivered ? 'bg-[#eef6e8] text-[#2f6b32]' : 'bg-[#fff2ef] text-[#9f3e2c]'
+                          entry.delivered ? 'bg-[#eef6e8] text-[#2f6b32]' : 'bg-red-500/20 backdrop-blur-md border border-red-500/50 text-red-900 dark:text-red-400 text-[#9f3e2c]'
                         }`}
                       >
                         {entry.delivered ? 'Delivered' : 'Failed'}
@@ -477,19 +477,19 @@ export function AdminPanel() {
                     </p>
                     <p className="mt-2 text-xs text-gray-600">{entry.payloadPreview || 'No preview available.'}</p>
                     {entry.errorMessage ? <p className="mt-2 text-xs font-medium text-[#9f3e2c]">{entry.errorMessage}</p> : null}
-                    <p className="mt-2 text-[11px] text-gray-500">{new Date(entry.createdAt).toLocaleString()}</p>
+                    <p className="mt-2 text-[11px] text-gray-600 dark:text-gray-400">{new Date(entry.createdAt).toLocaleString()}</p>
                   </article>
                 ))
               ) : (
-                <p className="rounded-xl bg-gray-50 p-3 text-sm text-gray-500">No email activity yet.</p>
+                <p className="rounded-xl bg-white/30 dark:bg-white/5 backdrop-blur-md p-3 border border-white/40 dark:border-white/10 shadow-[inset_0_2px_4px_rgba(255,255,255,0.4)] text-sm text-gray-600 dark:text-gray-400">No email activity yet.</p>
               )}
             </div>
           </div>
         </section>
 
         <section className="space-y-6">
-          <div className="rounded-2xl border bg-white p-5 shadow-sm">
-            <div className="flex items-center gap-2 text-[#17321f]">
+          <div className="rounded-2xl border bg-white/20 dark:bg-black/20 backdrop-blur-2xl p-6 shadow-[0_8px_32px_rgba(0,0,0,0.1)] border border-white/40 dark:border-white/10">
+            <div className="flex items-center gap-2 text-gray-900 dark:text-white drop-shadow-sm">
               <KeyRound size={20} />
               <h2 className="text-2xl font-black">Admin action verification</h2>
             </div>
@@ -498,7 +498,7 @@ export function AdminPanel() {
             </p>
 
             {actionOtpProofToken ? (
-              <div className="mt-4 rounded-xl border border-[#cfe3c8] bg-[#f2f9ef] px-4 py-3 text-sm font-semibold text-[#35513a]">
+              <div className="mt-4 rounded-xl border border-[#cfe3c8] bg-[#4eb69c]/20 backdrop-blur-md border border-[#4eb69c]/50 text-[#111] dark:text-[#4eb69c] px-4 py-3 text-sm font-semibold text-gray-800 dark:text-gray-200">
                 Admin action token is active for this session.
               </div>
             ) : null}
@@ -508,20 +508,20 @@ export function AdminPanel() {
                 type="button"
                 onClick={() => void requestActionOtp()}
                 disabled={saving}
-                className="mt-4 inline-flex items-center gap-2 rounded-2xl bg-[#2f6b32] px-5 py-3 text-sm font-bold text-white transition hover:bg-[#255428] disabled:cursor-not-allowed disabled:opacity-60"
+                className="mt-4 inline-flex items-center gap-2 rounded-2xl bg-gradient-to-br from-[#4eb69c]/90 to-[#235e4f]/90 shadow-[inset_0_2px_4px_rgba(255,255,255,0.6),0_4px_12px_rgba(35,94,79,0.4)] backdrop-blur-md border border-white/30 text-white px-5 py-3 text-sm font-bold text-white transition hover:bg-[#255428] disabled:cursor-not-allowed disabled:opacity-60"
               >
                 <KeyRound size={16} />
                 Request action OTP
               </button>
             ) : (
-              <div className="mt-4 rounded-2xl border border-[#d7e2c8] bg-[#f8fbf3] p-4">
+              <div className="mt-4 rounded-2xl border border-white/50 dark:border-white/20 bg-white/30 dark:bg-white/5 backdrop-blur-md p-4">
                 <label className="block space-y-2">
                   <span className="text-sm font-semibold text-[#314a30]">Enter OTP</span>
                   <input
                     value={actionOtp}
                     onChange={(event) => setActionOtp(event.target.value)}
                     maxLength={6}
-                    className="w-full rounded-2xl border border-[#d2ddc5] bg-white px-4 py-3 tracking-[0.25em] outline-none"
+                    className="w-full rounded-2xl border border-[#d2ddc5] bg-white/40 dark:bg-black/40 px-4 py-3 backdrop-blur-md shadow-[inset_0_2px_4px_rgba(0,0,0,0.05)] text-gray-900 dark:text-white tracking-[0.25em] outline-none"
                     placeholder="123456"
                   />
                 </label>
@@ -530,7 +530,7 @@ export function AdminPanel() {
                     type="button"
                     disabled={saving || actionOtp.length < 6}
                     onClick={() => void verifyActionOtp()}
-                    className="inline-flex items-center gap-2 rounded-2xl bg-[#ff7a1a] px-5 py-3 text-sm font-bold text-white transition hover:bg-[#ef6c0d] disabled:cursor-not-allowed disabled:opacity-70"
+                    className="inline-flex items-center gap-2 rounded-2xl bg-gradient-to-br from-orange-400/90 to-orange-600/90 shadow-[inset_0_2px_4px_rgba(255,255,255,0.6),0_4px_12px_rgba(234,88,12,0.4)] backdrop-blur-md border border-white/30 text-white px-5 py-3 text-sm font-bold text-white transition hover:bg-[#ef6c0d] disabled:cursor-not-allowed disabled:opacity-70"
                   >
                     <ShieldCheck size={16} />
                     Verify action OTP
@@ -550,8 +550,8 @@ export function AdminPanel() {
             )}
           </div>
 
-          <div className="rounded-2xl border bg-white p-5 shadow-sm">
-            <div className="flex items-center gap-2 text-[#17321f]">
+          <div className="rounded-2xl border bg-white/20 dark:bg-black/20 backdrop-blur-2xl p-6 shadow-[0_8px_32px_rgba(0,0,0,0.1)] border border-white/40 dark:border-white/10">
+            <div className="flex items-center gap-2 text-gray-900 dark:text-white drop-shadow-sm">
               <ToggleLeft size={20} />
               <h2 className="text-2xl font-black">Feature switches</h2>
             </div>
@@ -561,9 +561,9 @@ export function AdminPanel() {
 
             <div className="mt-4 space-y-3">
               {featureDraft.map((feature) => (
-                <label key={feature.key} className="flex items-start justify-between gap-4 rounded-2xl border border-gray-100 bg-gray-50 p-4">
+                <label key={feature.key} className="flex items-start justify-between gap-4 rounded-2xl border border-white/40 dark:border-white/10 bg-white/30 dark:bg-white/5 backdrop-blur-md p-4 border border-white/40 dark:border-white/10 shadow-[inset_0_2px_4px_rgba(255,255,255,0.4)]">
                   <div>
-                    <p className="font-semibold text-[#17321f]">{feature.title}</p>
+                    <p className="font-semibold text-gray-900 dark:text-white drop-shadow-sm">{feature.title}</p>
                     <p className="mt-1 text-sm text-gray-600">{feature.description}</p>
                   </div>
                   <input
@@ -580,28 +580,28 @@ export function AdminPanel() {
               ))}
             </div>
 
-            {error && <div className="mt-4 rounded-2xl border border-[#f0c5ba] bg-[#fff2ef] px-4 py-3 text-sm font-medium text-[#9f3e2c]">{error}</div>}
-            {message && <div className="mt-4 rounded-2xl border border-[#cfe3c8] bg-[#f2f9ef] px-4 py-3 text-sm font-medium text-[#35513a]">{message}</div>}
+            {error && <div className="mt-4 rounded-2xl border border-[#f0c5ba] bg-red-500/20 backdrop-blur-md border border-red-500/50 text-red-900 dark:text-red-400 px-4 py-3 text-sm font-medium text-[#9f3e2c]">{error}</div>}
+            {message && <div className="mt-4 rounded-2xl border border-[#cfe3c8] bg-[#4eb69c]/20 backdrop-blur-md border border-[#4eb69c]/50 text-[#111] dark:text-[#4eb69c] px-4 py-3 text-sm font-medium text-gray-800 dark:text-gray-200">{message}</div>}
 
             {!otpSessionToken ? (
               <button
                 type="button"
                 disabled={!hasFeatureChanges || saving}
                 onClick={() => void requestOtp()}
-                className="mt-5 inline-flex items-center gap-2 rounded-2xl bg-[#2f6b32] px-5 py-3 text-sm font-bold text-white transition hover:bg-[#255428] disabled:cursor-not-allowed disabled:opacity-60"
+                className="mt-5 inline-flex items-center gap-2 rounded-2xl bg-gradient-to-br from-[#4eb69c]/90 to-[#235e4f]/90 shadow-[inset_0_2px_4px_rgba(255,255,255,0.6),0_4px_12px_rgba(35,94,79,0.4)] backdrop-blur-md border border-white/30 text-white px-5 py-3 text-sm font-bold text-white transition hover:bg-[#255428] disabled:cursor-not-allowed disabled:opacity-60"
               >
                 <KeyRound size={16} />
                 {hasFeatureChanges ? 'Request OTP to apply changes' : 'No pending feature changes'}
               </button>
             ) : (
-              <div className="mt-5 rounded-2xl border border-[#d7e2c8] bg-[#f8fbf3] p-4">
+              <div className="mt-5 rounded-2xl border border-white/50 dark:border-white/20 bg-white/30 dark:bg-white/5 backdrop-blur-md p-4">
                 <label className="block space-y-2">
                   <span className="text-sm font-semibold text-[#314a30]">Enter OTP</span>
                   <input
                     value={otp}
                     onChange={(event) => setOtp(event.target.value)}
                     maxLength={6}
-                    className="w-full rounded-2xl border border-[#d2ddc5] bg-white px-4 py-3 tracking-[0.25em] outline-none"
+                    className="w-full rounded-2xl border border-[#d2ddc5] bg-white/40 dark:bg-black/40 px-4 py-3 backdrop-blur-md shadow-[inset_0_2px_4px_rgba(0,0,0,0.05)] text-gray-900 dark:text-white tracking-[0.25em] outline-none"
                     placeholder="123456"
                   />
                 </label>
@@ -610,7 +610,7 @@ export function AdminPanel() {
                     type="button"
                     disabled={saving}
                     onClick={() => void handleSaveFeatures()}
-                    className="inline-flex items-center gap-2 rounded-2xl bg-[#ff7a1a] px-5 py-3 text-sm font-bold text-white transition hover:bg-[#ef6c0d] disabled:cursor-not-allowed disabled:opacity-70"
+                    className="inline-flex items-center gap-2 rounded-2xl bg-gradient-to-br from-orange-400/90 to-orange-600/90 shadow-[inset_0_2px_4px_rgba(255,255,255,0.6),0_4px_12px_rgba(234,88,12,0.4)] backdrop-blur-md border border-white/30 text-white px-5 py-3 text-sm font-bold text-white transition hover:bg-[#ef6c0d] disabled:cursor-not-allowed disabled:opacity-70"
                   >
                     <ShieldCheck size={16} />
                     Verify OTP and save

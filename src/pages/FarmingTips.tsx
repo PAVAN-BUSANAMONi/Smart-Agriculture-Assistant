@@ -62,7 +62,7 @@ export function FarmingTips() {
   return (
     <div className="mx-auto max-w-5xl animate-fade-in p-4 space-y-6">
       <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
-        <h1 className="flex items-center gap-3 text-3xl font-bold font-display text-gray-900">
+        <h1 className="flex items-center gap-3 text-3xl font-bold font-display text-gray-900 dark:text-white drop-shadow-sm">
           <div className="bg-amber-100 p-2.5 rounded-xl text-amber-500 shadow-sm">
             <Lightbulb size={28} />
           </div>
@@ -106,11 +106,11 @@ export function FarmingTips() {
               </div>
 
               <div className={`overflow-hidden transition-all duration-500 ease-in-out ${expanded === crop.key ? 'max-h-[500px] opacity-100 mt-2' : 'max-h-0 opacity-0'}`}>
-                <div className="space-y-4 animate-fade-in text-gray-700 text-sm font-medium border-t border-amber-100/50 pt-4">
-                  <div className="flex gap-3"><div className="w-1.5 h-1.5 rounded-full bg-emerald-500 mt-1.5 shrink-0"></div><p><strong className="text-gray-900">{labels.sowing}:</strong> {crop.sowing[language]}</p></div>
-                  <div className="flex gap-3"><div className="w-1.5 h-1.5 rounded-full bg-blue-500 mt-1.5 shrink-0"></div><p><strong className="text-gray-900">{labels.irrigation}:</strong> {crop.irrigation[language]}</p></div>
-                  <div className="flex gap-3"><div className="w-1.5 h-1.5 rounded-full bg-amber-500 mt-1.5 shrink-0"></div><p><strong className="text-gray-900">{labels.fertilizer}:</strong> {crop.fertilizer[language]}</p></div>
-                  <div className="flex gap-3"><div className="w-1.5 h-1.5 rounded-full bg-rose-500 mt-1.5 shrink-0"></div><p><strong className="text-gray-900">{labels.protection}:</strong> {crop.protection[language]}</p></div>
+                <div className="space-y-4 animate-fade-in text-gray-800 dark:text-gray-200 text-sm font-medium border-t border-amber-100/50 pt-4">
+                  <div className="flex gap-3"><div className="w-1.5 h-1.5 rounded-full bg-emerald-500 mt-1.5 shrink-0"></div><p><strong className="text-gray-900 dark:text-white drop-shadow-sm">{labels.sowing}:</strong> {crop.sowing[language]}</p></div>
+                  <div className="flex gap-3"><div className="w-1.5 h-1.5 rounded-full bg-blue-500/20 backdrop-blur-md border border-blue-500/30 text-blue-900 dark:text-blue-3000 mt-1.5 shrink-0"></div><p><strong className="text-gray-900 dark:text-white drop-shadow-sm">{labels.irrigation}:</strong> {crop.irrigation[language]}</p></div>
+                  <div className="flex gap-3"><div className="w-1.5 h-1.5 rounded-full bg-amber-500 mt-1.5 shrink-0"></div><p><strong className="text-gray-900 dark:text-white drop-shadow-sm">{labels.fertilizer}:</strong> {crop.fertilizer[language]}</p></div>
+                  <div className="flex gap-3"><div className="w-1.5 h-1.5 rounded-full bg-rose-500 mt-1.5 shrink-0"></div><p><strong className="text-gray-900 dark:text-white drop-shadow-sm">{labels.protection}:</strong> {crop.protection[language]}</p></div>
                 </div>
               </div>
             </div>

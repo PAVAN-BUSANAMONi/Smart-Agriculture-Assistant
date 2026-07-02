@@ -59,7 +59,7 @@ async function fetchCurrentWeatherContext(): Promise<{ temperatureC: number; rai
 function riskStyles(risk: string) {
   if (risk === 'High') return 'bg-red-100 text-red-700 border-red-200';
   if (risk === 'Medium') return 'bg-amber-100 text-amber-700 border-amber-200';
-  return 'bg-green-100 text-green-700 border-green-200';
+  return 'bg-green-100 text-[#2a6d5d] dark:text-[#4eb69c] border-green-200';
 }
 
 function formatCurrency(value: number) {
@@ -177,8 +177,8 @@ export function CropRecommend() {
   return (
     <div className="mx-auto max-w-6xl animate-fade-in p-4 space-y-6">
       <div className="mb-6 flex items-center justify-between gap-3">
-        <h1 className="flex items-center gap-3 text-3xl font-bold font-display text-gray-900">
-          <div className="bg-green-100 p-2.5 rounded-xl text-green-600 shadow-sm">
+        <h1 className="flex items-center gap-3 text-3xl font-bold font-display text-gray-900 dark:text-white drop-shadow-sm">
+          <div className="bg-green-100 p-2.5 rounded-xl text-[#4eb69c] shadow-sm">
             <Sprout size={28} />
           </div>
           {t('crop_recommendation')}
@@ -194,11 +194,11 @@ export function CropRecommend() {
 
       <div className="grid gap-6 lg:grid-cols-3">
         <section className="lg:col-span-1 glass-card p-6">
-          <h2 className="mb-5 text-xl font-bold font-display text-gray-900">Recommendation Inputs</h2>
+          <h2 className="mb-5 text-xl font-bold font-display text-gray-900 dark:text-white drop-shadow-sm">Recommendation Inputs</h2>
 
           <div className="space-y-4">
             <div>
-              <label className="mb-1.5 block text-sm font-semibold text-gray-700">{t('select_soil')}</label>
+              <label className="mb-1.5 block text-sm font-semibold text-gray-800 dark:text-gray-200">{t('select_soil')}</label>
               <select
                 value={form.soilType}
                 onChange={(event) => setForm((prev) => ({ ...prev, soilType: event.target.value as SoilType }))}
@@ -213,7 +213,7 @@ export function CropRecommend() {
             </div>
 
             <div>
-              <label className="mb-1.5 block text-sm font-semibold text-gray-700">{t('select_season')}</label>
+              <label className="mb-1.5 block text-sm font-semibold text-gray-800 dark:text-gray-200">{t('select_season')}</label>
               <select
                 value={form.season}
                 onChange={(event) => setForm((prev) => ({ ...prev, season: event.target.value as SeasonType }))}
@@ -228,7 +228,7 @@ export function CropRecommend() {
             </div>
 
             <div>
-              <label className="mb-1.5 block text-sm font-semibold text-gray-700">Temperature (°C)</label>
+              <label className="mb-1.5 block text-sm font-semibold text-gray-800 dark:text-gray-200">Temperature (°C)</label>
               <input
                 type="number"
                 value={form.temperatureC}
@@ -238,7 +238,7 @@ export function CropRecommend() {
             </div>
 
             <div>
-              <label className="mb-1.5 block text-sm font-semibold text-gray-700">Seasonal Rainfall (mm)</label>
+              <label className="mb-1.5 block text-sm font-semibold text-gray-800 dark:text-gray-200">Seasonal Rainfall (mm)</label>
               <input
                 type="number"
                 value={form.rainfallMm}
@@ -248,7 +248,7 @@ export function CropRecommend() {
             </div>
 
             <div>
-              <label className="mb-1.5 block text-sm font-semibold text-gray-700">Land Size (acres)</label>
+              <label className="mb-1.5 block text-sm font-semibold text-gray-800 dark:text-gray-200">Land Size (acres)</label>
               <input
                 type="number"
                 min={0.25}
@@ -264,7 +264,7 @@ export function CropRecommend() {
             <button
               type="button"
               onClick={handleAutofillWeather}
-              className="inline-flex w-full items-center justify-center gap-2 glass-button-secondary py-3 text-blue-700 border-blue-200/60 bg-blue-50/50 hover:bg-blue-100/50"
+              className="inline-flex w-full items-center justify-center gap-2 glass-button-secondary py-3 text-blue-700 border-blue-200/60 bg-blue-500/20 backdrop-blur-md border border-blue-500/30 text-blue-900 dark:text-blue-300/50 hover:bg-blue-100/50"
             >
               <CloudSun size={18} />
               {fetchingWeather ? 'Fetching weather...' : 'Use current weather'}
@@ -284,21 +284,21 @@ export function CropRecommend() {
               ) : t('get_recommendation')}
             </button>
 
-            {error && <p className="rounded-lg bg-red-50 p-2 text-sm text-red-700">{error}</p>}
+            {error && <p className="rounded-lg bg-red-500/20 backdrop-blur-md border border-red-500/30 text-red-900 dark:text-red-300 p-2 text-sm text-red-700">{error}</p>}
           </div>
         </section>
 
         <section className="lg:col-span-2 space-y-6">
           {topRecommendation && (
-            <article className="glass-panel relative overflow-hidden bg-gradient-to-br from-green-50/80 to-emerald-100/80 p-8 shadow-md border-green-200/50">
+            <article className="glass-panel relative overflow-hidden bg-gradient-to-br from-green-50/80 to-emerald-100/80 dark:from-green-900/40 dark:to-emerald-900/40 p-8 shadow-md border-green-200/50 dark:border-green-800/50">
               <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-green-400 blur-3xl opacity-20"></div>
               
               <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-green-400 blur-3xl opacity-20"></div>
               
               <div className="relative z-10 flex flex-col md:flex-row gap-8 items-center">
                 <div className="flex-1">
-                  <p className="text-sm font-semibold uppercase tracking-wider text-green-800 mb-1">Top Recommendation</p>
-                  <h3 className="text-4xl font-extrabold font-display text-gray-900 mb-4">{t(topRecommendation.cropKey)}</h3>
+                  <p className="text-sm font-semibold uppercase tracking-wider text-[#2a6d5d] dark:text-[#4eb69c] drop-shadow-sm mb-1">Top Recommendation</p>
+                  <h3 className="text-4xl font-extrabold font-display text-gray-900 dark:text-white drop-shadow-sm mb-4">{t(topRecommendation.cropKey)}</h3>
 
                   <div className={`inline-flex items-center rounded-xl border px-4 py-1.5 text-sm font-bold shadow-sm ${riskStyles(topRecommendation.riskLevel)}`}>
                     Suitability {topRecommendation.suitabilityScore}% • Risk {topRecommendation.riskLevel}
@@ -315,14 +315,14 @@ export function CropRecommend() {
               </div>
 
               <div className="relative z-10 mt-6 grid md:grid-cols-2 gap-4">
-                  <div className="bg-white/40 backdrop-blur-sm rounded-xl p-4 border border-white/40">
-                    <p className="text-sm text-gray-600 mb-1 font-semibold">Why Selected</p>
-                    <p className="text-gray-900 font-medium">{topRecommendation.whyRecommended}</p>
+                  <div className="bg-white/40 dark:bg-black/20 backdrop-blur-sm rounded-xl p-4 border border-white/40 dark:border-white/10 shadow-[inset_0_2px_4px_rgba(255,255,255,0.1)]">
+                    <p className="text-sm text-gray-700 dark:text-gray-300 mb-1 font-semibold">Why Selected</p>
+                    <p className="text-gray-900 dark:text-white drop-shadow-sm font-medium">{topRecommendation.whyRecommended}</p>
                   </div>
-                  <div className="bg-white/40 backdrop-blur-sm rounded-xl p-4 border border-white/40">
-                    <p className="text-sm text-gray-600 mb-1 font-semibold">Financial Estimate</p>
-                    <p className="text-gray-900 font-bold text-lg">{formatCurrency(topRecommendation.economics.netProfit)} <span className="text-sm font-normal text-gray-600">net profit</span></p>
-                    <p className="text-xs text-gray-600 mt-1">{topRecommendation.expectedYieldQPerAcre} yield / {formatCurrency(topRecommendation.economics.estimatedCost)} cost</p>
+                  <div className="bg-white/40 dark:bg-black/20 backdrop-blur-sm rounded-xl p-4 border border-white/40 dark:border-white/10 shadow-[inset_0_2px_4px_rgba(255,255,255,0.1)]">
+                    <p className="text-sm text-gray-700 dark:text-gray-300 mb-1 font-semibold">Financial Estimate</p>
+                    <p className="text-gray-900 dark:text-white drop-shadow-sm font-bold text-lg">{formatCurrency(topRecommendation.economics.netProfit)} <span className="text-sm font-normal text-gray-700 dark:text-gray-300">net profit</span></p>
+                    <p className="text-xs text-gray-700 dark:text-gray-300 mt-1">{topRecommendation.expectedYieldQPerAcre} yield / {formatCurrency(topRecommendation.economics.estimatedCost)} cost</p>
                   </div>
                 </div>
             </article>
@@ -371,24 +371,24 @@ export function CropRecommend() {
                     </div>
 
                     <div className="p-6 flex-1 flex flex-col">
-                      <div className="bg-gray-50/50 rounded-xl p-3 border border-gray-100 mb-4">
-                     <p className="text-sm text-gray-700 font-medium flex justify-between">
-                       <span className="text-gray-500">Risk Level</span> 
+                      <div className="bg-white/30 dark:bg-white/5 backdrop-blur-md border border-white/40 dark:border-white/10 shadow-[inset_0_2px_4px_rgba(255,255,255,0.4)]/50 rounded-xl p-3 border border-gray-100 mb-4">
+                     <p className="text-sm text-gray-800 dark:text-gray-200 font-medium flex justify-between">
+                       <span className="text-gray-600 dark:text-gray-400">Risk Level</span> 
                        <span>{crop.riskLevel}</span>
                      </p>
-                     <p className="text-sm text-gray-700 font-medium flex justify-between mt-2">
-                       <span className="text-gray-500">{t('yield')}</span> 
+                     <p className="text-sm text-gray-800 dark:text-gray-200 font-medium flex justify-between mt-2">
+                       <span className="text-gray-600 dark:text-gray-400">{t('yield')}</span> 
                        <span>{crop.expectedYieldQPerAcre}</span>
                      </p>
                   </div>
 
                     <div className={`overflow-hidden transition-all duration-500 ease-in-out ${isExpanded ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'}`}>
-                      <div className="space-y-3 text-sm text-gray-700 font-medium mt-4 border-t border-gray-100 pt-4">
+                      <div className="space-y-3 text-sm text-gray-800 dark:text-gray-200 font-medium mt-4 border-t border-gray-100 pt-4">
                         <p className="flex items-start gap-3"><Droplets size={18} className="mt-0.5 text-blue-500 shrink-0" /> {crop.requiredWater}</p>
-                        <p className="flex items-start gap-3"><Leaf size={18} className="mt-0.5 text-green-600 shrink-0" /> {crop.requiredFertilizer}</p>
-                        <p><strong className="text-gray-900 block mb-1">Why recommended:</strong> {crop.whyRecommended}</p>
+                        <p className="flex items-start gap-3"><Leaf size={18} className="mt-0.5 text-[#4eb69c] shrink-0" /> {crop.requiredFertilizer}</p>
+                        <p><strong className="text-gray-900 dark:text-white drop-shadow-sm block mb-1">Why recommended:</strong> {crop.whyRecommended}</p>
                         {crop.riskNote && <p><strong className="text-amber-800 block mb-1">Risk note:</strong> {crop.riskNote}</p>}
-                        <p className="text-lg font-bold text-gray-900 mt-2">{formatCurrency(crop.economics.netProfit)} <span className="text-xs font-medium text-gray-500">Net Profit</span></p>
+                        <p className="text-lg font-bold text-gray-900 dark:text-white drop-shadow-sm mt-2">{formatCurrency(crop.economics.netProfit)} <span className="text-xs font-medium text-gray-600 dark:text-gray-400">Net Profit</span></p>
                       </div>
                     </div>
 
@@ -406,24 +406,24 @@ export function CropRecommend() {
             })}
             </div>
           ) : (
-            <div className="glass-panel border-dashed border-gray-300 p-12 text-center text-gray-500 bg-gray-50/30">
+            <div className="glass-panel border-dashed border-gray-300 p-12 text-center text-gray-600 dark:text-gray-400 bg-white/30 dark:bg-white/5 backdrop-blur-md border border-white/40 dark:border-white/10 shadow-[inset_0_2px_4px_rgba(255,255,255,0.4)]/30">
               Enter farm inputs to get AI-powered crop recommendations with suitability and profit estimates.
             </div>
           )}
 
           <section className="glass-card p-6">
-            <h3 className="mb-4 text-xl font-bold font-display text-gray-900">Recent Queries</h3>
+            <h3 className="mb-4 text-xl font-bold font-display text-gray-900 dark:text-white drop-shadow-sm">Recent Queries</h3>
             {history.length ? (
-              <div className="space-y-3 text-sm text-gray-700 font-medium">
+              <div className="space-y-3 text-sm text-gray-800 dark:text-gray-200 font-medium">
                 {history.map((item) => (
-                  <div key={item.id} className="flex items-center justify-between rounded-xl bg-gray-50/50 border border-gray-100 px-4 py-3">
-                    <span className="text-gray-900">Top crop: <span className="font-bold">{t(item.topCrop)}</span></span>
-                    <span className="text-gray-500 text-xs">{new Date(item.createdAt).toLocaleString()}</span>
+                  <div key={item.id} className="flex items-center justify-between rounded-xl bg-white/30 dark:bg-white/5 backdrop-blur-md border border-white/40 dark:border-white/10 shadow-[inset_0_2px_4px_rgba(255,255,255,0.4)]/50 border border-gray-100 px-4 py-3">
+                    <span className="text-gray-900 dark:text-white drop-shadow-sm">Top crop: <span className="font-bold">{t(item.topCrop)}</span></span>
+                    <span className="text-gray-600 dark:text-gray-400 text-xs">{new Date(item.createdAt).toLocaleString()}</span>
                   </div>
                 ))}
               </div>
             ) : (
-              <p className="text-sm text-gray-500 text-center py-4">No recommendation history found yet.</p>
+              <p className="text-sm text-gray-600 dark:text-gray-400 text-center py-4">No recommendation history found yet.</p>
             )}
           </section>
         </section>

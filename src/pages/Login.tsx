@@ -1,8 +1,9 @@
 import { FormEvent, ReactNode, useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { ArrowRight, KeyRound, Lock, Mail, Phone, ShieldCheck, Tractor, UserRound } from 'lucide-react';
+import { ArrowRight, KeyRound, Lock, Mail, Moon, Phone, ShieldCheck, Sun, Tractor, UserRound } from 'lucide-react';
 import { api } from '../services/api';
 import { useAuth } from '../contexts/AuthContext';
+import { useTheme } from '../contexts/ThemeContext';
 
 type AuthMode = 'login' | 'register';
 type AuthRole = 'farmer' | 'admin';
@@ -31,7 +32,7 @@ const INITIAL_ADMIN_FORM: AdminForm = {
   password: '',
 };
 
-function UnderlineField({
+function PillField({
   label,
   icon,
   children,
@@ -41,11 +42,20 @@ function UnderlineField({
   children: ReactNode;
 }) {
   return (
-    <label className="block">
-      <span className="mb-2 block text-[0.84rem] font-semibold uppercase tracking-[0.08em] text-white/84">{label}</span>
-      <div className="flex items-center gap-3 border-b border-white/60 pb-2.5">
-        <span className="text-white/78">{icon}</span>
-        {children}
+    <label className="block relative">
+      <span className="mb-[6px] block text-[0.8rem] font-bold uppercase tracking-wider text-gray-900 dark:text-white drop-shadow-sm">{label}</span>
+      <div className="relative flex items-center gap-3 rounded-full bg-white/10 dark:bg-black/40 px-4 py-3 shadow-[inset_0_4px_8px_rgba(255,255,255,0.9),inset_0_-2px_5px_rgba(255,255,255,0.4),0_6px_15px_rgba(0,0,0,0.1)] border border-white/60 backdrop-blur-xl transition-all focus-within:ring-2 focus-within:ring-[#2a6d5d]/60 focus-within:bg-white/20 dark:bg-black/30 group">
+        
+        {/* Extreme Glossy Top Highlight for Input */}
+        <div className="pointer-events-none absolute inset-x-2 top-[2px] h-[45%] rounded-t-full bg-gradient-to-b from-white/70 to-transparent opacity-80" />
+        
+        {/* Inner glow on focus */}
+        <div className="pointer-events-none absolute inset-0 rounded-full bg-gradient-to-br from-white/20 to-transparent opacity-0 transition-opacity group-focus-within:opacity-100" />
+
+        <span className="relative z-10 text-gray-900 dark:text-gray-200 drop-shadow-sm">{icon}</span>
+        <div className="relative z-10 flex-1">
+          {children}
+        </div>
       </div>
     </label>
   );
@@ -55,6 +65,7 @@ export function Login() {
   const navigate = useNavigate();
   const location = useLocation();
   const { acceptSession, canAccessAdmin, isAuthenticated } = useAuth();
+  const { theme, toggleTheme } = useTheme();
   const [role, setRole] = useState<AuthRole>('farmer');
   const [farmerForm, setFarmerForm] = useState<FarmerForm>(INITIAL_FARMER_FORM);
   const [adminForm, setAdminForm] = useState<AdminForm>(INITIAL_ADMIN_FORM);
@@ -238,188 +249,213 @@ export function Login() {
   const switchAction = inOtpStep ? null : mode === 'register' ? 'Login' : 'Register';
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-[radial-gradient(circle_at_top,#7c58a8_0%,#56397d_40%,#2c265f_100%)]">
-      <div className="pointer-events-none absolute inset-0">
-        <div className="absolute inset-x-0 bottom-0 h-[42%] bg-[linear-gradient(180deg,transparent_0%,rgba(20,15,54,0.2)_20%,rgba(18,12,44,0.62)_100%)]" />
-        <div className="absolute left-[-10%] bottom-0 h-[34%] w-[42%] bg-[#2b2357]/85 [clip-path:polygon(0_100%,18%_58%,36%_74%,54%_42%,72%_65%,100%_100%)]" />
-        <div className="absolute left-[18%] bottom-0 h-[28%] w-[34%] bg-[#3c2d6b]/88 [clip-path:polygon(0_100%,22%_56%,44%_68%,64%_30%,82%_58%,100%_100%)]" />
-        <div className="absolute right-[-6%] bottom-0 h-[38%] w-[44%] bg-[#241b4d]/88 [clip-path:polygon(0_100%,20%_66%,38%_80%,55%_46%,74%_62%,100%_100%)]" />
-        <div className="absolute left-[6%] top-[14%] h-10 w-24 rounded-full bg-white/10 blur-sm" />
-        <div className="absolute left-[18%] top-[17%] h-7 w-16 rounded-full bg-[#ffc3ea26] blur-sm" />
-        <div className="absolute right-[16%] top-[15%] h-10 w-24 rounded-full bg-white/12 blur-sm" />
-        <div className="absolute right-[10%] top-[18%] h-8 w-20 rounded-full bg-[#ffd2a626] blur-sm" />
-        <div className="absolute bottom-[18%] right-[10%] h-24 w-36 rounded-[44%_44%_14%_14%] bg-[#2e214f]/88" />
-        <div className="absolute bottom-[24%] right-[11.5%] h-10 w-20 rounded-[50%_50%_0_0] bg-[#3d2c67]/85 [clip-path:polygon(0_100%,14%_42%,50%_0,86%_42%,100%_100%)]" />
-        <div className="absolute bottom-[18.8%] right-[13.8%] h-3 w-4 rounded-sm bg-[#ffcb74] shadow-[0_0_20px_rgba(255,203,116,0.8)]" />
-        <div className="absolute bottom-[18.8%] right-[11.6%] h-3 w-4 rounded-sm bg-[#ffcb74] shadow-[0_0_20px_rgba(255,203,116,0.8)]" />
-        <div className="absolute bottom-[28%] right-[8.6%] h-12 w-10 rounded-full bg-[#ffffff16] blur-md" />
-        <div className="absolute bottom-[30%] right-[8.8%] h-4 w-6 rounded-full bg-[#ffffff18] blur-sm" />
-        <div className="absolute bottom-[10%] left-[4%] h-44 w-44 rounded-full bg-[#ffb8d61a] blur-3xl" />
-        <div className="absolute bottom-[10%] right-[2%] h-44 w-44 rounded-full bg-[#f0d29f1f] blur-3xl" />
+    <div className="relative min-h-screen overflow-hidden bg-slate-900">
+      {/* Background Images with Crossfade */}
+      <div className="pointer-events-none absolute inset-0 z-0">
+        <div 
+          className={`absolute inset-0 bg-cover bg-center bg-no-repeat transition-opacity duration-1000 ${isFarmer ? 'opacity-100' : 'opacity-0'}`}
+          style={{ backgroundImage: "url('/farmer-bg.jpg.png')" }}
+        />
+        <div 
+          className={`absolute inset-0 bg-cover bg-center bg-no-repeat transition-opacity duration-1000 ${!isFarmer ? 'opacity-100' : 'opacity-0'}`}
+          style={{ backgroundImage: "url('/admin-bg.jpg.png')" }}
+        />
+        <div className="absolute inset-0 bg-white/10 dark:bg-black/40 dark:bg-black/60 transition-colors duration-500" />
+      </div>
+
+      <div className="absolute top-4 right-4 z-50">
+        <button
+          onClick={toggleTheme}
+          className="rounded-full bg-white/40 dark:bg-black/50 dark:bg-black/40 p-2 text-gray-900 dark:text-white dark:text-white/90 shadow-lg backdrop-blur-md transition hover:scale-105 hover:bg-white/60 dark:hover:bg-black/60 border border-white/20"
+        >
+          {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
+        </button>
       </div>
 
       <div className="relative z-10 flex min-h-screen items-center justify-center px-4 py-8">
-        <div className="w-full max-w-[430px] rounded-[26px] border border-white/35 bg-[linear-gradient(180deg,rgba(255,255,255,0.16),rgba(255,255,255,0.06))] px-6 py-6 shadow-[0_28px_80px_rgba(15,10,45,0.34)] backdrop-blur-xl sm:px-8 sm:py-7">
-          <div className="flex flex-wrap justify-center gap-2">
-            <button
-              type="button"
-              onClick={() => handleModeSwitch('login')}
-              className={`rounded-full px-4 py-2 text-sm font-semibold transition ${
-                mode === 'login' ? 'bg-white text-[#4b3f84] shadow-md' : 'bg-white/10 text-white/88 hover:bg-white/16'
-              }`}
-            >
-              Login
-            </button>
-            <button
-              type="button"
-              onClick={() => handleModeSwitch('register')}
-              className={`rounded-full px-4 py-2 text-sm font-semibold transition ${
-                mode === 'register' ? 'bg-white text-[#4b3f84] shadow-md' : 'bg-white/10 text-white/88 hover:bg-white/16'
-              }`}
-            >
-              Sign Up
-            </button>
-          </div>
+        
+        {/* ADVANCED GLOSSY GLASSMORPHISM CARD */}
+        <div className="relative w-full min-w-[340px] max-w-[420px] rounded-[42px] bg-white/20 dark:bg-black/30 bg-gradient-to-br from-white/40 via-white/5 to-transparent px-6 py-8 shadow-[0_20px_60px_rgba(0,0,0,0.5),inset_0_2px_4px_rgba(255,255,255,0.8),inset_0_-1px_3px_rgba(255,255,255,0.4),0_0_0_1px_rgba(255,255,255,0.4)] backdrop-blur-2xl sm:px-8 sm:py-10">
+          
+          <div className="relative z-10 flex flex-col items-center gap-5">
+            
+            {/* SWAPPED TO TOP: Role Toggle: Farmer / Admin */}
+            {!inOtpStep && (
+              <div className="flex w-max gap-3 mb-1">
+                <button
+                  type="button"
+                  onClick={() => handleRoleSwitch('farmer')}
+                  className={`relative inline-flex items-center gap-2 rounded-full px-6 py-2 text-[0.95rem] font-bold transition overflow-hidden border ${
+                    isFarmer ? 'border-[#3c8e7a]/80 bg-gradient-to-b from-[#4eb69c]/30 to-[#2a6d5d]/20 text-[#1b5042] dark:text-[#a7f3d0] shadow-[inset_0_1px_3px_rgba(255,255,255,0.6)] drop-shadow-md' : 'border-white/30 bg-white/10 dark:bg-black/40 text-gray-900 dark:text-gray-200 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.4)] hover:bg-white/30'
+                  }`}
+                >
+                  {isFarmer && <div className="pointer-events-none absolute inset-x-1 top-[2px] h-[45%] rounded-full bg-gradient-to-b from-white/40 to-transparent" />}
+                  <Tractor size={18} className="relative z-10" />
+                  <span className="relative z-10">Farmer</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleRoleSwitch('admin')}
+                  className={`relative inline-flex items-center gap-2 rounded-full px-6 py-2 text-[0.95rem] font-bold transition overflow-hidden border ${
+                    !isFarmer ? 'border-[#3c8e7a]/80 bg-gradient-to-b from-[#4eb69c]/30 to-[#2a6d5d]/20 text-[#1b5042] dark:text-[#a7f3d0] shadow-[inset_0_1px_3px_rgba(255,255,255,0.6)] drop-shadow-md' : 'border-white/30 bg-white/10 dark:bg-black/40 text-gray-900 dark:text-gray-200 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.4)] hover:bg-white/30'
+                  }`}
+                >
+                  {!isFarmer && <div className="pointer-events-none absolute inset-x-1 top-[2px] h-[45%] rounded-full bg-gradient-to-b from-white/40 to-transparent" />}
+                  <ShieldCheck size={18} className="relative z-10" />
+                  <span className="relative z-10">Admin</span>
+                </button>
+              </div>
+            )}
 
-          {!inOtpStep && (
-            <div className="mt-4 flex flex-wrap justify-center gap-2">
+            {/* SWAPPED TO BOTTOM: Mode Toggle: Login / Sign Up */}
+            <div className="flex w-max gap-3">
               <button
                 type="button"
-                onClick={() => handleRoleSwitch('farmer')}
-                className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition ${
-                  isFarmer ? 'bg-[#ffffff1f] text-white ring-1 ring-white/40' : 'bg-transparent text-white/74 hover:bg-white/10'
+                onClick={() => handleModeSwitch('login')}
+                className={`relative overflow-hidden rounded-full px-8 py-2.5 text-[0.95rem] font-black transition ${
+                  mode === 'login' ? 'bg-gradient-to-b from-white to-gray-200 text-[#1b5042] dark:text-[#a7f3d0] shadow-[0_8px_20px_rgba(0,0,0,0.25),inset_0_2px_4px_rgba(255,255,255,1),inset_0_-2px_4px_rgba(0,0,0,0.1)]' : 'bg-black/10 border border-white/40 text-gray-900 dark:text-gray-200 shadow-[inset_0_2px_4px_rgba(255,255,255,0.5)] hover:bg-white/30'
                 }`}
               >
-                <Tractor size={15} />
-                Farmer
+                {mode === 'login' && <div className="pointer-events-none absolute inset-x-2 top-1 h-[40%] rounded-full bg-gradient-to-b from-white/80 to-transparent" />}
+                <span className="relative z-10">Login</span>
               </button>
               <button
                 type="button"
-                onClick={() => handleRoleSwitch('admin')}
-                className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition ${
-                  !isFarmer ? 'bg-[#ffffff1f] text-white ring-1 ring-white/40' : 'bg-transparent text-white/74 hover:bg-white/10'
+                onClick={() => handleModeSwitch('register')}
+                className={`relative overflow-hidden rounded-full px-8 py-2.5 text-[0.95rem] font-black transition ${
+                  mode === 'register' ? 'bg-gradient-to-b from-white to-gray-200 text-[#1b5042] dark:text-[#a7f3d0] shadow-[0_8px_20px_rgba(0,0,0,0.25),inset_0_2px_4px_rgba(255,255,255,1),inset_0_-2px_4px_rgba(0,0,0,0.1)]' : 'bg-black/10 border border-white/40 text-gray-900 dark:text-gray-200 shadow-[inset_0_2px_4px_rgba(255,255,255,0.5)] hover:bg-white/30'
                 }`}
               >
-                <ShieldCheck size={15} />
-                Admin
+                {mode === 'register' && <div className="pointer-events-none absolute inset-x-2 top-1 h-[40%] rounded-full bg-gradient-to-b from-white/80 to-transparent" />}
+                <span className="relative z-10">Sign Up</span>
               </button>
             </div>
-          )}
+          </div>
 
-          <div className="mt-6 text-center">
-            <h1 className="font-[var(--font-sans-app)] text-[1.85rem] font-extrabold tracking-[-0.04em] text-white sm:text-[2.05rem]">
+          <div className="relative z-10 mt-10 text-center">
+            <h1 className="font-[var(--font-sans-app)] text-[2.8rem] font-black tracking-tight text-[#111] dark:text-white sm:text-[3rem] drop-shadow-lg">
               {heading}
             </h1>
-            <p className="mx-auto mt-3 max-w-[290px] text-[0.92rem] leading-6 text-white/76">{subtitle}</p>
+            <p className="mx-auto mt-2 max-w-[290px] text-[1rem] font-bold leading-6 text-gray-900 dark:text-gray-200 drop-shadow-md">{subtitle}</p>
           </div>
 
           {notice && (
-            <div className="mt-5 rounded-2xl border border-white/18 bg-white/10 px-4 py-3 text-center text-sm font-semibold text-white/92">
+            <div className="relative z-10 mt-6 rounded-2xl border border-[#3c8e7a]/60 bg-[#3c8e7a]/30 px-4 py-3 text-center text-sm font-bold text-[#113a30] backdrop-blur-md shadow-[inset_0_2px_4px_rgba(255,255,255,0.6)]">
               {notice}
             </div>
           )}
 
           {!inOtpStep && isFarmer && (
-            <form onSubmit={handleFarmerSubmit} className="mt-7 space-y-5">
+            <form onSubmit={handleFarmerSubmit} className="relative z-10 mt-8 space-y-6">
               {mode === 'register' && (
-                <UnderlineField label="Name" icon={<UserRound size={17} />}>
+                <PillField label="Name" icon={<UserRound size={20} />}>
                   <input
                     value={farmerForm.name}
                     onChange={(event) => setFarmerForm((prev) => ({ ...prev, name: event.target.value }))}
                     required
                     placeholder="Enter name"
-                    className="w-full bg-transparent text-[0.98rem] text-white outline-none placeholder:text-white/48"
+                    className="w-full bg-transparent text-[1.05rem] font-bold text-gray-900 dark:text-white outline-none placeholder:text-gray-700/80 dark:text-gray-300/80 placeholder:font-bold drop-shadow-sm"
                   />
-                </UnderlineField>
+                </PillField>
               )}
 
               {mode === 'register' && (
-                <UnderlineField label="Email (Optional)" icon={<Mail size={17} />}>
+                <PillField label="Email (Optional)" icon={<Mail size={20} />}>
                   <input
                     type="email"
                     value={farmerForm.email}
                     onChange={(event) => setFarmerForm((prev) => ({ ...prev, email: event.target.value }))}
                     placeholder="Enter email for alerts"
-                    className="w-full bg-transparent text-[0.98rem] text-white outline-none placeholder:text-white/48"
+                    className="w-full bg-transparent text-[1.05rem] font-bold text-gray-900 dark:text-white outline-none placeholder:text-gray-700/80 dark:text-gray-300/80 placeholder:font-bold drop-shadow-sm"
                   />
-                </UnderlineField>
+                </PillField>
               )}
 
-              <UnderlineField label="Phone Number" icon={<Phone size={17} />}>
+              <PillField label="Phone Number" icon={<Phone size={20} />}>
                 <input
                   value={farmerForm.phone}
                   onChange={(event) => setFarmerForm((prev) => ({ ...prev, phone: event.target.value }))}
                   required
                   placeholder="Enter phone number"
-                  className="w-full bg-transparent text-[0.98rem] text-white outline-none placeholder:text-white/48"
+                  className="w-full bg-transparent text-[1.05rem] font-bold text-gray-900 dark:text-white outline-none placeholder:text-gray-700/80 dark:text-gray-300/80 placeholder:font-bold drop-shadow-sm"
                 />
-              </UnderlineField>
+              </PillField>
 
-              {error && <div className="rounded-2xl border border-[#ffc7ca66] bg-[#7f243320] px-4 py-3 text-sm font-medium text-[#ffe8e9]">{error}</div>}
+              {error && <div className="rounded-2xl border border-red-400/60 bg-red-400/40 px-4 py-3 text-sm font-bold text-red-900 backdrop-blur-md shadow-[inset_0_2px_4px_rgba(255,255,255,0.5)]">{error}</div>}
 
+              {/* ADVANCED GLOSSY EMERALD BUTTON */}
               <button
                 type="submit"
                 disabled={submitting}
-                className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-full bg-white text-[0.97rem] font-bold text-[#473f83] shadow-[0_18px_34px_rgba(255,255,255,0.16)] transition hover:bg-[#f6f2ff] disabled:cursor-not-allowed disabled:opacity-70"
+                className="relative mt-8 inline-flex h-[60px] w-full items-center justify-center gap-2 rounded-full bg-gradient-to-b from-[#4eb69c]/90 to-[#235e4f]/90 text-[1.15rem] font-black text-white shadow-[inset_0_3px_6px_rgba(255,255,255,0.9),inset_0_-3px_8px_rgba(0,0,0,0.6),0_10px_25px_rgba(35,94,79,0.5)] border border-white/40 backdrop-blur-2xl transition hover:brightness-110 active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-70 overflow-hidden"
               >
-                {submitting ? 'verifying...' : primaryButtonLabel}
-                <ArrowRight size={18} />
+                {/* Advanced 3D Gel Highlights */}
+                <div className="pointer-events-none absolute inset-x-2 top-[3px] h-[45%] rounded-full bg-gradient-to-b from-white/70 to-transparent" />
+                <div className="pointer-events-none absolute inset-x-6 bottom-[2px] h-[30%] rounded-full bg-gradient-to-t from-white/30 to-transparent blur-[2px]" />
+                
+                <span className="relative z-10 drop-shadow-md">{submitting ? 'verifying...' : primaryButtonLabel}</span>
+                <ArrowRight size={22} className="relative z-10 ml-2 drop-shadow-md" />
               </button>
             </form>
           )}
 
           {!inOtpStep && !isFarmer && (
-            <form onSubmit={handleAdminChallenge} className="mt-7 space-y-5">
+            <form onSubmit={handleAdminChallenge} className="relative z-10 mt-8 space-y-6">
               {mode === 'register' && (
-                <UnderlineField label="Name" icon={<ShieldCheck size={17} />}>
+                <PillField label="Name" icon={<ShieldCheck size={20} />}>
                   <input
                     value={adminForm.name}
                     onChange={(event) => setAdminForm((prev) => ({ ...prev, name: event.target.value }))}
                     required
                     placeholder="Enter name"
-                    className="w-full bg-transparent text-[0.98rem] text-white outline-none placeholder:text-white/48"
+                    className="w-full bg-transparent text-[1.05rem] font-bold text-gray-900 dark:text-white outline-none placeholder:text-gray-700/80 dark:text-gray-300/80 placeholder:font-bold drop-shadow-sm"
                   />
-                </UnderlineField>
+                </PillField>
               )}
 
-              <UnderlineField label="Email" icon={<Mail size={17} />}>
+              <PillField label="Email" icon={<Mail size={20} />}>
                 <input
                   type="email"
                   value={adminForm.email}
                   onChange={(event) => setAdminForm((prev) => ({ ...prev, email: event.target.value }))}
                   required
                   placeholder="Enter email"
-                  className="w-full bg-transparent text-[0.98rem] text-white outline-none placeholder:text-white/48"
+                  className="w-full bg-transparent text-[1.05rem] font-bold text-gray-900 dark:text-white outline-none placeholder:text-gray-700/80 dark:text-gray-300/80 placeholder:font-bold drop-shadow-sm"
                 />
-              </UnderlineField>
+              </PillField>
 
-              <UnderlineField label="Password" icon={<Lock size={17} />}>
+              <PillField label="Password" icon={<Lock size={20} />}>
                 <input
                   type="password"
                   value={adminForm.password}
                   onChange={(event) => setAdminForm((prev) => ({ ...prev, password: event.target.value }))}
                   required
                   placeholder="Enter password"
-                  className="w-full bg-transparent text-[0.98rem] text-white outline-none placeholder:text-white/48"
+                  className="w-full bg-transparent text-[1.05rem] font-bold text-gray-900 dark:text-white outline-none placeholder:text-gray-700/80 dark:text-gray-300/80 placeholder:font-bold drop-shadow-sm"
                 />
-              </UnderlineField>
+              </PillField>
 
-              {error && <div className="rounded-2xl border border-[#ffc7ca66] bg-[#7f243320] px-4 py-3 text-sm font-medium text-[#ffe8e9]">{error}</div>}
+              {error && <div className="rounded-2xl border border-red-400/60 bg-red-400/40 px-4 py-3 text-sm font-bold text-red-900 backdrop-blur-md shadow-[inset_0_2px_4px_rgba(255,255,255,0.5)]">{error}</div>}
 
+              {/* ADVANCED GLOSSY EMERALD BUTTON */}
               <button
                 type="submit"
                 disabled={submitting}
-                className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-full bg-white text-[0.97rem] font-bold text-[#473f83] shadow-[0_18px_34px_rgba(255,255,255,0.16)] transition hover:bg-[#f6f2ff] disabled:cursor-not-allowed disabled:opacity-70"
+                className="relative mt-8 inline-flex h-[60px] w-full items-center justify-center gap-2 rounded-full bg-gradient-to-b from-[#4eb69c]/90 to-[#235e4f]/90 text-[1.15rem] font-black text-white shadow-[inset_0_3px_6px_rgba(255,255,255,0.9),inset_0_-3px_8px_rgba(0,0,0,0.6),0_10px_25px_rgba(35,94,79,0.5)] border border-white/40 backdrop-blur-2xl transition hover:brightness-110 active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-70 overflow-hidden"
               >
-                {submitting ? 'Sending OTP...' : primaryButtonLabel}
-                <ArrowRight size={18} />
+                {/* Advanced 3D Gel Highlights */}
+                <div className="pointer-events-none absolute inset-x-2 top-[3px] h-[45%] rounded-full bg-gradient-to-b from-white/70 to-transparent" />
+                <div className="pointer-events-none absolute inset-x-6 bottom-[2px] h-[30%] rounded-full bg-gradient-to-t from-white/30 to-transparent blur-[2px]" />
+                
+                <span className="relative z-10 drop-shadow-md">{submitting ? 'Sending OTP...' : primaryButtonLabel}</span>
+                <ArrowRight size={22} className="relative z-10 ml-2 drop-shadow-md" />
               </button>
             </form>
           )}
 
           {inOtpStep && (
-            <form onSubmit={handleVerifyOtp} className="mt-7 space-y-5">
-              <UnderlineField label="OTP Code" icon={<KeyRound size={17} />}>
+            <form onSubmit={handleVerifyOtp} className="relative z-10 mt-8 space-y-6">
+              <PillField label="OTP Code" icon={<KeyRound size={20} />}>
                 <input
                   value={otp}
                   onChange={(event) => setOtp(event.target.value)}
@@ -427,22 +463,27 @@ export function Login() {
                   maxLength={6}
                   required
                   placeholder="Enter 6-digit OTP"
-                  className="w-full bg-transparent text-[0.98rem] text-white outline-none placeholder:text-white/48"
+                  className="w-full bg-transparent text-[1.05rem] font-bold text-gray-900 dark:text-white outline-none placeholder:text-gray-700/80 dark:text-gray-300/80 placeholder:font-bold drop-shadow-sm"
                 />
-              </UnderlineField>
+              </PillField>
 
-              {error && <div className="rounded-2xl border border-[#ffc7ca66] bg-[#7f243320] px-4 py-3 text-sm font-medium text-[#ffe8e9]">{error}</div>}
+              {error && <div className="rounded-2xl border border-red-400/60 bg-red-400/40 px-4 py-3 text-sm font-bold text-red-900 backdrop-blur-md shadow-[inset_0_2px_4px_rgba(255,255,255,0.5)]">{error}</div>}
 
+              {/* ADVANCED GLOSSY EMERALD BUTTON */}
               <button
                 type="submit"
                 disabled={submitting}
-                className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-full bg-white text-[0.97rem] font-bold text-[#473f83] shadow-[0_18px_34px_rgba(255,255,255,0.16)] transition hover:bg-[#f6f2ff] disabled:cursor-not-allowed disabled:opacity-70"
+                className="relative mt-8 inline-flex h-[60px] w-full items-center justify-center gap-2 rounded-full bg-gradient-to-b from-[#4eb69c]/90 to-[#235e4f]/90 text-[1.15rem] font-black text-white shadow-[inset_0_3px_6px_rgba(255,255,255,0.9),inset_0_-3px_8px_rgba(0,0,0,0.6),0_10px_25px_rgba(35,94,79,0.5)] border border-white/40 backdrop-blur-2xl transition hover:brightness-110 active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-70 overflow-hidden"
               >
-                {submitting ? 'Verifying...' : primaryButtonLabel}
-                <ArrowRight size={18} />
+                {/* Advanced 3D Gel Highlights */}
+                <div className="pointer-events-none absolute inset-x-2 top-[3px] h-[45%] rounded-full bg-gradient-to-b from-white/70 to-transparent" />
+                <div className="pointer-events-none absolute inset-x-6 bottom-[2px] h-[30%] rounded-full bg-gradient-to-t from-white/30 to-transparent blur-[2px]" />
+                
+                <span className="relative z-10 drop-shadow-md">{submitting ? 'Verifying...' : primaryButtonLabel}</span>
+                <ArrowRight size={22} className="relative z-10 ml-2 drop-shadow-md" />
               </button>
 
-              <div className="flex items-center justify-center gap-4 text-sm font-semibold text-white/84">
+              <div className="flex items-center justify-center gap-6 pt-3 text-[0.95rem] font-black text-gray-900 dark:text-white drop-shadow-md">
                 <button
                   type="button"
                   onClick={() => {
@@ -461,20 +502,20 @@ export function Login() {
           )}
 
           {!inOtpStep && switchLine && switchAction && (
-            <div className="mt-7 text-center text-sm text-white/82">
+            <div className="relative z-10 mt-10 text-center text-[1rem] font-bold text-gray-900 dark:text-white drop-shadow-md">
               <span>{switchLine} </span>
               <button
                 type="button"
                 onClick={() => handleModeSwitch(mode === 'register' ? 'login' : 'register')}
-                className="font-semibold text-white transition hover:text-white/78"
+                className="text-white drop-shadow-lg transition hover:text-gray-200 ml-1 font-black"
               >
                 {switchAction}
               </button>
-              <div className="mt-3 text-xs text-white/70">
+              <div className="mt-8">
                 <button
                   type="button"
                   onClick={() => navigate('/owner')}
-                  className="font-semibold uppercase tracking-[0.08em] text-white/84 transition hover:text-white"
+                  className="font-black text-[0.8rem] uppercase tracking-[0.2em] text-[#111] dark:text-white transition hover:text-white drop-shadow-md"
                 >
                   Owner Access
                 </button>

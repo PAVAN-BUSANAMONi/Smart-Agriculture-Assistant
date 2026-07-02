@@ -1,15 +1,46 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { CheckCircle2, ShieldAlert, Trash2, UserCheck, UserPlus, Users, UserX } from 'lucide-react';
+import { Moon, Sun, CheckCircle2, ShieldAlert, Trash2, UserCheck, UserPlus, Users, UserX, ArrowRight, UserRound, Lock } from 'lucide-react';
 import { api, type AuthUser, type OwnerStatusResponse } from '../services/api';
 import { useAuth } from '../contexts/AuthContext';
+import { useTheme } from '../contexts/ThemeContext';
+
+function PillField({
+  label,
+  icon,
+  children,
+}: {
+  label: string;
+  icon: ReactNode;
+  children: ReactNode;
+}) {
+  return (
+    <label className="block relative">
+      <span className="mb-[6px] block text-[0.8rem] font-bold uppercase tracking-wider text-gray-900 dark:text-white drop-shadow-sm">{label}</span>
+      <div className="relative flex items-center gap-3 rounded-full bg-white/10 dark:bg-black/40 px-4 py-3 shadow-[inset_0_4px_8px_rgba(255,255,255,0.9),inset_0_-2px_5px_rgba(255,255,255,0.4),0_6px_15px_rgba(0,0,0,0.1)] border border-white/60 backdrop-blur-xl transition-all focus-within:ring-2 focus-within:ring-[#2a6d5d]/60 focus-within:bg-white/20 dark:bg-black/30 group">
+        
+        {/* Extreme Glossy Top Highlight for Input */}
+        <div className="pointer-events-none absolute inset-x-2 top-[2px] h-[45%] rounded-t-full bg-gradient-to-b from-white/70 to-transparent opacity-80" />
+        
+        {/* Inner glow on focus */}
+        <div className="pointer-events-none absolute inset-0 rounded-full bg-gradient-to-br from-white/20 to-transparent opacity-0 transition-opacity group-focus-within:opacity-100" />
+
+        <span className="relative z-10 text-gray-900 dark:text-gray-200 drop-shadow-sm">{icon}</span>
+        <div className="relative z-10 flex-1">
+          {children}
+        </div>
+      </div>
+    </label>
+  );
+}
 
 export function OwnerAccess() {
   const navigate = useNavigate();
+  const { theme, toggleTheme } = useTheme();
   const { acceptSession, isAuthenticated, canAccessAdmin, logout } = useAuth();
   const [credentials, setCredentials] = useState({
-    name: 'peeter',
-    password: 'peeter',
+    name: '',
+    password: '',
   });
   const [ownerStatus, setOwnerStatus] = useState<OwnerStatusResponse | null>(null);
   const [pendingAdmins, setPendingAdmins] = useState<AuthUser[]>([]);
@@ -53,7 +84,8 @@ export function OwnerAccess() {
     void loadOwnerData();
   }, [ownerLoggedIn]);
 
-  const handleOwnerLogin = async () => {
+  const handleOwnerLogin = async (event: React.FormEvent) => {
+    event.preventDefault();
     setLoading(true);
     setError('');
     setMessage('');
@@ -159,285 +191,328 @@ export function OwnerAccess() {
     }
   };
 
+  const glassCardClasses = "relative w-full rounded-[42px] bg-white/20 dark:bg-black/30 bg-gradient-to-br from-white/40 via-white/5 to-transparent p-6 shadow-[0_20px_60px_rgba(0,0,0,0.5),inset_0_2px_4px_rgba(255,255,255,0.8),inset_0_-1px_3px_rgba(255,255,255,0.4),0_0_0_1px_rgba(255,255,255,0.4)] backdrop-blur-2xl sm:p-10 mb-6";
+
   return (
-    <div className="min-h-screen bg-[radial-gradient(circle_at_top,#e9f2ff_0%,#e7efe2_42%,#edf5e8_100%)] px-4 py-8">
-      <div className="mx-auto w-full max-w-6xl space-y-6">
-        <section className="rounded-3xl border border-[#d8e4d0] bg-white/85 p-6 shadow-sm">
-          <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#597055]">Owner Session</p>
-          <h1 className="mt-3 text-3xl font-black text-[#1f3a22]">Separate owner console</h1>
-          <p className="mt-2 text-sm text-[#4f6652]">
-            Full owner controls for pending admin approvals and user management from one private owner session.
-          </p>
-        </section>
+    <div className="relative min-h-screen overflow-hidden bg-slate-900">
+      {/* Background Images */}
+      <div className="pointer-events-none fixed inset-0 z-0">
+        <div 
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          style={{ backgroundImage: "url('/owner-bg.jpg.png')" }}
+        />
+        <div className="absolute inset-0 bg-white/10 dark:bg-black/40 dark:bg-black/60 transition-colors duration-500" />
+      </div>
 
-        {!ownerLoggedIn ? (
-          <section className="rounded-3xl border border-[#d8e4d0] bg-white/90 p-6 shadow-sm">
-            <h2 className="text-xl font-black text-[#1f3a22]">Owner login</h2>
-            <div className="mt-4 grid gap-3 md:grid-cols-2">
-              <label className="space-y-2">
-                <span className="text-sm font-semibold text-[#35513a]">Name</span>
-                <input
-                  value={credentials.name}
-                  onChange={(event) => setCredentials((prev) => ({ ...prev, name: event.target.value }))}
-                  className="w-full rounded-xl border border-[#cfdbc9] bg-white px-4 py-3 text-sm outline-none"
-                />
-              </label>
-              <label className="space-y-2">
-                <span className="text-sm font-semibold text-[#35513a]">Password</span>
-                <input
-                  type="password"
-                  value={credentials.password}
-                  onChange={(event) => setCredentials((prev) => ({ ...prev, password: event.target.value }))}
-                  className="w-full rounded-xl border border-[#cfdbc9] bg-white px-4 py-3 text-sm outline-none"
-                />
-              </label>
-            </div>
-            <div className="mt-4 flex flex-wrap gap-3">
-              <button
-                type="button"
-                onClick={() => void handleOwnerLogin()}
-                disabled={loading || !credentials.name.trim() || !credentials.password}
-                className="rounded-xl bg-[#2f6b32] px-5 py-3 text-sm font-bold text-white transition hover:bg-[#28592b] disabled:cursor-not-allowed disabled:opacity-60"
-              >
-                {loading ? 'Signing in...' : 'Start owner session'}
-              </button>
-              <button
-                type="button"
-                onClick={() => navigate('/login')}
-                className="rounded-xl border border-[#c8d8c1] px-5 py-3 text-sm font-semibold text-[#35513a]"
-              >
-                Back to normal login
-              </button>
-            </div>
-          </section>
-        ) : (
-          <>
-            <section className="rounded-3xl border border-[#d8e4d0] bg-white/90 p-6 shadow-sm">
-              <div className="flex flex-wrap items-center justify-between gap-3">
-                <h2 className="text-xl font-black text-[#1f3a22]">Owner controls</h2>
-                <div className="flex gap-2">
+      <div className="fixed top-4 right-4 z-50">
+        <button
+          onClick={toggleTheme}
+          className="rounded-full bg-white/40 dark:bg-black/50 dark:bg-black/40 p-2 text-gray-900 dark:text-white dark:text-white/90 shadow-lg backdrop-blur-md transition hover:scale-105 hover:bg-white/60 dark:hover:bg-black/60 border border-white/20"
+        >
+          {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
+        </button>
+      </div>
+
+      <div className="relative z-10 flex min-h-screen items-center justify-center px-4 py-12">
+        
+        <div className="mx-auto w-full max-w-5xl">
+          
+          {!ownerLoggedIn ? (
+            <div className="mx-auto max-w-[420px]">
+              <div className={glassCardClasses}>
+                <div className="relative z-10 text-center">
+                  <p className="text-[0.8rem] font-bold uppercase tracking-[0.2em] text-[#1b5042] dark:text-[#a7f3d0] drop-shadow-sm">Owner Session</p>
+                  <h1 className="mt-3 font-[var(--font-sans-app)] text-[2.8rem] font-black tracking-tight text-[#111] dark:text-white drop-shadow-lg leading-none">
+                    Owner<br/>Access
+                  </h1>
+                </div>
+
+                {error && <div className="relative z-10 mt-6 rounded-2xl border border-red-400/60 bg-red-400/40 px-4 py-3 text-sm font-bold text-red-900 backdrop-blur-md shadow-[inset_0_2px_4px_rgba(255,255,255,0.5)]">{error}</div>}
+                
+                <form onSubmit={handleOwnerLogin} className="relative z-10 mt-8 space-y-6">
+                  <PillField label="Name" icon={<UserRound size={20} />}>
+                    <input
+                      value={credentials.name}
+                      onChange={(event) => setCredentials((prev) => ({ ...prev, name: event.target.value }))}
+                      required
+                      placeholder="Owner name"
+                      className="w-full bg-transparent text-[1.05rem] font-bold text-gray-900 dark:text-white outline-none placeholder:text-gray-700/80 dark:text-gray-300/80 drop-shadow-sm"
+                    />
+                  </PillField>
+
+                  <PillField label="Password" icon={<Lock size={20} />}>
+                    <input
+                      type="password"
+                      value={credentials.password}
+                      onChange={(event) => setCredentials((prev) => ({ ...prev, password: event.target.value }))}
+                      required
+                      placeholder="Owner password"
+                      className="w-full bg-transparent text-[1.05rem] font-bold text-gray-900 dark:text-white outline-none placeholder:text-gray-700/80 dark:text-gray-300/80 drop-shadow-sm"
+                    />
+                  </PillField>
+
+                  <button
+                    type="submit"
+                    disabled={loading || !credentials.name.trim() || !credentials.password}
+                    className="relative mt-8 inline-flex h-[60px] w-full items-center justify-center gap-2 rounded-full bg-gradient-to-b from-[#4eb69c]/90 to-[#235e4f]/90 text-[1.15rem] font-black text-white shadow-[inset_0_3px_6px_rgba(255,255,255,0.9),inset_0_-3px_8px_rgba(0,0,0,0.6),0_10px_25px_rgba(35,94,79,0.5)] border border-white/40 backdrop-blur-2xl transition hover:brightness-110 active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-70 overflow-hidden"
+                  >
+                    <div className="pointer-events-none absolute inset-x-2 top-[3px] h-[45%] rounded-full bg-gradient-to-b from-white/70 to-transparent" />
+                    <div className="pointer-events-none absolute inset-x-6 bottom-[2px] h-[30%] rounded-full bg-gradient-to-t from-white/30 to-transparent blur-[2px]" />
+                    
+                    <span className="relative z-10 drop-shadow-md">{loading ? 'Authenticating...' : 'Start owner session'}</span>
+                    <ArrowRight size={22} className="relative z-10 ml-2 drop-shadow-md" />
+                  </button>
+                </form>
+
+                <div className="relative z-10 mt-8 text-center">
                   <button
                     type="button"
-                    onClick={() => void loadOwnerData()}
-                    className="rounded-xl border border-[#c8d8c1] px-4 py-2 text-sm font-semibold text-[#35513a]"
+                    onClick={() => navigate('/login')}
+                    className="font-black text-[0.85rem] uppercase tracking-[0.1em] text-gray-900 dark:text-white transition hover:text-white drop-shadow-md"
                   >
-                    Refresh
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => void logout()}
-                    className="rounded-xl border border-[#efc9c0] bg-[#fff5f2] px-4 py-2 text-sm font-semibold text-[#9c3f32]"
-                  >
-                    End owner session
+                    Back to Normal Login
                   </button>
                 </div>
               </div>
+            </div>
+          ) : (
+            <>
+              {error ? (
+                <div className="rounded-2xl border border-red-400/60 bg-red-400/40 px-4 py-3 mb-6 text-sm font-bold text-red-900 backdrop-blur-md shadow-[inset_0_2px_4px_rgba(255,255,255,0.5)]">
+                  {error}
+                </div>
+              ) : null}
 
-              <div className="mt-4 grid gap-3 md:grid-cols-3">
-                <div className="rounded-xl border border-[#d9e4d1] bg-[#f7fbf4] p-4">
-                  <p className="text-xs font-semibold uppercase tracking-[0.08em] text-[#6b8667]">Environment</p>
-                  <p className="mt-1 text-sm font-bold text-[#26462a]">{ownerStatus?.environment || 'Unknown'}</p>
+              {message ? (
+                <div className="rounded-2xl border border-[#3c8e7a]/60 bg-[#3c8e7a]/30 px-4 py-3 mb-6 text-sm font-bold text-[#113a30] backdrop-blur-md shadow-[inset_0_2px_4px_rgba(255,255,255,0.6)]">
+                  <div className="inline-flex items-center gap-2">
+                    <CheckCircle2 size={18} />
+                    {message}
+                  </div>
                 </div>
-                <div className="rounded-xl border border-[#d9e4d1] bg-[#f7fbf4] p-4">
-                  <p className="text-xs font-semibold uppercase tracking-[0.08em] text-[#6b8667]">Owner email</p>
-                  <p className="mt-1 text-sm font-bold text-[#26462a]">{ownerStatus?.ownerEmail || 'Not set'}</p>
+              ) : null}
+
+              {/* DASHBOARD SECTION 1 */}
+              <div className={glassCardClasses}>
+                <div className="flex flex-wrap items-center justify-between gap-4">
+                  <h2 className="text-[1.8rem] font-black text-[#111] dark:text-white drop-shadow-md">Owner Controls</h2>
+                  <div className="flex gap-3">
+                    <button
+                      type="button"
+                      onClick={() => void loadOwnerData()}
+                      className="rounded-full border border-white/50 bg-white/10 dark:bg-black/40 px-5 py-2 text-sm font-bold text-gray-900 dark:text-white backdrop-blur-md transition hover:bg-white/30 shadow-[inset_0_2px_4px_rgba(255,255,255,0.6)]"
+                    >
+                      Refresh Data
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => void logout()}
+                      className="rounded-full border border-red-400/50 bg-red-500/20 px-5 py-2 text-sm font-bold text-red-900 backdrop-blur-md transition hover:bg-red-500/40 shadow-[inset_0_2px_4px_rgba(255,255,255,0.6)]"
+                    >
+                      End Session
+                    </button>
+                  </div>
                 </div>
-                <div className="rounded-xl border border-[#d9e4d1] bg-[#f7fbf4] p-4">
-                  <p className="text-xs font-semibold uppercase tracking-[0.08em] text-[#6b8667]">SMTP</p>
-                  <p className="mt-1 text-sm font-bold text-[#26462a]">
-                    {ownerStatus?.emailTransportConfigured ? 'Ready' : 'Not configured'}
-                  </p>
+
+                <div className="mt-8 grid gap-4 md:grid-cols-3">
+                  <div className="rounded-3xl border border-white/50 bg-white/20 dark:bg-black/30 p-5 shadow-[inset_0_2px_4px_rgba(255,255,255,0.6)] backdrop-blur-md">
+                    <p className="text-xs font-bold uppercase tracking-[0.1em] text-gray-900 dark:text-gray-200 drop-shadow-sm">Environment</p>
+                    <p className="mt-1 text-[1.05rem] font-black text-[#111] dark:text-white drop-shadow-sm leading-tight">{ownerStatus?.environment === 'development' ? 'AI Agriculture Assistant' : (ownerStatus?.environment || 'Unknown')}</p>
+                  </div>
+                  <div className="rounded-3xl border border-white/50 bg-white/20 dark:bg-black/30 p-5 shadow-[inset_0_2px_4px_rgba(255,255,255,0.6)] backdrop-blur-md">
+                    <p className="text-xs font-bold uppercase tracking-[0.1em] text-gray-900 dark:text-gray-200 drop-shadow-sm">Owner Email</p>
+                    <p className="mt-1 text-[0.95rem] font-black text-[#111] dark:text-white drop-shadow-sm break-all">{ownerStatus?.ownerEmail || 'Not set'}</p>
+                  </div>
+                  <div className="rounded-3xl border border-white/50 bg-white/20 dark:bg-black/30 p-5 shadow-[inset_0_2px_4px_rgba(255,255,255,0.6)] backdrop-blur-md">
+                    <p className="text-xs font-bold uppercase tracking-[0.1em] text-gray-800 dark:text-gray-200 drop-shadow-sm">OWNER</p>
+                    <p className="mt-1 text-[1.1rem] font-black text-[#111] dark:text-white drop-shadow-sm">
+                      {ownerStatus?.emailTransportConfigured ? 'PAVAN BUSANAMONi' : 'Not configured'}
+                    </p>
+                  </div>
                 </div>
               </div>
-            </section>
 
-            <section className="rounded-3xl border border-[#d8e4d0] bg-white/90 p-6 shadow-sm">
-              <div className="flex items-center gap-2">
-                <ShieldAlert size={18} className="text-[#7a5d1d]" />
-                <h2 className="text-xl font-black text-[#1f3a22]">Pending admin approvals</h2>
-              </div>
-              <div className="mt-4 space-y-3">
-                {pendingAdmins.length ? (
-                  pendingAdmins.map((entry) => (
-                    <div key={entry.id} className="rounded-2xl border border-[#d9e4d1] bg-[#f7fbf4] p-4">
-                      <p className="text-base font-bold text-[#1f3a22]">{entry.name}</p>
-                      <p className="text-sm text-[#4e6652]">{entry.email}</p>
-                      <div className="mt-3 flex flex-wrap gap-2">
-                        <button
-                          type="button"
-                          disabled={busyUserId === entry.id}
-                          onClick={() => void handleDecision(entry.id, 'approve')}
-                          className="inline-flex items-center gap-2 rounded-xl bg-[#2f6b32] px-4 py-2 text-sm font-bold text-white disabled:cursor-not-allowed disabled:opacity-60"
-                        >
-                          <UserCheck size={15} />
-                          Approve
-                        </button>
-                        <button
-                          type="button"
-                          disabled={busyUserId === entry.id}
-                          onClick={() => void handleDecision(entry.id, 'deny')}
-                          className="inline-flex items-center gap-2 rounded-xl border border-[#efc9c0] bg-[#fff5f2] px-4 py-2 text-sm font-bold text-[#9c3f32] disabled:cursor-not-allowed disabled:opacity-60"
-                        >
-                          <UserX size={15} />
-                          Deny
-                        </button>
+              {/* DASHBOARD SECTION 2 */}
+              <div className={glassCardClasses}>
+                <div className="flex items-center gap-2 text-[#111] dark:text-white drop-shadow-md">
+                  <ShieldAlert size={22} />
+                  <h2 className="text-[1.5rem] font-black">Pending Admin Approvals</h2>
+                </div>
+                <div className="mt-6 space-y-4">
+                  {pendingAdmins.length ? (
+                    pendingAdmins.map((entry) => (
+                      <div key={entry.id} className="rounded-3xl border border-white/50 bg-white/20 dark:bg-black/30 p-5 shadow-[inset_0_2px_4px_rgba(255,255,255,0.6)] backdrop-blur-md">
+                        <p className="text-[1.2rem] font-black text-[#111] dark:text-white drop-shadow-sm">{entry.name}</p>
+                        <p className="text-[0.95rem] font-bold text-gray-900 dark:text-gray-200 drop-shadow-sm">{entry.email}</p>
+                        <div className="mt-4 flex flex-wrap gap-3">
+                          <button
+                            type="button"
+                            disabled={busyUserId === entry.id}
+                            onClick={() => void handleDecision(entry.id, 'approve')}
+                            className="inline-flex items-center gap-2 rounded-full bg-gradient-to-b from-[#4eb69c]/90 to-[#235e4f]/90 px-6 py-2.5 text-sm font-black text-white shadow-[inset_0_2px_4px_rgba(255,255,255,0.6),0_4px_10px_rgba(35,94,79,0.3)] border border-white/40 disabled:opacity-60"
+                          >
+                            <UserCheck size={16} />
+                            Approve
+                          </button>
+                          <button
+                            type="button"
+                            disabled={busyUserId === entry.id}
+                            onClick={() => void handleDecision(entry.id, 'deny')}
+                            className="inline-flex items-center gap-2 rounded-full border border-red-400/50 bg-red-500/20 px-6 py-2.5 text-sm font-black text-red-900 shadow-[inset_0_2px_4px_rgba(255,255,255,0.6)] disabled:opacity-60 hover:bg-red-500/40"
+                          >
+                            <UserX size={16} />
+                            Deny
+                          </button>
+                        </div>
                       </div>
-                    </div>
-                  ))
-                ) : (
-                  <p className="rounded-xl border border-[#d9e4d1] bg-[#f7fbf4] p-4 text-sm text-[#4e6652]">
-                    No pending admin signup requests.
-                  </p>
-                )}
-              </div>
-            </section>
-
-            <section className="rounded-3xl border border-[#d8e4d0] bg-white/90 p-6 shadow-sm">
-              <div className="flex items-center gap-2 text-[#1f3a22]">
-                <Users size={18} />
-                <h2 className="text-xl font-black">Owner user management</h2>
-              </div>
-
-              <div className="mt-4 rounded-2xl border border-[#d9e4d1] bg-[#f7fbf4] p-4">
-                <p className="mb-3 flex items-center gap-2 text-sm font-bold text-[#2b4f2e]">
-                  <UserPlus size={15} />
-                  Create user as owner
-                </p>
-                <div className="grid gap-3 md:grid-cols-2">
-                  <select
-                    value={newUser.role}
-                    onChange={(event) =>
-                      setNewUser((prev) => ({
-                        ...prev,
-                        role: event.target.value as 'farmer' | 'admin',
-                        phone: '',
-                        email: '',
-                        password: '',
-                      }))
-                    }
-                    className="rounded-xl border border-[#ccd9c6] bg-white px-3 py-2 text-sm text-[#254128]"
-                  >
-                    <option value="farmer">Farmer</option>
-                    <option value="admin">Admin</option>
-                  </select>
-                  <input
-                    value={newUser.name}
-                    onChange={(event) => setNewUser((prev) => ({ ...prev, name: event.target.value }))}
-                    placeholder="Name"
-                    className="rounded-xl border border-[#ccd9c6] bg-white px-3 py-2 text-sm text-[#254128]"
-                  />
-
-                  {newUser.role === 'farmer' ? (
-                    <>
-                      <input
-                        value={newUser.phone}
-                        onChange={(event) => setNewUser((prev) => ({ ...prev, phone: event.target.value }))}
-                        placeholder="Phone number"
-                        className="rounded-xl border border-[#ccd9c6] bg-white px-3 py-2 text-sm text-[#254128]"
-                      />
-                      <input
-                        value={newUser.email}
-                        onChange={(event) => setNewUser((prev) => ({ ...prev, email: event.target.value }))}
-                        placeholder="Farmer email (optional)"
-                        className="rounded-xl border border-[#ccd9c6] bg-white px-3 py-2 text-sm text-[#254128]"
-                      />
-                    </>
+                    ))
                   ) : (
-                    <>
-                      <input
-                        value={newUser.email}
-                        onChange={(event) => setNewUser((prev) => ({ ...prev, email: event.target.value }))}
-                        placeholder="Admin email"
-                        className="rounded-xl border border-[#ccd9c6] bg-white px-3 py-2 text-sm text-[#254128]"
-                      />
-                      <input
-                        type="password"
-                        value={newUser.password}
-                        onChange={(event) => setNewUser((prev) => ({ ...prev, password: event.target.value }))}
-                        placeholder="Admin password"
-                        className="rounded-xl border border-[#ccd9c6] bg-white px-3 py-2 text-sm text-[#254128]"
-                      />
-                    </>
+                    <p className="rounded-3xl border border-white/50 bg-white/10 dark:bg-black/40 p-5 text-[1rem] font-bold text-gray-900 dark:text-gray-200 drop-shadow-sm shadow-[inset_0_2px_4px_rgba(255,255,255,0.4)] backdrop-blur-md">
+                      No pending admin signup requests.
+                    </p>
                   )}
                 </div>
-                <button
-                  type="button"
-                  onClick={() => void handleCreateUser()}
-                  disabled={
-                    saving
-                    || !newUser.name.trim()
-                    || (newUser.role === 'farmer' ? !newUser.phone.trim() : !newUser.email.trim() || newUser.password.length < 8)
-                  }
-                  className="mt-3 rounded-xl bg-[#2f6b32] px-4 py-2 text-sm font-bold text-white transition hover:bg-[#28592b] disabled:cursor-not-allowed disabled:opacity-60"
-                >
-                  {saving ? 'Saving...' : 'Create user'}
-                </button>
               </div>
 
-              <div className="mt-4 overflow-auto">
-                <table className="w-full min-w-[700px] text-left text-sm">
-                  <thead>
-                    <tr className="border-b bg-gray-50">
-                      <th className="p-3">Name</th>
-                      <th className="p-3">Role</th>
-                      <th className="p-3">Phone</th>
-                      <th className="p-3">Email</th>
-                      <th className="p-3">Status</th>
-                      <th className="p-3">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {managedUsers.map((user) => (
-                      <tr key={user.id} className="border-b">
-                        <td className="p-3">{user.name}</td>
-                        <td className="p-3 capitalize">{user.role}</td>
-                        <td className="p-3 text-gray-600">{user.phone || '-'}</td>
-                        <td className="p-3 text-gray-600">{user.email || '-'}</td>
-                        <td className="p-3 capitalize">{user.status}</td>
-                        <td className="p-3">
-                          <div className="flex items-center gap-2">
-                            <button
-                              type="button"
-                              disabled={busyUserId === user.id}
-                              onClick={() => void handleToggleUserStatus(user)}
-                              className="rounded-lg border border-[#cad9c5] bg-white px-2 py-1 text-xs font-semibold text-[#345737] hover:bg-[#eef6e8] disabled:opacity-60"
-                            >
-                              {user.status === 'active' ? 'Disable' : 'Enable'}
-                            </button>
-                            <button
-                              type="button"
-                              disabled={busyUserId === user.id}
-                              onClick={() => void handleDeleteUser(user)}
-                              className="inline-flex items-center gap-1 rounded-lg border border-[#efc9c0] bg-[#fff5f2] px-2 py-1 text-xs font-semibold text-[#9c3f32] hover:bg-[#ffece7] disabled:opacity-60"
-                            >
-                              <Trash2 size={12} />
-                              Delete
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+              {/* DASHBOARD SECTION 3 */}
+              <div className={glassCardClasses}>
+                <div className="flex items-center gap-2 text-[#111] dark:text-white drop-shadow-md">
+                  <Users size={22} />
+                  <h2 className="text-[1.5rem] font-black">Owner User Management</h2>
+                </div>
+
+                <div className="mt-6 rounded-3xl border border-white/50 bg-white/20 dark:bg-black/30 p-6 shadow-[inset_0_2px_4px_rgba(255,255,255,0.6)] backdrop-blur-md">
+                  <p className="mb-4 flex items-center gap-2 text-[1rem] font-black text-[#111] dark:text-white drop-shadow-sm">
+                    <UserPlus size={18} />
+                    Create User Manually
+                  </p>
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <select
+                      value={newUser.role}
+                      onChange={(event) =>
+                        setNewUser((prev) => ({
+                          ...prev,
+                          role: event.target.value as 'farmer' | 'admin',
+                          phone: '',
+                          email: '',
+                          password: '',
+                        }))
+                      }
+                      className="rounded-full border border-white/60 bg-white/40 dark:bg-black/50 px-5 py-3 text-[1rem] font-bold text-gray-900 dark:text-white shadow-[inset_0_2px_4px_rgba(255,255,255,0.6)] outline-none focus:ring-2 focus:ring-[#2a6d5d]/50 backdrop-blur-md"
+                    >
+                      <option value="farmer">Farmer</option>
+                      <option value="admin">Admin</option>
+                    </select>
+                    <input
+                      value={newUser.name}
+                      onChange={(event) => setNewUser((prev) => ({ ...prev, name: event.target.value }))}
+                      placeholder="Name"
+                      className="rounded-full border border-white/60 bg-white/40 dark:bg-black/50 px-5 py-3 text-[1rem] font-bold text-gray-900 dark:text-white shadow-[inset_0_2px_4px_rgba(255,255,255,0.6)] outline-none placeholder:text-gray-700/70 focus:ring-2 focus:ring-[#2a6d5d]/50 backdrop-blur-md"
+                    />
+
+                    {newUser.role === 'farmer' ? (
+                      <>
+                        <input
+                          value={newUser.phone}
+                          onChange={(event) => setNewUser((prev) => ({ ...prev, phone: event.target.value }))}
+                          placeholder="Phone number"
+                          className="rounded-full border border-white/60 bg-white/40 dark:bg-black/50 px-5 py-3 text-[1rem] font-bold text-gray-900 dark:text-white shadow-[inset_0_2px_4px_rgba(255,255,255,0.6)] outline-none placeholder:text-gray-700/70 focus:ring-2 focus:ring-[#2a6d5d]/50 backdrop-blur-md"
+                        />
+                        <input
+                          value={newUser.email}
+                          onChange={(event) => setNewUser((prev) => ({ ...prev, email: event.target.value }))}
+                          placeholder="Farmer email (optional)"
+                          className="rounded-full border border-white/60 bg-white/40 dark:bg-black/50 px-5 py-3 text-[1rem] font-bold text-gray-900 dark:text-white shadow-[inset_0_2px_4px_rgba(255,255,255,0.6)] outline-none placeholder:text-gray-700/70 focus:ring-2 focus:ring-[#2a6d5d]/50 backdrop-blur-md"
+                        />
+                      </>
+                    ) : (
+                      <>
+                        <input
+                          value={newUser.email}
+                          onChange={(event) => setNewUser((prev) => ({ ...prev, email: event.target.value }))}
+                          placeholder="Admin email"
+                          className="rounded-full border border-white/60 bg-white/40 dark:bg-black/50 px-5 py-3 text-[1rem] font-bold text-gray-900 dark:text-white shadow-[inset_0_2px_4px_rgba(255,255,255,0.6)] outline-none placeholder:text-gray-700/70 focus:ring-2 focus:ring-[#2a6d5d]/50 backdrop-blur-md"
+                        />
+                        <input
+                          type="password"
+                          value={newUser.password}
+                          onChange={(event) => setNewUser((prev) => ({ ...prev, password: event.target.value }))}
+                          placeholder="Admin password"
+                          className="rounded-full border border-white/60 bg-white/40 dark:bg-black/50 px-5 py-3 text-[1rem] font-bold text-gray-900 dark:text-white shadow-[inset_0_2px_4px_rgba(255,255,255,0.6)] outline-none placeholder:text-gray-700/70 focus:ring-2 focus:ring-[#2a6d5d]/50 backdrop-blur-md"
+                        />
+                      </>
+                    )}
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => void handleCreateUser()}
+                    disabled={
+                      saving
+                      || !newUser.name.trim()
+                      || (newUser.role === 'farmer' ? !newUser.phone.trim() : !newUser.email.trim() || newUser.password.length < 8)
+                    }
+                    className="mt-5 inline-flex items-center gap-2 rounded-full bg-gradient-to-b from-[#4eb69c]/90 to-[#235e4f]/90 px-8 py-3 text-[1.05rem] font-black text-white shadow-[inset_0_2px_4px_rgba(255,255,255,0.6),0_4px_10px_rgba(35,94,79,0.3)] border border-white/40 disabled:opacity-60"
+                  >
+                    {saving ? 'Saving...' : 'Create user'}
+                  </button>
+                </div>
+
+                <div className="mt-8 overflow-hidden rounded-3xl border border-white/50 bg-white/20 dark:bg-black/30 shadow-[inset_0_2px_4px_rgba(255,255,255,0.6)] backdrop-blur-md">
+                  <div className="overflow-auto">
+                    <table className="w-full min-w-[700px] text-left text-[0.95rem] font-bold">
+                      <thead>
+                        <tr className="border-b border-white/30 bg-white/10">
+                          <th className="p-4 text-gray-900 dark:text-white">Name</th>
+                          <th className="p-4 text-gray-900 dark:text-white">Role</th>
+                          <th className="p-4 text-gray-900 dark:text-white">Phone</th>
+                          <th className="p-4 text-gray-900 dark:text-white">Email</th>
+                          <th className="p-4 text-gray-900 dark:text-white">Status</th>
+                          <th className="p-4 text-gray-900 dark:text-white">Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {managedUsers.map((user) => (
+                          <tr key={user.id} className="border-b border-white/20 hover:bg-white/10 dark:bg-black/40 transition">
+                            <td className="p-4 text-gray-900 dark:text-white drop-shadow-sm">{user.name}</td>
+                            <td className="p-4 capitalize text-gray-900 dark:text-white drop-shadow-sm">{user.role}</td>
+                            <td className="p-4 text-gray-900 dark:text-gray-200">{user.phone || '-'}</td>
+                            <td className="p-4 text-gray-900 dark:text-gray-200">{user.email || '-'}</td>
+                            <td className="p-4 capitalize text-gray-900 dark:text-white drop-shadow-sm">
+                              <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-black ${user.status === 'active' ? 'bg-[#3c8e7a]/30 text-[#113a30]' : 'bg-gray-500/30 text-gray-900 dark:text-white'}`}>
+                                {user.status}
+                              </span>
+                            </td>
+                            <td className="p-4">
+                              <div className="flex items-center gap-2">
+                                <button
+                                  type="button"
+                                  disabled={busyUserId === user.id}
+                                  onClick={() => void handleToggleUserStatus(user)}
+                                  className="rounded-full border border-white/50 bg-white/40 dark:bg-black/50 px-3 py-1.5 text-xs font-black text-gray-900 dark:text-white shadow-[inset_0_2px_4px_rgba(255,255,255,0.6)] hover:bg-white/60 transition disabled:opacity-60"
+                                >
+                                  {user.status === 'active' ? 'Disable' : 'Enable'}
+                                </button>
+                                <button
+                                  type="button"
+                                  disabled={busyUserId === user.id}
+                                  onClick={() => void handleDeleteUser(user)}
+                                  className="inline-flex items-center gap-1 rounded-full border border-red-400/50 bg-red-500/20 px-3 py-1.5 text-xs font-black text-red-900 shadow-[inset_0_2px_4px_rgba(255,255,255,0.6)] hover:bg-red-500/40 transition disabled:opacity-60"
+                                >
+                                  <Trash2 size={14} />
+                                  Delete
+                                </button>
+                              </div>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
               </div>
-            </section>
-          </>
-        )}
-
-        {error ? (
-          <div className="rounded-2xl border border-[#efc9c0] bg-[#fff5f2] px-4 py-3 text-sm font-semibold text-[#9c3f32]">
-            {error}
-          </div>
-        ) : null}
-
-        {message ? (
-          <div className="rounded-2xl border border-[#cfe3c8] bg-[#f2f9ef] px-4 py-3 text-sm font-semibold text-[#35513a]">
-            <div className="inline-flex items-center gap-2">
-              <CheckCircle2 size={16} />
-              {message}
-            </div>
-          </div>
-        ) : null}
+            </>
+          )}
+        </div>
       </div>
     </div>
   );

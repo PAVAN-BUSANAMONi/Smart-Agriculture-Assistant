@@ -276,7 +276,7 @@ export function DiseaseDetect() {
 
   return (
     <div className="mx-auto max-w-5xl animate-fade-in p-4 space-y-6">
-      <h1 className="mb-6 flex items-center gap-3 text-3xl font-bold font-display text-gray-900">
+      <h1 className="mb-6 flex items-center gap-3 text-3xl font-bold font-display text-gray-900 dark:text-white drop-shadow-sm">
         <div className="bg-rose-100 p-2.5 rounded-xl text-rose-600 shadow-sm">
           <Bug size={28} />
         </div>
@@ -288,12 +288,12 @@ export function DiseaseDetect() {
           {!image ? (
             <div
               onClick={() => fileInputRef.current?.click()}
-              className="flex h-72 cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed border-gray-300/60 bg-gray-50/30 transition-all hover:bg-gray-50/60 hover:border-gray-400 group relative z-10"
+              className="flex h-72 cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed border-gray-300/60 bg-white/30 dark:bg-white/5 backdrop-blur-md border border-white/40 dark:border-white/10 shadow-[inset_0_2px_4px_rgba(255,255,255,0.4)]/30 transition-all hover:bg-white/30 dark:bg-white/5 backdrop-blur-md border border-white/40 dark:border-white/10 shadow-[inset_0_2px_4px_rgba(255,255,255,0.4)]/60 hover:border-gray-400 group relative z-10"
             >
               <div className="bg-white p-4 rounded-full shadow-sm mb-4 group-hover:scale-110 transition-transform">
-                <Upload size={40} className="text-gray-500" />
+                <Upload size={40} className="text-gray-600 dark:text-gray-400" />
               </div>
-              <span className="font-semibold text-gray-600 font-display text-lg">{t('upload_image')}</span>
+              <span className="font-semibold text-gray-700 dark:text-gray-300 font-display text-lg">{t('upload_image')}</span>
               <p className="text-sm text-gray-400 mt-1">Tap to browse or take a photo</p>
               <input
                 type="file"
@@ -346,8 +346,8 @@ export function DiseaseDetect() {
 
               <div className="space-y-5">
                 <div>
-                  <h4 className="mb-1.5 font-bold font-display text-gray-800 text-lg">{t('observation')}:</h4>
-                  <p className="text-gray-700 font-medium">{t(result.obsKey)}</p>
+                  <h4 className="mb-1.5 font-bold font-display text-gray-900 dark:text-white drop-shadow-sm text-lg">{t('observation')}:</h4>
+                  <p className="text-gray-800 dark:text-gray-200 font-medium">{t(result.obsKey)}</p>
                 </div>
 
                 <div className="rounded-xl border border-emerald-200/50 bg-emerald-50/60 p-5 shadow-sm">
@@ -367,7 +367,7 @@ export function DiseaseDetect() {
                 </div>
 
                 <div className="flex items-center justify-between pt-2">
-                  <p className="text-xs text-gray-500 font-medium">
+                  <p className="text-xs text-gray-600 dark:text-gray-400 font-medium">
                     {language === 'te' ? 'డేటా మూలం' : 'Inference source'}: {result.source || 'unknown'}
                   </p>
                   <button
@@ -380,9 +380,9 @@ export function DiseaseDetect() {
                 </div>
 
                 {showDetails && (
-                  <div className="rounded-xl border border-gray-200/50 bg-white/50 backdrop-blur-sm p-5 text-sm text-gray-700 shadow-sm">
-                    <p className="mb-3"><span className="font-semibold text-gray-900">Cause:</span> {result.cause || '-'}</p>
-                    <p className="mb-2 font-semibold text-gray-900">Prevention:</p>
+                  <div className="rounded-xl border border-gray-200/50 bg-white/50 backdrop-blur-sm p-5 text-sm text-gray-800 dark:text-gray-200 shadow-sm">
+                    <p className="mb-3"><span className="font-semibold text-gray-900 dark:text-white drop-shadow-sm">Cause:</span> {result.cause || '-'}</p>
+                    <p className="mb-2 font-semibold text-gray-900 dark:text-white drop-shadow-sm">Prevention:</p>
                     <ul className="space-y-2 font-medium">
                       {(result.prevention || []).map((tip) => (
                         <li key={tip} className="flex gap-2">
@@ -399,21 +399,21 @@ export function DiseaseDetect() {
         </div>
 
         <aside className="glass-card p-6 h-max">
-          <h3 className="mb-4 flex items-center gap-2 text-lg font-bold font-display text-gray-900">
-            <History size={20} className="text-gray-500" />
+          <h3 className="mb-4 flex items-center gap-2 text-lg font-bold font-display text-gray-900 dark:text-white drop-shadow-sm">
+            <History size={20} className="text-gray-600 dark:text-gray-400" />
             {language === 'te' ? 'తాజా స్కాన్‌లు' : 'Recent scans'}
           </h3>
           <div className="space-y-3">
             {scanHistory.length === 0 ? (
-              <p className="text-sm text-gray-500 font-medium py-4 text-center">{language === 'te' ? 'చరిత్ర అందుబాటులో లేదు.' : 'No scan history yet.'}</p>
+              <p className="text-sm text-gray-600 dark:text-gray-400 font-medium py-4 text-center">{language === 'te' ? 'చరిత్ర అందుబాటులో లేదు.' : 'No scan history yet.'}</p>
             ) : (
               scanHistory.map((scan) => {
                 const mapped = DISEASE_KEY_MAP[scan.diseaseKey] || DISEASE_KEY_MAP.unknown;
                 return (
-                  <div key={scan.id} className="rounded-xl border border-gray-100 bg-gray-50/50 p-3 shadow-sm hover:bg-gray-50 transition-colors">
+                  <div key={scan.id} className="rounded-xl border border-gray-100 bg-white/30 dark:bg-white/5 backdrop-blur-md border border-white/40 dark:border-white/10 shadow-[inset_0_2px_4px_rgba(255,255,255,0.4)]/50 p-3 shadow-sm hover:bg-white/30 dark:bg-white/5 backdrop-blur-md border border-white/40 dark:border-white/10 shadow-[inset_0_2px_4px_rgba(255,255,255,0.4)] transition-colors">
                     <div className="flex justify-between items-start mb-1">
-                      <p className="font-bold text-gray-900">{t(mapped.nameKey)}</p>
-                      <span className="text-xs font-bold text-gray-500 bg-white px-2 py-0.5 rounded-md border border-gray-200">{scan.confidence}%</span>
+                      <p className="font-bold text-gray-900 dark:text-white drop-shadow-sm">{t(mapped.nameKey)}</p>
+                      <span className="text-xs font-bold text-gray-600 dark:text-gray-400 bg-white px-2 py-0.5 rounded-md border border-gray-200">{scan.confidence}%</span>
                     </div>
                     <p className="text-xs text-gray-400 font-medium">{new Date(scan.createdAt).toLocaleString()}</p>
                   </div>

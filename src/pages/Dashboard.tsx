@@ -74,9 +74,9 @@ export function Dashboard() {
   return (
     <div className="mx-auto max-w-6xl animate-fade-in">
       {/* Welcome Banner */}
-      <div className="mb-8 rounded-[24px] bg-primary-600 p-8 shadow-lg relative overflow-hidden text-white">
+      <div className="mb-8 rounded-[24px] bg-gradient-to-br from-primary-500/90 to-primary-700/90 shadow-[inset_0_2px_4px_rgba(255,255,255,0.6),0_4px_12px_rgba(var(--color-primary-600),0.4)] backdrop-blur-md border border-white/30 text-white p-8 shadow-lg relative overflow-hidden text-white">
         <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10 mix-blend-overlay"></div>
-        <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-primary-500 blur-3xl opacity-50"></div>
+        <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-primary-500/20 backdrop-blur-md border border-primary-500/30 text-primary-900 dark:text-primary-3000 blur-3xl opacity-50"></div>
         
         <div className="relative z-10">
           <p className="text-sm font-semibold uppercase tracking-widest text-primary-200 mb-2">Smart Agriculture Workspace</p>
@@ -105,19 +105,19 @@ export function Dashboard() {
           className="glass-card p-6 flex flex-col justify-between cursor-pointer group min-h-[160px]"
         >
           <div className="flex justify-between items-start mb-4">
-            <div className="bg-blue-50 text-blue-600 p-2.5 rounded-xl shadow-sm">
+            <div className="bg-blue-500/20 backdrop-blur-md border border-blue-500/30 text-blue-900 dark:text-blue-300 text-blue-600 p-2.5 rounded-xl shadow-sm">
               <CloudRain size={24} />
             </div>
             <ArrowRight size={20} className="text-gray-300 group-hover:text-primary-500 transition-colors" />
           </div>
           <div>
-            <p className="text-sm font-semibold text-gray-500 mb-1">Current Weather</p>
+            <p className="text-sm font-semibold text-gray-600 dark:text-gray-400 mb-1">Current Weather</p>
             {isLoadingWeather ? (
               <div className="h-8 bg-gray-200 rounded animate-pulse w-3/4"></div>
             ) : weatherSnap ? (
               <div>
-                <div className="text-3xl font-display font-bold text-gray-900">{weatherSnap.tempC}°C</div>
-                <p className="text-sm text-gray-600 mt-1">{weatherSnap.desc} • {weatherSnap.rainChance24h}% Rain Chance</p>
+                <div className="text-3xl font-display font-bold text-gray-900 dark:text-white drop-shadow-sm">{weatherSnap.tempC}°C</div>
+                <p className="text-sm text-gray-700 dark:text-gray-300 mt-1">{weatherSnap.desc} • {weatherSnap.rainChance24h}% Rain Chance</p>
               </div>
             ) : (
               <p className="text-sm text-gray-400">Location required</p>
@@ -128,14 +128,14 @@ export function Dashboard() {
         {/* Alerts Widget */}
         <div className="glass-card p-6 flex flex-col justify-between min-h-[160px]">
           <div className="flex justify-between items-start mb-4">
-            <div className={`p-2.5 rounded-xl shadow-sm ${alertCount > 0 ? 'bg-amber-50 text-amber-600' : 'bg-green-50 text-green-600'}`}>
+            <div className={`p-2.5 rounded-xl shadow-sm ${alertCount > 0 ? 'bg-amber-50 text-amber-600' : 'bg-[#4eb69c]/20 backdrop-blur-md border border-[#4eb69c]/30 text-[#111] dark:text-[#4eb69c] text-[#4eb69c]'}`}>
               <Activity size={24} />
             </div>
           </div>
           <div>
-            <p className="text-sm font-semibold text-gray-500 mb-1">Active Alerts</p>
-            <div className="text-3xl font-display font-bold text-gray-900">{alertCount}</div>
-            <p className="text-sm text-gray-600 mt-1">{alertCount > 0 ? 'Requires attention' : 'All systems normal'}</p>
+            <p className="text-sm font-semibold text-gray-600 dark:text-gray-400 mb-1">Active Alerts</p>
+            <div className="text-3xl font-display font-bold text-gray-900 dark:text-white drop-shadow-sm">{alertCount}</div>
+            <p className="text-sm text-gray-700 dark:text-gray-300 mt-1">{alertCount > 0 ? 'Requires attention' : 'All systems normal'}</p>
           </div>
         </div>
 
@@ -151,11 +151,11 @@ export function Dashboard() {
             <ArrowRight size={20} className="text-gray-300 group-hover:text-primary-500 transition-colors" />
           </div>
           <div>
-            <p className="text-sm font-semibold text-gray-500 mb-1">Farm Profile</p>
-            <div className="text-xl font-display font-bold text-gray-900 truncate">
+            <p className="text-sm font-semibold text-gray-600 dark:text-gray-400 mb-1">Farm Profile</p>
+            <div className="text-xl font-display font-bold text-gray-900 dark:text-white drop-shadow-sm truncate">
               {profile.location || 'Location Not Set'}
             </div>
-            <p className="text-sm text-gray-600 mt-1 flex items-center gap-1">
+            <p className="text-sm text-gray-700 dark:text-gray-300 mt-1 flex items-center gap-1">
               <Maximize size={14} />
               {profile.landSize ? `${profile.landSize} acres` : 'Size Not Set'}
             </p>
@@ -187,7 +187,7 @@ export function Dashboard() {
 
       {/* Quick Tools Grid */}
       <div>
-        <h2 className="text-xl font-bold font-display text-gray-900 mb-4">Quick Tools</h2>
+        <h2 className="text-xl font-bold font-display text-gray-900 dark:text-white drop-shadow-sm mb-4">Quick Tools</h2>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {[
             { id: 1, title: t('disease_detection'), icon: <Bug size={24}/>, path: '/disease-detect', color: 'text-rose-500', bg: 'bg-rose-50 border-rose-100' },
@@ -202,7 +202,7 @@ export function Dashboard() {
               <div className={`p-3 rounded-xl border ${tool.bg} ${tool.color} mr-4 transition-transform group-hover:scale-110 shadow-sm`}>
                 {tool.icon}
               </div>
-              <div className="flex-1 font-semibold text-gray-800">{tool.title}</div>
+              <div className="flex-1 font-semibold text-gray-900 dark:text-white drop-shadow-sm">{tool.title}</div>
               <ArrowRight size={18} className="text-gray-300 group-hover:text-primary-500 transition-colors" />
             </div>
           ))}

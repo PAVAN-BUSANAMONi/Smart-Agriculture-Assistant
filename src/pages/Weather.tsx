@@ -490,7 +490,7 @@ export function Weather() {
   const weatherLabel = data.current.weatherLabel || WEATHER_CODE_MAP[data.current.weatherCode] || 'Weather';
   const irrigationClass =
     data.decisions.irrigationRecommendation.status === 'hold'
-      ? 'border-red-200 bg-red-50 text-red-800'
+      ? 'border-red-200 bg-red-500/20 backdrop-blur-md border border-red-500/30 text-red-900 dark:text-red-300 text-red-800'
       : data.decisions.irrigationRecommendation.status === 'increase'
       ? 'border-amber-200 bg-amber-50 text-amber-800'
       : 'border-emerald-200 bg-emerald-50 text-emerald-800';
@@ -498,7 +498,7 @@ export function Weather() {
   return (
     <div className="mx-auto max-w-6xl animate-fade-in space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-4">
-        <h1 className="text-3xl font-bold font-display text-gray-900">{t('weather_forecast')}</h1>
+        <h1 className="text-3xl font-bold font-display text-gray-900 dark:text-white drop-shadow-sm">{t('weather_forecast')}</h1>
         <button
           type="button"
           onClick={() => setDetailedView((prev) => !prev)}
@@ -515,14 +515,14 @@ export function Weather() {
       </div>
 
       {isOffline && (
-        <div className="glass-card border-blue-200 bg-blue-50/80 p-4 text-sm text-blue-800">
+        <div className="glass-card border-blue-200 bg-blue-500/20 backdrop-blur-md border border-blue-500/30 text-blue-900 dark:text-blue-300/80 p-4 text-sm text-blue-800">
           {language === 'te'
             ? 'ఆఫ్‌లైన్ మోడ్ అందుబాటులో ఉంది. చివరిసారి సింక్ అయిన డేటా ఉపయోగించబడుతుంది.'
             : 'Offline mode enabled. Last synced advisory is used in low-network areas.'}
         </div>
       )}
 
-      {notice && <div className="glass-card border-blue-200 bg-blue-50/80 p-4 text-sm text-blue-800">{notice}</div>}
+      {notice && <div className="glass-card border-blue-200 bg-blue-500/20 backdrop-blur-md border border-blue-500/30 text-blue-900 dark:text-blue-300/80 p-4 text-sm text-blue-800">{notice}</div>}
       {error && <div className="glass-card border-amber-200 bg-amber-50/80 p-4 text-sm text-amber-800">{error}</div>}
 
       <div className="grid gap-6 md:grid-cols-2">
@@ -618,7 +618,7 @@ export function Weather() {
       </div>
 
       {data.decisions.alerts.length > 0 && (
-        <div className="glass-card border-red-200/60 bg-red-50/60 p-6 text-red-900">
+        <div className="glass-card border-red-200/60 bg-red-500/20 backdrop-blur-md border border-red-500/30 text-red-900 dark:text-red-300/60 p-6 text-red-900">
           <h3 className="mb-3 flex items-center gap-2 font-bold font-display text-lg">
             <AlertTriangle size={20} className="text-red-600" />
             {language === 'te' ? 'సృష్టించిన అలర్ట్లు' : 'Generated Alerts'}
@@ -626,7 +626,7 @@ export function Weather() {
           <ul className="space-y-2 text-sm font-medium">
             {data.decisions.alerts.map((item) => (
               <li key={`${item.title}-${item.message}`} className="flex gap-3">
-                  <div className="mt-1.5 h-1.5 w-1.5 rounded-full bg-red-500 shrink-0"></div>
+                  <div className="mt-1.5 h-1.5 w-1.5 rounded-full bg-red-500/20 backdrop-blur-md border border-red-500/30 text-red-900 dark:text-red-3000 shrink-0"></div>
                   <span><strong className="text-red-800">{item.title}:</strong> {item.message}</span>
               </li>
             ))}
@@ -657,39 +657,39 @@ export function Weather() {
 
       {detailedView && (
         <div className="glass-card p-6 border-gray-200">
-          <h3 className="mb-4 font-bold font-display text-lg text-gray-900">{language === 'te' ? 'వివరమైన అంచనా' : 'Detailed Forecast Context'}</h3>
-          <div className="grid gap-4 text-sm text-gray-600 font-medium md:grid-cols-2 lg:grid-cols-3">
-            <div className="bg-gray-50/50 p-3 rounded-lg border border-gray-100">
+          <h3 className="mb-4 font-bold font-display text-lg text-gray-900 dark:text-white drop-shadow-sm">{language === 'te' ? 'వివరమైన అంచనా' : 'Detailed Forecast Context'}</h3>
+          <div className="grid gap-4 text-sm text-gray-700 dark:text-gray-300 font-medium md:grid-cols-2 lg:grid-cols-3">
+            <div className="bg-white/30 dark:bg-white/5 backdrop-blur-md border border-white/40 dark:border-white/10 shadow-[inset_0_2px_4px_rgba(255,255,255,0.4)]/50 p-3 rounded-lg border border-gray-100">
                 <p className="text-xs text-gray-400 mb-1">24h Rain Prob.</p>
-                <p className="text-gray-900">{data.forecast.rainChance24h}%</p>
+                <p className="text-gray-900 dark:text-white drop-shadow-sm">{data.forecast.rainChance24h}%</p>
             </div>
-            <div className="bg-gray-50/50 p-3 rounded-lg border border-gray-100">
+            <div className="bg-white/30 dark:bg-white/5 backdrop-blur-md border border-white/40 dark:border-white/10 shadow-[inset_0_2px_4px_rgba(255,255,255,0.4)]/50 p-3 rounded-lg border border-gray-100">
                 <p className="text-xs text-gray-400 mb-1">24h Expected Rainfall</p>
-                <p className="text-gray-900">{data.forecast.rainMm24h} mm</p>
+                <p className="text-gray-900 dark:text-white drop-shadow-sm">{data.forecast.rainMm24h} mm</p>
             </div>
-            <div className="bg-gray-50/50 p-3 rounded-lg border border-gray-100">
+            <div className="bg-white/30 dark:bg-white/5 backdrop-blur-md border border-white/40 dark:border-white/10 shadow-[inset_0_2px_4px_rgba(255,255,255,0.4)]/50 p-3 rounded-lg border border-gray-100">
                 <p className="text-xs text-gray-400 mb-1">7-Day Rainfall Outlook</p>
-                <p className="text-gray-900">{data.forecast.rainMm7d} mm</p>
+                <p className="text-gray-900 dark:text-white drop-shadow-sm">{data.forecast.rainMm7d} mm</p>
             </div>
-            <div className="bg-gray-50/50 p-3 rounded-lg border border-gray-100">
+            <div className="bg-white/30 dark:bg-white/5 backdrop-blur-md border border-white/40 dark:border-white/10 shadow-[inset_0_2px_4px_rgba(255,255,255,0.4)]/50 p-3 rounded-lg border border-gray-100">
                 <p className="text-xs text-gray-400 mb-1">Daily Temp Range</p>
-                <p className="text-gray-900">{data.forecast.minTemp}°C to {data.forecast.maxTemp}°C</p>
+                <p className="text-gray-900 dark:text-white drop-shadow-sm">{data.forecast.minTemp}°C to {data.forecast.maxTemp}°C</p>
             </div>
-            <div className="bg-gray-50/50 p-3 rounded-lg border border-gray-100">
+            <div className="bg-white/30 dark:bg-white/5 backdrop-blur-md border border-white/40 dark:border-white/10 shadow-[inset_0_2px_4px_rgba(255,255,255,0.4)]/50 p-3 rounded-lg border border-gray-100">
                 <p className="text-xs text-gray-400 mb-1">Data Source</p>
-                <p className="text-gray-900">{data.source}</p>
+                <p className="text-gray-900 dark:text-white drop-shadow-sm">{data.source}</p>
             </div>
-            <div className="bg-gray-50/50 p-3 rounded-lg border border-gray-100">
+            <div className="bg-white/30 dark:bg-white/5 backdrop-blur-md border border-white/40 dark:border-white/10 shadow-[inset_0_2px_4px_rgba(255,255,255,0.4)]/50 p-3 rounded-lg border border-gray-100">
                 <p className="text-xs text-gray-400 mb-1">Primary Crop</p>
-                <p className="text-gray-900">{crop || (language === 'te' ? 'సెట్ కాలేదు' : 'Not set')}</p>
+                <p className="text-gray-900 dark:text-white drop-shadow-sm">{crop || (language === 'te' ? 'సెట్ కాలేదు' : 'Not set')}</p>
             </div>
           </div>
         </div>
       )}
 
       <div className="glass-card p-6 border-gray-200">
-        <h3 className="mb-2 font-bold font-display text-lg text-gray-800">{t('manager_alert_setup')}</h3>
-        <p className="mb-4 text-sm text-gray-500">{t('manager_alert_setup_hint')}</p>
+        <h3 className="mb-2 font-bold font-display text-lg text-gray-900 dark:text-white drop-shadow-sm">{t('manager_alert_setup')}</h3>
+        <p className="mb-4 text-sm text-gray-600 dark:text-gray-400">{t('manager_alert_setup_hint')}</p>
         <div className="flex flex-col gap-3 md:flex-row max-w-2xl">
           <input
             value={webhookInput}

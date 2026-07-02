@@ -26,28 +26,39 @@ export function Sidebar() {
     return true;
   });
 
+  const getButtonClass = (isActive: boolean) => {
+    if (isActive) {
+      return 'bg-white/40 dark:bg-white/20 text-[#111] dark:text-white font-black shadow-[inset_0_2px_4px_rgba(255,255,255,0.6)] border border-white/50 drop-shadow-md';
+    }
+    return 'text-gray-900 dark:text-gray-300 hover:bg-white/30 dark:hover:bg-white/10 hover:shadow-[inset_0_2px_4px_rgba(255,255,255,0.4)] border border-transparent hover:border-white/40 font-bold drop-shadow-sm';
+  };
+
+  const isDashboardActive = location.pathname === '/' || location.pathname === '/dashboard';
+
   return (
-    <aside className="hidden md:flex w-64 flex-col bg-white/60 backdrop-blur-md border-r border-gray-200/50 shadow-[4px_0_24px_rgba(0,0,0,0.02)] h-[calc(100vh-64px)] sticky top-[64px] overflow-y-auto">
-      <nav className="flex-1 px-4 py-6 space-y-1.5">
+    <aside className="hidden md:flex w-64 flex-col bg-white/10 dark:bg-black/20 backdrop-blur-3xl border-r border-white/30 dark:border-white/10 shadow-[4px_0_24px_rgba(0,0,0,0.1)] h-[calc(100vh-64px)] sticky top-[64px] overflow-y-auto">
+      <nav className="flex-1 px-4 py-6 space-y-2">
         <button 
           onClick={() => navigate('/')} 
-          className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all ${location.pathname === '/' || location.pathname === '/dashboard' ? 'bg-primary-50 text-primary-700 font-semibold shadow-sm border border-primary-100' : 'text-gray-600 hover:bg-white hover:shadow-sm border border-transparent'}`}
+          className={`w-full flex items-center gap-3 px-4 py-3 rounded-full transition-all ${getButtonClass(isDashboardActive)}`}
         >
-          <Sprout size={20} className={location.pathname === '/' || location.pathname === '/dashboard' ? 'text-primary-600' : 'text-gray-400'} />
-          Dashboard
+          <Sprout size={20} className={isDashboardActive ? 'text-[#2a6d5d] dark:text-[#4eb69c]' : 'text-gray-700 dark:text-gray-400'} />
+          <span>Dashboard</span>
         </button>
+        
         <div className="pt-6 pb-2">
-          <p className="px-3 text-xs font-semibold text-gray-400 uppercase tracking-wider">Tools & Utilities</p>
+          <p className="px-4 text-xs font-black text-gray-800 dark:text-gray-400 uppercase tracking-widest drop-shadow-sm">Tools & Utilities</p>
         </div>
+        
         {visibleItems.map((item) => {
           const isActive = location.pathname === item.path;
           return (
             <button
               key={item.path}
               onClick={() => navigate(item.path)}
-              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all ${isActive ? 'bg-primary-50 text-primary-700 font-semibold shadow-sm border border-primary-100' : 'text-gray-600 hover:bg-white hover:shadow-sm border border-transparent'}`}
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-full transition-all ${getButtonClass(isActive)}`}
             >
-              <span className={isActive ? 'text-primary-600' : 'text-gray-400'}>{item.icon}</span>
+              <span className={isActive ? 'text-[#2a6d5d] dark:text-[#4eb69c]' : 'text-gray-700 dark:text-gray-400'}>{item.icon}</span>
               <span className="truncate">{item.label}</span>
             </button>
           );

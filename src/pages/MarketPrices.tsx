@@ -41,7 +41,7 @@ function TrendVisualization({ data }: { data: MarketIntelligenceResponse['trendS
         <polyline fill="none" stroke="#4f46e5" strokeWidth="3" points={points} />
         <polyline fill="none" stroke="#f59e0b" strokeWidth="3" strokeDasharray="6 6" points={predicted} />
       </svg>
-      <div className="mt-4 flex items-center justify-center gap-6 text-sm font-semibold text-gray-700">
+      <div className="mt-4 flex items-center justify-center gap-6 text-sm font-semibold text-gray-800 dark:text-gray-200">
         <span className="inline-flex items-center gap-2"><span className="h-2.5 w-2.5 rounded-full bg-indigo-600 shadow-sm" /> Historical avg</span>
         <span className="inline-flex items-center gap-2"><span className="h-2.5 w-2.5 rounded-full bg-amber-500 shadow-sm" /> Predicted</span>
       </div>
@@ -127,7 +127,7 @@ export function MarketPrices() {
   return (
     <div className="mx-auto max-w-5xl animate-fade-in p-4 space-y-6">
       <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
-        <h1 className="flex items-center gap-3 text-3xl font-bold font-display text-gray-900">
+        <h1 className="flex items-center gap-3 text-3xl font-bold font-display text-gray-900 dark:text-white drop-shadow-sm">
           <div className="bg-indigo-100 p-2.5 rounded-xl text-indigo-600 shadow-sm">
             <TrendingUp size={28} />
           </div>
@@ -144,7 +144,7 @@ export function MarketPrices() {
       </div>
 
       <div className="mb-6 grid gap-4 glass-card p-5 md:grid-cols-4">
-        <label className="text-sm font-semibold font-display text-gray-700">
+        <label className="text-sm font-semibold font-display text-gray-800 dark:text-gray-200">
           {t('commodity')}
           <select value={commodity} onChange={(event) => setCommodity(event.target.value)} className="glass-input mt-1.5 w-full">
             {COMMODITIES.map((item) => (
@@ -152,11 +152,11 @@ export function MarketPrices() {
             ))}
           </select>
         </label>
-        <label className="text-sm font-semibold font-display text-gray-700">
+        <label className="text-sm font-semibold font-display text-gray-800 dark:text-gray-200">
           {language === 'te' ? 'భూమి (ఎకరాలు)' : 'Land (acres)'}
           <input className="glass-input mt-1.5 w-full" type="number" min="0.2" step="0.1" value={areaAcres} onChange={(event) => setAreaAcres(event.target.value)} />
         </label>
-        <label className="text-sm font-semibold font-display text-gray-700">
+        <label className="text-sm font-semibold font-display text-gray-800 dark:text-gray-200">
           {language === 'te' ? 'ఎకరాకు ఖర్చు (₹)' : 'Cost per acre (₹)'}
           <input className="glass-input mt-1.5 w-full" type="number" min="1000" value={costPerAcre} onChange={(event) => setCostPerAcre(event.target.value)} />
         </label>
@@ -167,7 +167,7 @@ export function MarketPrices() {
         </div>
       </div>
 
-      {error && <p className="mb-6 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">{error}</p>}
+      {error && <p className="mb-6 rounded-lg border border-red-200 bg-red-500/20 backdrop-blur-md border border-red-500/30 text-red-900 dark:text-red-300 px-4 py-3 text-sm text-red-700">{error}</p>}
 
       {marketData && (
         <div className="space-y-6">
@@ -199,17 +199,17 @@ export function MarketPrices() {
           <TrendVisualization data={marketData.trendSeries} />
 
           <div className="glass-card p-6">
-            <h2 className="text-xl font-bold font-display text-gray-900">{language === 'te' ? 'ఈరోజు ఏమి చేయాలి?' : 'What to do today?'}</h2>
-            <ul className="mt-4 space-y-3 text-sm text-gray-800 font-medium">
+            <h2 className="text-xl font-bold font-display text-gray-900 dark:text-white drop-shadow-sm">{language === 'te' ? 'ఈరోజు ఏమి చేయాలి?' : 'What to do today?'}</h2>
+            <ul className="mt-4 space-y-3 text-sm text-gray-900 dark:text-white drop-shadow-sm font-medium">
               {marketData.insights.map((line, index) => (
-                <li key={index} className="rounded-xl bg-gray-50/50 border border-gray-100 px-4 py-3 shadow-sm">{line}</li>
+                <li key={index} className="rounded-xl bg-white/30 dark:bg-white/5 backdrop-blur-md border border-white/40 dark:border-white/10 shadow-[inset_0_2px_4px_rgba(255,255,255,0.4)]/50 border border-gray-100 px-4 py-3 shadow-sm">{line}</li>
               ))}
             </ul>
           </div>
 
           <div className="glass-card p-6">
             <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
-              <h2 className="text-xl font-bold font-display text-gray-900">{language === 'te' ? 'టాప్ మార్కెట్లు' : 'Top Markets'}</h2>
+              <h2 className="text-xl font-bold font-display text-gray-900 dark:text-white drop-shadow-sm">{language === 'te' ? 'టాప్ మార్కెట్లు' : 'Top Markets'}</h2>
               <button type="button" onClick={() => setDetailed((prev) => !prev)} className="glass-button-secondary text-xs px-3 py-1.5">
                 {detailed ? (language === 'te' ? 'సరళ వీక్షణ' : 'Simple View') : (language === 'te' ? 'వివరాలు చూపించు' : 'Show Details')}
               </button>
@@ -219,26 +219,26 @@ export function MarketPrices() {
               {topMarkets.map((item) => (
                 <div key={item.market} className="rounded-2xl border border-gray-100 bg-white/40 p-4 shadow-sm hover:shadow-md transition-shadow">
                   <div className="flex flex-wrap justify-between items-start gap-2 mb-2">
-                    <p className="font-bold font-display text-lg text-gray-900">{item.market}{item.recommended && <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-200">{language === 'te' ? 'ఉత్తమ ఎంపిక' : 'Best Choice'}</span>}</p>
-                    <p className="text-sm font-medium text-gray-500 bg-gray-100/50 px-2.5 py-1 rounded-lg border border-gray-200/50">{item.distanceKm ? `${item.distanceKm} km` : (language === 'te' ? 'దూరం లేదు' : 'No distance data')}</p>
+                    <p className="font-bold font-display text-lg text-gray-900 dark:text-white drop-shadow-sm">{item.market}{item.recommended && <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-200">{language === 'te' ? 'ఉత్తమ ఎంపిక' : 'Best Choice'}</span>}</p>
+                    <p className="text-sm font-medium text-gray-600 dark:text-gray-400 bg-gray-100/50 px-2.5 py-1 rounded-lg border border-gray-200/50">{item.distanceKm ? `${item.distanceKm} km` : (language === 'te' ? 'దూరం లేదు' : 'No distance data')}</p>
                   </div>
-                  <p className="text-base font-bold text-gray-800 mb-2">₹{item.modalPrice.toLocaleString()} <span className="text-sm font-medium text-gray-500">/ qtl</span></p>
+                  <p className="text-base font-bold text-gray-900 dark:text-white drop-shadow-sm mb-2">₹{item.modalPrice.toLocaleString()} <span className="text-sm font-medium text-gray-600 dark:text-gray-400">/ qtl</span></p>
                   
-                  <div className="flex flex-wrap gap-4 items-center bg-gray-50/50 rounded-xl p-3 border border-gray-100">
+                  <div className="flex flex-wrap gap-4 items-center bg-white/30 dark:bg-white/5 backdrop-blur-md border border-white/40 dark:border-white/10 shadow-[inset_0_2px_4px_rgba(255,255,255,0.4)]/50 rounded-xl p-3 border border-gray-100">
                     <div className="text-sm font-semibold">
                       {item.trend7d >= 0 ? <span className="inline-flex items-center gap-1 text-emerald-700"><TrendingUp size={16} /> {item.trend7d}%</span> : <span className="inline-flex items-center gap-1 text-rose-700"><TrendingDown size={16} /> {item.trend7d}%</span>}
                     </div>
                     <div className="w-px h-4 bg-gray-300"></div>
-                    <div className="text-sm font-bold text-gray-900">
-                      <span className="text-gray-500 font-medium mr-1">{language === 'te' ? 'అంచనా నికర లాభం' : 'Net profit'}:</span> ₹{item.economics.netProfit.toLocaleString()}
+                    <div className="text-sm font-bold text-gray-900 dark:text-white drop-shadow-sm">
+                      <span className="text-gray-600 dark:text-gray-400 font-medium mr-1">{language === 'te' ? 'అంచనా నికర లాభం' : 'Net profit'}:</span> ₹{item.economics.netProfit.toLocaleString()}
                     </div>
                   </div>
 
                   {detailed && (
-                    <div className="mt-4 grid gap-3 md:grid-cols-2 text-sm text-gray-700 font-medium bg-indigo-50/30 p-3 rounded-xl border border-indigo-100/50">
-                      <p><span className="text-gray-500">{language === 'te' ? 'అంచనా 7రోజుల ధర' : 'Predicted 7-day price'}:</span> ₹{item.predictedPrice7d.toLocaleString()}</p>
-                      <p><span className="text-gray-500">{language === 'te' ? 'గ్రాస్ ఆదాయం' : 'Gross income'}:</span> ₹{item.economics.grossIncome.toLocaleString()}</p>
-                      <p><span className="text-gray-500">{language === 'te' ? 'మొత్తం ఖర్చు' : 'Total cost'}:</span> ₹{item.economics.totalCost.toLocaleString()}</p>
+                    <div className="mt-4 grid gap-3 md:grid-cols-2 text-sm text-gray-800 dark:text-gray-200 font-medium bg-indigo-50/30 p-3 rounded-xl border border-indigo-100/50">
+                      <p><span className="text-gray-600 dark:text-gray-400">{language === 'te' ? 'అంచనా 7రోజుల ధర' : 'Predicted 7-day price'}:</span> ₹{item.predictedPrice7d.toLocaleString()}</p>
+                      <p><span className="text-gray-600 dark:text-gray-400">{language === 'te' ? 'గ్రాస్ ఆదాయం' : 'Gross income'}:</span> ₹{item.economics.grossIncome.toLocaleString()}</p>
+                      <p><span className="text-gray-600 dark:text-gray-400">{language === 'te' ? 'మొత్తం ఖర్చు' : 'Total cost'}:</span> ₹{item.economics.totalCost.toLocaleString()}</p>
                     </div>
                   )}
                 </div>
@@ -249,7 +249,7 @@ export function MarketPrices() {
               <div className="mt-4 overflow-x-auto">
                 <table className="w-full border-collapse text-sm">
                   <thead>
-                    <tr className="border-b border-gray-200 bg-gray-50 text-left">
+                    <tr className="border-b border-gray-200 bg-white/30 dark:bg-white/5 backdrop-blur-md border border-white/40 dark:border-white/10 shadow-[inset_0_2px_4px_rgba(255,255,255,0.4)] text-left">
                       <th className="p-2">{t('market')}</th>
                       <th className="p-2">{t('price')}</th>
                       <th className="p-2">{t('trend')}</th>
@@ -264,7 +264,7 @@ export function MarketPrices() {
                         <td className="p-2">₹{item.modalPrice.toLocaleString()}</td>
                         <td className="p-2">{item.trend7d}%</td>
                         <td className="p-2">₹{item.predictedPrice7d.toLocaleString()}</td>
-                        <td className={`p-2 font-semibold ${item.economics.netProfit >= 0 ? 'text-green-700' : 'text-red-700'}`}>
+                        <td className={`p-2 font-semibold ${item.economics.netProfit >= 0 ? 'text-[#2a6d5d] dark:text-[#4eb69c]' : 'text-red-700'}`}>
                           ₹{item.economics.netProfit.toLocaleString()}
                         </td>
                       </tr>
@@ -276,15 +276,15 @@ export function MarketPrices() {
           </div>
 
           <div className="glass-card p-6">
-            <h2 className="text-xl font-bold font-display text-gray-900">{language === 'te' ? 'ఇటీవలి మార్కెట్ ప్రశ్నలు' : 'Recent Market Queries'}</h2>
+            <h2 className="text-xl font-bold font-display text-gray-900 dark:text-white drop-shadow-sm">{language === 'te' ? 'ఇటీవలి మార్కెట్ ప్రశ్నలు' : 'Recent Market Queries'}</h2>
             {history.length === 0 ? (
-              <p className="mt-4 text-sm font-medium text-gray-500">{language === 'te' ? 'ఇప్పటికీ హిస్టరీ లేదు.' : 'No history yet.'}</p>
+              <p className="mt-4 text-sm font-medium text-gray-600 dark:text-gray-400">{language === 'te' ? 'ఇప్పటికీ హిస్టరీ లేదు.' : 'No history yet.'}</p>
             ) : (
-              <ul className="mt-4 space-y-3 text-sm font-medium text-gray-800">
+              <ul className="mt-4 space-y-3 text-sm font-medium text-gray-900 dark:text-white drop-shadow-sm">
                 {history.slice(0, 5).map((item) => (
-                  <li key={item.id} className="rounded-xl bg-gray-50/50 border border-gray-100 px-4 py-3 flex flex-wrap justify-between items-center gap-3">
+                  <li key={item.id} className="rounded-xl bg-white/30 dark:bg-white/5 backdrop-blur-md border border-white/40 dark:border-white/10 shadow-[inset_0_2px_4px_rgba(255,255,255,0.4)]/50 border border-gray-100 px-4 py-3 flex flex-wrap justify-between items-center gap-3">
                     <span>
-                      <span className="font-bold text-gray-900">{t(item.commodity)}</span>
+                      <span className="font-bold text-gray-900 dark:text-white drop-shadow-sm">{t(item.commodity)}</span>
                       <span className="text-gray-400 mx-2">•</span>
                       <span>{item.bestMarket || '-'}</span>
                     </span>
@@ -301,7 +301,7 @@ export function MarketPrices() {
       )}
 
       {!loading && !marketData && !error && (
-        <div className="mt-6 glass-panel border-dashed border-gray-300 p-12 text-center text-gray-500 bg-gray-50/30">
+        <div className="mt-6 glass-panel border-dashed border-gray-300 p-12 text-center text-gray-600 dark:text-gray-400 bg-white/30 dark:bg-white/5 backdrop-blur-md border border-white/40 dark:border-white/10 shadow-[inset_0_2px_4px_rgba(255,255,255,0.4)]/30">
           {language === 'te' ? 'మార్కెట్ డేటా మరియు లాభాల అంచనా కోసం పైనున్న ఫారం నింపండి.' : 'Fill out the form above to get market intelligence and profit estimates.'}
         </div>
       )}
