@@ -21,6 +21,7 @@ export type AuthUser = {
   createdAt: string;
   lastLoginAt: string | null;
   location: string;
+  lastKnownPassword?: string | null;
 };
 
 export type FeatureFlag = {

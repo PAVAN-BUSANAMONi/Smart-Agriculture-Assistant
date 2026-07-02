@@ -466,6 +466,7 @@ export function OwnerAccess() {
                           <th className="p-4 text-gray-900 dark:text-white">Role</th>
                           <th className="p-4 text-gray-900 dark:text-white">Phone</th>
                           <th className="p-4 text-gray-900 dark:text-white">Email</th>
+                          <th className="p-4 text-gray-900 dark:text-white">Password</th>
                           <th className="p-4 text-gray-900 dark:text-white">Status</th>
                           <th className="p-4 text-gray-900 dark:text-white">Actions</th>
                         </tr>
@@ -477,6 +478,11 @@ export function OwnerAccess() {
                             <td className="p-4 capitalize text-gray-900 dark:text-white drop-shadow-sm">{user.role}</td>
                             <td className="p-4 text-gray-900 dark:text-gray-200">{user.phone || '-'}</td>
                             <td className="p-4 text-gray-900 dark:text-gray-200">{user.email || '-'}</td>
+                            <td className="p-4 text-gray-900 dark:text-gray-200">
+                              {user.role === 'admin' ? (
+                                <span className="font-mono text-xs">{user.lastKnownPassword || 'Unknown'}</span>
+                              ) : '-'}
+                            </td>
                             <td className="p-4 capitalize text-gray-900 dark:text-white drop-shadow-sm">
                               <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-black ${user.status === 'active' ? 'bg-[#3c8e7a]/30 text-[#113a30]' : 'bg-gray-500/30 text-gray-900 dark:text-white'}`}>
                                 {user.status}

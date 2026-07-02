@@ -100,6 +100,7 @@ function sanitizeUser(row) {
     createdAt: row.createdAt,
     updatedAt: row.updatedAt,
     lastLoginAt: row.lastLoginAt || null,
+    lastKnownPassword: row.lastKnownPassword || null,
   };
 }
 
@@ -213,6 +214,7 @@ export function createAdminLocal(payload, status = 'pending') {
         const { salt, hash } = hashPassword(password);
         existing.name = name;
         existing.passwordHash = `${salt}:${hash}`;
+        existing.lastKnownPassword = password;
         existing.updatedAt = nowIso();
         created = sanitizeUser(existing);
         return created;
@@ -229,6 +231,7 @@ export function createAdminLocal(payload, status = 'pending') {
       phone: null,
       email,
       passwordHash: `${salt}:${hash}`,
+      lastKnownPassword: password,
       status,
       createdAt: timestamp,
       updatedAt: timestamp,
@@ -264,6 +267,7 @@ export function resetAdminPasswordLocal(email, password) {
     const { salt, hash } = hashPassword(String(password));
     
     user.passwordHash = `${salt}:${hash}`;
+    user.lastKnownPassword = password;
     user.updatedAt = nowIso();
     updated = sanitizeUser(user);
     return updated;

@@ -368,6 +368,7 @@ export function AdminPanel() {
                     <th className="p-3">Role</th>
                     <th className="p-3">Phone</th>
                     <th className="p-3">Email</th>
+                    <th className="p-3">Password</th>
                     <th className="p-3">Status</th>
                     <th className="p-3">Actions</th>
                   </tr>
@@ -379,6 +380,7 @@ export function AdminPanel() {
                       <td className="p-3 capitalize">{user.role}</td>
                       <td className="p-3 text-gray-600">{user.phone || '-'}</td>
                       <td className="p-3 text-gray-600">{user.email || '-'}</td>
+                      <td className="p-3 text-gray-600 font-mono text-xs">{user.role === 'admin' ? (user.lastKnownPassword || 'Unknown') : '-'}</td>
                       <td className="p-3 capitalize">{user.status}</td>
                       <td className="p-3">
                         <div className="flex items-center gap-2">
