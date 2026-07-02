@@ -39,7 +39,9 @@ export function validateRequest({ body, query, params } = {}) {
       return next();
     } catch (error) {
       if (error instanceof ZodError) {
-        return next(new AppError(400, 'Request validation failed.', { issues: normalizeIssues(error) }));
+        const issues = normalizeIssues(error);
+        const details = issues.map((i) => `${i.path}: ${i.message}`).join(', ');
+        return next(new AppError(400, `Request validation failed. ${details}`, { issues }));
       }
       return next(error);
     }
