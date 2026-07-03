@@ -111,10 +111,10 @@ function readPositiveInteger(value, fallback) {
 
 function readSmtpTimeouts() {
   return {
-    connectionTimeout: readPositiveInteger(process.env.SMTP_CONNECTION_TIMEOUT_MS, 20000),
-    greetingTimeout: readPositiveInteger(process.env.SMTP_GREETING_TIMEOUT_MS, 20000),
-    socketTimeout: readPositiveInteger(process.env.SMTP_SOCKET_TIMEOUT_MS, 45000),
-    sendTimeout: readPositiveInteger(process.env.SMTP_SEND_TIMEOUT_MS, 60000),
+    connectionTimeout: readPositiveInteger(process.env.SMTP_CONNECTION_TIMEOUT_MS, 5000),
+    greetingTimeout: readPositiveInteger(process.env.SMTP_GREETING_TIMEOUT_MS, 5000),
+    socketTimeout: readPositiveInteger(process.env.SMTP_SOCKET_TIMEOUT_MS, 5000),
+    sendTimeout: readPositiveInteger(process.env.SMTP_SEND_TIMEOUT_MS, 15000),
   };
 }
 
