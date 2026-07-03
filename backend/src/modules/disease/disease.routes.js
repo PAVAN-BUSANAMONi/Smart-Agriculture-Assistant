@@ -8,9 +8,22 @@ const router = Router();
 
 const analyzeBodySchema = z.object({
   userId: z.string().trim().min(1).max(64).optional(),
-  imageData: z.string().trim().min(30).max(6_000_000),
-  imageUrl: z.string().trim().min(30).max(6_000_000).optional(),
+  images: z.array(z.object({
+    type: z.enum(['front', 'back', 'full']),
+    data: z.string().trim().min(30).max(6_000_000)
+  })).min(1).max(3),
   crop: z.string().trim().min(1).max(80).optional(),
+  context: z.object({
+    weather: z.object({
+      temperature: z.string().optional(),
+      humidity: z.string().optional(),
+      condition: z.string().optional(),
+    }).optional(),
+    season: z.string().optional(),
+    growthStage: z.string().optional(),
+    region: z.string().optional(),
+    month: z.string().optional(),
+  }).optional(),
 }).strict();
 
 const saveScanBodySchema = z.object({
@@ -30,37 +43,116 @@ const historyQuerySchema = z.object({
 router.post('/analyze', validateRequest({ body: analyzeBodySchema }), async (req, res) => {
   const payload = req.body || {};
   const userId = String(req.headers['x-user-id'] || payload.userId || 'anonymous');
-  const imageData = String(payload.imageData || payload.imageUrl || '');
+  const images = payload.images || [];
   const crop = String(payload.crop || 'unknown');
+  const context = payload.context || {};
 
-  if (!imageData) {
-    return res.status(400).json({ message: 'imageData is required' });
+  if (!images || images.length === 0) {
+    return res.status(400).json({ message: 'images array is required' });
   }
 
-  const prediction = await inferDisease({ imageData, crop });
-  const level = prediction.diseaseKey === 'healthy' ? 'low' : prediction.confidence >= 82 ? 'high' : 'medium';
+  // Analyze each image concurrently
+  const results = await Promise.all(
+    images.map(async (img) => {
+      const prediction = await inferDisease({ imageData: img.data, crop, context });
+      return { type: img.type, ...prediction };
+    })
+  );
+
+  // Check if any rejected the image as not a plant immediately
+  const firstError = results.find(r => r.diseaseKey === 'not_a_plant');
+  if (firstError) {
+    return res.status(400).json({ status: 'error', reason: 'not_a_plant' });
+  }
+
+  // Filter out uncertain or poor quality predictions for the consensus
+  const validPredictions = results.filter(r => !['not_a_plant', 'blurry', 'low_light', 'leaf_not_visible', 'uncertain'].includes(r.diseaseKey));
+
+  if (validPredictions.length === 0) {
+    // If all failed validation, just return the first one
+    const errPred = results[0];
+    const scan = addDiseaseScan({
+      userId,
+      crop,
+      diseaseKey: errPred.diseaseKey,
+      confidence: errPred.confidence,
+      level: 'low',
+      imageUrl: images[0].data,
+      notes: `Failed quality checks across ${images.length} images.`,
+    });
+    return res.json({ prediction: errPred, verificationResults: results, scan });
+  }
+
+  // Consensus Algorithm
+  const diseaseCounts = {};
+  for (const r of validPredictions) {
+    diseaseCounts[r.diseaseKey] = (diseaseCounts[r.diseaseKey] || 0) + 1;
+  }
+
+  let majorityDisease = null;
+  let maxCount = 0;
+  for (const [key, count] of Object.entries(diseaseCounts)) {
+    if (count > maxCount) {
+      maxCount = count;
+      majorityDisease = key;
+    }
+  }
+
+  // Priority: Majority -> Front Leaf -> First valid
+  const primaryPrediction = validPredictions.find(r => r.type === 'front') || validPredictions[0];
+  const finalDiseaseKey = majorityDisease || primaryPrediction.diseaseKey;
+  const finalPrediction = results.find(r => r.diseaseKey === finalDiseaseKey) || primaryPrediction;
+
+  // Boost confidence if multiple agree
+  let combinedConfidence = finalPrediction.confidence;
+  if (maxCount > 1) {
+    combinedConfidence = Math.min(99, combinedConfidence + (maxCount - 1) * 10);
+  }
+
+  const level = finalDiseaseKey === 'healthy' ? 'low' : combinedConfidence >= 82 ? 'high' : 'medium';
 
   const scan = addDiseaseScan({
     userId,
     crop,
-    diseaseKey: prediction.diseaseKey,
-    confidence: prediction.confidence,
+    diseaseKey: finalDiseaseKey,
+    confidence: combinedConfidence,
     level,
-    imageUrl: imageData,
-    notes: `Inference source: ${prediction.source}`,
+    imageUrl: images[0].data,
+    notes: `Verified by ${images.length} images. Consensus: ${finalDiseaseKey}.`,
   });
 
   return res.json({
     prediction: {
-      diseaseKey: prediction.diseaseKey,
-      diseaseName: prediction.diseaseName,
-      confidence: prediction.confidence,
-      cause: prediction.cause,
-      treatment: prediction.treatment,
-      prevention: prediction.prevention,
+      diseaseKey: finalDiseaseKey,
+      diseaseName: finalPrediction.diseaseName,
+      scientificName: finalPrediction.scientificName,
+      description: finalPrediction.description,
+      confidence: combinedConfidence,
+      symptoms: finalPrediction.symptoms,
+      organicTreatment: finalPrediction.organicTreatment,
+      chemicalTreatment: finalPrediction.chemicalTreatment,
+      applicationSteps: finalPrediction.applicationSteps,
+      safetyPrecautions: finalPrediction.safetyPrecautions,
+      recoveryTime: finalPrediction.recoveryTime,
+      preventionMethods: finalPrediction.preventionMethods,
+      cropRotation: finalPrediction.cropRotation,
+      waterManagement: finalPrediction.waterManagement,
+      soilHealth: finalPrediction.soilHealth,
+      spacingTechniques: finalPrediction.spacingTechniques,
+      resistantVarieties: finalPrediction.resistantVarieties,
+      toolSanitation: finalPrediction.toolSanitation,
+      seasonalPrecautions: finalPrediction.seasonalPrecautions,
+      referenceImages: finalPrediction.referenceImages,
+      contextAdvice: finalPrediction.contextAdvice,
       level,
-      source: prediction.source,
+      source: 'multi-image-consensus',
     },
+    verificationResults: results.map(r => ({
+      type: r.type,
+      diseaseKey: r.diseaseKey,
+      diseaseName: r.diseaseName,
+      confidence: r.confidence,
+    })),
     scan,
   });
 });

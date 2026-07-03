@@ -4,6 +4,7 @@ import { api, WeatherDecisionResponse } from '../services/api';
 import { useLanguage } from '../contexts/LanguageContext';
 import { createAlert, shouldTriggerAlert } from '../utils/alertEngine';
 import { pushBrowserNotification } from '../utils/browserNotifications';
+import { RippleButton } from '../components/ui/RippleButton';
 
 type CachedWeather = WeatherDecisionResponse;
 type WeatherCoordinates = {
@@ -499,10 +500,10 @@ export function Weather() {
     <div className="mx-auto max-w-6xl animate-fade-in space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <h1 className="text-3xl font-bold font-display text-gray-900 dark:text-white drop-shadow-sm">{t('weather_forecast')}</h1>
-        <button
+        <RippleButton
           type="button"
           onClick={() => setDetailedView((prev) => !prev)}
-          className="glass-button-secondary text-sm px-4 py-2"
+          variant="secondary" className="text-sm px-4 py-2"
         >
           {detailedView
             ? language === 'te'
@@ -511,7 +512,7 @@ export function Weather() {
             : language === 'te'
             ? 'వివర దృశ్యం'
             : 'Detailed View'}
-        </button>
+        </RippleButton>
       </div>
 
       {isOffline && (
@@ -697,13 +698,13 @@ export function Weather() {
             placeholder="https://your-webhook-url"
             className="glass-input flex-1"
           />
-          <button
+          <RippleButton
             type="button"
             onClick={() => localStorage.setItem('managerWebhookUrl', webhookInput.trim())}
-            className="glass-button whitespace-nowrap"
+            variant="primary" className="whitespace-nowrap"
           >
             {t('save_webhook')}
-          </button>
+          </RippleButton>
         </div>
       </div>
     </div>

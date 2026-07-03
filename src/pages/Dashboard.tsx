@@ -16,6 +16,9 @@ import { readAlerts } from '../utils/alertEngine';
 import { useNotifications } from '../contexts/NotificationContext';
 import { useAuth } from '../contexts/AuthContext';
 import { api } from '../services/api';
+import { GlowCard } from '../components/ui/GlowCard';
+import { Skeleton } from '../components/ui/SkeletonLoader';
+import { motion } from 'framer-motion';
 
 export function Dashboard() {
   const navigate = useNavigate();
@@ -97,12 +100,18 @@ export function Dashboard() {
       </div>
 
       {/* Top Widgets Row */}
-      <div className="mb-8 grid gap-6 md:grid-cols-3">
+      <motion.div 
+        className="mb-8 grid gap-6 md:grid-cols-3"
+        initial="initial"
+        animate="animate"
+        variants={{ animate: { transition: { staggerChildren: 0.08 } } }}
+      >
         
         {/* Weather Widget */}
-        <div 
+        <motion.div 
+          variants={{ initial: { opacity: 0, y: 16 }, animate: { opacity: 1, y: 0, transition: { duration: 0.35 } } }}
           onClick={() => navigate('/weather')}
-          className="glass-card p-6 flex flex-col justify-between cursor-pointer group min-h-[160px]"
+          className="glass-card p-6 flex flex-col justify-between cursor-pointer group min-h-[160px] scale-hover"
         >
           <div className="flex justify-between items-start mb-4">
             <div className="bg-blue-500/20 backdrop-blur-md border border-blue-500/30 text-blue-900 dark:text-blue-300 text-blue-600 p-2.5 rounded-xl shadow-sm">
@@ -113,7 +122,7 @@ export function Dashboard() {
           <div>
             <p className="text-sm font-semibold text-gray-600 dark:text-gray-400 mb-1">Current Weather</p>
             {isLoadingWeather ? (
-              <div className="h-8 bg-gray-200 rounded animate-pulse w-3/4"></div>
+              <Skeleton variant="text" width="75%" height="32px" />
             ) : weatherSnap ? (
               <div>
                 <div className="text-3xl font-display font-bold text-gray-900 dark:text-white drop-shadow-sm">{weatherSnap.tempC}°C</div>
@@ -123,10 +132,13 @@ export function Dashboard() {
               <p className="text-sm text-gray-400">Location required</p>
             )}
           </div>
-        </div>
+        </motion.div>
 
         {/* Alerts Widget */}
-        <div className="glass-card p-6 flex flex-col justify-between min-h-[160px]">
+        <motion.div 
+          variants={{ initial: { opacity: 0, y: 16 }, animate: { opacity: 1, y: 0, transition: { duration: 0.35 } } }}
+          className="glass-card p-6 flex flex-col justify-between min-h-[160px] scale-hover"
+        >
           <div className="flex justify-between items-start mb-4">
             <div className={`p-2.5 rounded-xl shadow-sm ${alertCount > 0 ? 'bg-amber-50 text-amber-600' : 'bg-[#4eb69c]/20 backdrop-blur-md border border-[#4eb69c]/30 text-[#111] dark:text-[#4eb69c] text-[#4eb69c]'}`}>
               <Activity size={24} />
@@ -137,12 +149,13 @@ export function Dashboard() {
             <div className="text-3xl font-display font-bold text-gray-900 dark:text-white drop-shadow-sm">{alertCount}</div>
             <p className="text-sm text-gray-700 dark:text-gray-300 mt-1">{alertCount > 0 ? 'Requires attention' : 'All systems normal'}</p>
           </div>
-        </div>
+        </motion.div>
 
         {/* Farm Profile Widget */}
-        <div 
+        <motion.div 
+          variants={{ initial: { opacity: 0, y: 16 }, animate: { opacity: 1, y: 0, transition: { duration: 0.35 } } }}
           onClick={() => navigate('/profile')}
-          className="glass-card p-6 flex flex-col justify-between cursor-pointer group min-h-[160px]"
+          className="glass-card p-6 flex flex-col justify-between cursor-pointer group min-h-[160px] scale-hover"
         >
            <div className="flex justify-between items-start mb-4">
             <div className="bg-purple-50 text-purple-600 p-2.5 rounded-xl shadow-sm">
@@ -160,9 +173,9 @@ export function Dashboard() {
               {profile.landSize ? `${profile.landSize} acres` : 'Size Not Set'}
             </p>
           </div>
-        </div>
+        </motion.div>
 
-      </div>
+      </motion.div>
 
       {/* AI Assistant Banner */}
       <div 
@@ -194,10 +207,13 @@ export function Dashboard() {
             { id: 2, title: t('farming_tips'), icon: <Lightbulb size={24}/>, path: '/farming-tips', color: 'text-amber-500', bg: 'bg-amber-50 border-amber-100' },
             { id: 3, title: t('govt_schemes'), icon: <Activity size={24}/>, path: '/govt-schemes', color: 'text-indigo-500', bg: 'bg-indigo-50 border-indigo-100' },
           ].map(tool => (
-            <div 
+            <GlowCard 
               key={tool.id} 
+              className="cursor-pointer"
+            >
+            <div
               onClick={() => navigate(tool.path)}
-              className="glass-card flex items-center p-4 cursor-pointer group"
+              className="flex items-center p-4 group"
             >
               <div className={`p-3 rounded-xl border ${tool.bg} ${tool.color} mr-4 transition-transform group-hover:scale-110 shadow-sm`}>
                 {tool.icon}
@@ -205,6 +221,7 @@ export function Dashboard() {
               <div className="flex-1 font-semibold text-gray-900 dark:text-white drop-shadow-sm">{tool.title}</div>
               <ArrowRight size={18} className="text-gray-300 group-hover:text-primary-500 transition-colors" />
             </div>
+            </GlowCard>
           ))}
         </div>
       </div>

@@ -1,4 +1,5 @@
-import { FormEvent, useEffect, useMemo, useState } from 'react';
+import { FormEvent, useEffect, useMemo, useState, useRef } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Bot, LoaderCircle, Send, Sparkles, UserRound, MessageSquarePlus, History, MessageSquare } from 'lucide-react';
 import { api, type AiChatHistoryItem, type AiChatResponse } from '../services/api';
 
@@ -100,6 +101,14 @@ export function AIAssistant() {
   
   const primaryCrop = useMemo(() => readPrimaryCrop(), []);
   const farmerName = useMemo(() => readFarmerName(), []);
+
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  
+  useEffect(() => {
+    if (activeTab === 'chat') {
+        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [liveMessages, loading, activeTab]);
 
   // Initialize live chat with a greeting
   useEffect(() => {
@@ -284,8 +293,15 @@ export function AIAssistant() {
 
   return (
     <div className="container mx-auto max-w-6xl p-4 flex flex-col h-[calc(100vh-2rem)]">
+      <AnimatePresence>
       {liveMessages.length <= 1 && (
-      <section className="shrink-0 rounded-[28px] border border-[#d3e8cc] bg-[linear-gradient(130deg,#f7fff4_0%,#f0f8e8_50%,#edf8ff_100%)] p-5 shadow-[0_20px_45px_rgba(58,107,78,0.12)]">
+      <motion.section 
+        initial={{ opacity: 0, height: 0 }}
+        animate={{ opacity: 1, height: 'auto', marginBottom: 20 }}
+        exit={{ opacity: 0, height: 0, overflow: 'hidden', padding: 0, marginBottom: 0, border: 'none' }}
+        transition={{ duration: 0.35, ease: 'easeInOut' }}
+        className="shrink-0 rounded-[28px] border border-[#d3e8cc] bg-[linear-gradient(130deg,#f7fff4_0%,#f0f8e8_50%,#edf8ff_100%)] p-5 shadow-[0_20px_45px_rgba(58,107,78,0.12)]"
+      >
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
             <p className="text-xs font-bold uppercase tracking-[0.26em] text-[#4f7d4f]">Gemini AI Assistant</p>
@@ -324,8 +340,9 @@ export function AIAssistant() {
                 Chat History
             </button>
         </div>
-      </section>
+      </motion.section>
       )}
+      </AnimatePresence>
 
       {activeTab === 'history' && (
         <section className="shrink-0 mt-5 rounded-[20px] border border-[#dbe8d8] bg-white/85 p-4 shadow-sm animate-fade-in">
@@ -425,9 +442,9 @@ export function AIAssistant() {
              visibleHistoryMessages.length ? (
                 visibleHistoryMessages.map((item) => <ChatMessage key={item.id} item={item} />)
               ) : (
-                <div className="rounded-2xl border border-[#e2ece0] bg-[#f8fbf7] p-4 text-sm text-[#4b6c4f]">
+                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="rounded-2xl border border-[#e2ece0] bg-[#f8fbf7] p-4 text-sm text-[#4b6c4f]">
                   {hasActiveFilters ? 'No past chats match these filters.' : 'You have no chat history yet.'}
-                </div>
+                </motion.div>
               )
           )}
 
@@ -435,7 +452,11 @@ export function AIAssistant() {
               liveMessages.map((item) => <ChatMessage key={item.id} item={item} />)
           )}
           {activeTab === 'chat' && loading && (
-            <article className="flex gap-3 justify-start animate-fade-in">
+            <motion.article 
+              initial={{ opacity: 0, y: 15 }} 
+              animate={{ opacity: 1, y: 0 }} 
+              className="flex gap-3 justify-start"
+            >
               <div className="mt-1 rounded-full bg-[linear-gradient(135deg,#2c7d41,#4c9f5c)] p-2 text-white shadow-sm h-9 w-9 flex items-center justify-center shrink-0">
                 <Bot size={18} />
               </div>
@@ -444,8 +465,9 @@ export function AIAssistant() {
                 <span className="h-2 w-2 bg-[#5d9964] rounded-full animate-bounce [animation-delay:-0.15s]"></span>
                 <span className="h-2 w-2 bg-[#5d9964] rounded-full animate-bounce"></span>
               </div>
-            </article>
+            </motion.article>
           )}
+          <div ref={messagesEndRef} className="h-2" />
         </div>
 
         {error && <div className="mt-3 shrink-0 rounded-xl border border-[#f2c9c2] bg-[#fff2ef] px-3 py-2 text-sm text-[#9d3c30]">{error}</div>}
@@ -480,7 +502,12 @@ export function AIAssistant() {
 
 function ChatMessage({ item }: { item: ChatItem }) {
     return (
-        <article className={`flex gap-3 ${item.role === 'user' ? 'justify-end' : 'justify-start'} animate-fade-in`}>
+        <motion.article 
+            initial={{ opacity: 0, y: 15, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ type: 'spring', stiffness: 260, damping: 25 }}
+            className={`flex gap-3 ${item.role === 'user' ? 'justify-end' : 'justify-start'}`}
+        >
             {item.role === 'assistant' && (
                 <div className="mt-1 rounded-full bg-[linear-gradient(135deg,#2c7d41,#4c9f5c)] p-2 text-white shadow-sm h-9 w-9 flex items-center justify-center shrink-0">
                 <Bot size={18} />
@@ -529,6 +556,6 @@ function ChatMessage({ item }: { item: ChatItem }) {
                 <UserRound size={18} />
                 </div>
             )}
-        </article>
+        </motion.article>
     );
 }

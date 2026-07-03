@@ -3,6 +3,7 @@ import { Loader2, MapPin, RefreshCcw, TrendingDown, TrendingUp } from 'lucide-re
 import { useLanguage } from '../contexts/LanguageContext';
 import { api, MarketIntelligenceResponse, MarketQueryHistoryItem } from '../services/api';
 import { createAlert } from '../utils/alertEngine';
+import { RippleButton } from '../components/ui/RippleButton';
 
 const COMMODITIES = ['rice', 'cotton', 'chilli', 'soybean', 'maize', 'onion', 'turmeric', 'banana'];
 
@@ -133,14 +134,14 @@ export function MarketPrices() {
           </div>
           {title}
         </h1>
-        <button
+        <RippleButton
           type="button"
           onClick={refreshData}
-          className="glass-button-secondary"
+          variant="secondary"
         >
           {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <RefreshCcw size={16} />}
           {language === 'te' ? 'రిఫ్రెష్' : 'Refresh'}
-        </button>
+        </RippleButton>
       </div>
 
       <div className="mb-6 grid gap-4 glass-card p-5 md:grid-cols-4">
@@ -161,9 +162,9 @@ export function MarketPrices() {
           <input className="glass-input mt-1.5 w-full" type="number" min="1000" value={costPerAcre} onChange={(event) => setCostPerAcre(event.target.value)} />
         </label>
         <div className="flex items-end">
-          <button type="button" onClick={refreshData} className="glass-button w-full py-2.5">
+          <RippleButton type="button" onClick={refreshData} variant="primary" className="w-full py-2.5">
             {language === 'te' ? 'లాభం చూసి మార్కెట్ ఎంచుకోండి' : 'Get Best Market'}
-          </button>
+          </RippleButton>
         </div>
       </div>
 
@@ -210,9 +211,9 @@ export function MarketPrices() {
           <div className="glass-card p-6">
             <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
               <h2 className="text-xl font-bold font-display text-gray-900 dark:text-white drop-shadow-sm">{language === 'te' ? 'టాప్ మార్కెట్లు' : 'Top Markets'}</h2>
-              <button type="button" onClick={() => setDetailed((prev) => !prev)} className="glass-button-secondary text-xs px-3 py-1.5">
+              <RippleButton type="button" onClick={() => setDetailed((prev) => !prev)} variant="secondary" className="text-xs px-3 py-1.5">
                 {detailed ? (language === 'te' ? 'సరళ వీక్షణ' : 'Simple View') : (language === 'te' ? 'వివరాలు చూపించు' : 'Show Details')}
-              </button>
+              </RippleButton>
             </div>
 
             <div className="space-y-4">

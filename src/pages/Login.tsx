@@ -5,6 +5,7 @@ import { api } from '../services/api';
 import { useAuth } from '../contexts/AuthContext';
 import { useTheme } from '../contexts/ThemeContext';
 import { Magnetic } from '../components/ui/Magnetic';
+import { RippleButton } from '../components/ui/RippleButton';
 
 type AuthMode = 'login' | 'register';
 type AuthRole = 'farmer' | 'admin';
@@ -351,12 +352,12 @@ export function Login() {
       </div>
 
       <div className="absolute top-2 right-2 sm:top-4 sm:right-4 z-50">
-        <button
+        <RippleButton
           onClick={toggleTheme}
           className="rounded-full bg-white/40 dark:bg-black/50 dark:bg-black/40 p-2 text-gray-900 dark:text-white dark:text-white/90 shadow-lg backdrop-blur-md transition hover:scale-105 hover:bg-white/60 dark:hover:bg-black/60 border border-white/20"
         >
           {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
-        </button>
+        </RippleButton>
       </div>
 
       <div className="relative z-10 flex min-h-screen items-center justify-center px-4 py-8">
@@ -369,7 +370,7 @@ export function Login() {
             {/* SWAPPED TO TOP: Role Toggle: Farmer / Admin */}
             {!inOtpStep && forgotPasswordStep === 'none' && (
               <div className="flex w-max gap-3 mb-1">
-                <button
+                <RippleButton
                   type="button"
                   onClick={() => handleRoleSwitch('farmer')}
                   className={`relative inline-flex items-center gap-2 rounded-full px-6 py-2 text-[0.95rem] font-bold transition overflow-hidden border cursor-pointer ${
@@ -379,8 +380,8 @@ export function Login() {
                   {isFarmer && <div className="pointer-events-none absolute inset-x-1 top-[2px] h-[45%] rounded-full bg-gradient-to-b from-white/40 to-transparent" />}
                   <Tractor size={18} className="relative z-10" />
                   <span className="relative z-10">Farmer</span>
-                </button>
-                <button
+                </RippleButton>
+                <RippleButton
                   type="button"
                   onClick={() => handleRoleSwitch('admin')}
                   className={`relative inline-flex items-center gap-2 rounded-full px-6 py-2 text-[0.95rem] font-bold transition overflow-hidden border cursor-pointer ${
@@ -390,14 +391,14 @@ export function Login() {
                   {!isFarmer && <div className="pointer-events-none absolute inset-x-1 top-[2px] h-[45%] rounded-full bg-gradient-to-b from-white/40 to-transparent" />}
                   <ShieldCheck size={18} className="relative z-10" />
                   <span className="relative z-10">Admin</span>
-                </button>
+                </RippleButton>
               </div>
             )}
 
             {/* SWAPPED TO BOTTOM: Mode Toggle: Login / Sign Up */}
             {!inOtpStep && forgotPasswordStep === 'none' && (
               <div className="flex w-max gap-3">
-                <button
+                <RippleButton
                   type="button"
                   onClick={() => handleModeSwitch('login')}
                   className={`relative overflow-hidden rounded-full px-8 py-2.5 text-[0.95rem] font-black transition cursor-pointer ${
@@ -406,8 +407,8 @@ export function Login() {
                 >
                   {mode === 'login' && <div className="pointer-events-none absolute inset-x-2 top-1 h-[40%] rounded-full bg-gradient-to-b from-white/80 to-transparent" />}
                   <span className="relative z-10">Login</span>
-                </button>
-                <button
+                </RippleButton>
+                <RippleButton
                   type="button"
                   onClick={() => handleModeSwitch('register')}
                   className={`relative overflow-hidden rounded-full px-8 py-2.5 text-[0.95rem] font-black transition cursor-pointer ${
@@ -416,7 +417,7 @@ export function Login() {
                 >
                   {mode === 'register' && <div className="pointer-events-none absolute inset-x-2 top-1 h-[40%] rounded-full bg-gradient-to-b from-white/80 to-transparent" />}
                   <span className="relative z-10">Sign Up</span>
-                </button>
+                </RippleButton>
               </div>
             )}
           </div>
@@ -474,7 +475,7 @@ export function Login() {
 
               {/* ADVANCED GLOSSY EMERALD BUTTON */}
               <Magnetic pull={0.2}>
-                <button
+                <RippleButton
                   type="submit"
                   disabled={submitting}
                   className="relative mt-8 inline-flex h-[60px] w-full items-center justify-center gap-2 rounded-full bg-gradient-to-b from-[#4eb69c]/90 to-[#235e4f]/90 text-[1.15rem] font-black text-white shadow-[inset_0_3px_6px_rgba(255,255,255,0.9),inset_0_-3px_8px_rgba(0,0,0,0.6),0_10px_25px_rgba(35,94,79,0.5)] border border-white/40 backdrop-blur-2xl transition hover:brightness-110 active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-70 overflow-hidden"
@@ -485,7 +486,7 @@ export function Login() {
                   
                   <span className="relative z-10 drop-shadow-md">{submitting ? 'verifying...' : primaryButtonLabel}</span>
                   <ArrowRight size={22} className="relative z-10 ml-2 drop-shadow-md" />
-                </button>
+                </RippleButton>
               </Magnetic>
             </form>
           )}
@@ -528,7 +529,7 @@ export function Login() {
 
               {mode === 'login' && (
                 <div className="flex justify-end mt-2">
-                  <button
+                  <RippleButton
                     type="button"
                     onClick={() => {
                       setForgotPasswordStep('email');
@@ -539,7 +540,7 @@ export function Login() {
                     className="text-[0.85rem] font-bold text-gray-900 dark:text-white drop-shadow-sm transition hover:text-white/80"
                   >
                     Forgot password?
-                  </button>
+                  </RippleButton>
                 </div>
               )}
 
@@ -547,7 +548,7 @@ export function Login() {
 
               {/* ADVANCED GLOSSY EMERALD BUTTON */}
               <Magnetic pull={0.2}>
-                <button
+                <RippleButton
                   type="submit"
                   disabled={submitting}
                   className="relative mt-8 inline-flex h-[60px] w-full items-center justify-center gap-2 rounded-full bg-gradient-to-b from-[#4eb69c]/90 to-[#235e4f]/90 text-[1.15rem] font-black text-white shadow-[inset_0_3px_6px_rgba(255,255,255,0.9),inset_0_-3px_8px_rgba(0,0,0,0.6),0_10px_25px_rgba(35,94,79,0.5)] border border-white/40 backdrop-blur-2xl transition hover:brightness-110 active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-70 overflow-hidden"
@@ -558,7 +559,7 @@ export function Login() {
                   
                   <span className="relative z-10 drop-shadow-md">{submitting ? 'Sending OTP...' : primaryButtonLabel}</span>
                   <ArrowRight size={22} className="relative z-10 ml-2 drop-shadow-md" />
-                </button>
+                </RippleButton>
               </Magnetic>
             </form>
           )}
@@ -581,7 +582,7 @@ export function Login() {
 
               {/* ADVANCED GLOSSY EMERALD BUTTON */}
               <Magnetic pull={0.2}>
-                <button
+                <RippleButton
                   type="submit"
                   disabled={submitting}
                   className="relative mt-8 inline-flex h-[60px] w-full items-center justify-center gap-2 rounded-full bg-gradient-to-b from-[#4eb69c]/90 to-[#235e4f]/90 text-[1.15rem] font-black text-white shadow-[inset_0_3px_6px_rgba(255,255,255,0.9),inset_0_-3px_8px_rgba(0,0,0,0.6),0_10px_25px_rgba(35,94,79,0.5)] border border-white/40 backdrop-blur-2xl transition hover:brightness-110 active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-70 overflow-hidden"
@@ -592,11 +593,11 @@ export function Login() {
                   
                   <span className="relative z-10 drop-shadow-md">{submitting ? 'Verifying...' : primaryButtonLabel}</span>
                   <ArrowRight size={22} className="relative z-10 ml-2 drop-shadow-md" />
-                </button>
+                </RippleButton>
               </Magnetic>
 
               <div className="flex items-center justify-center gap-6 pt-3 text-[0.95rem] font-black text-gray-900 dark:text-white drop-shadow-md">
-                <button
+                <RippleButton
                   type="button"
                   onClick={() => {
                     resetOtpState();
@@ -605,10 +606,10 @@ export function Login() {
                   className="transition hover:text-white cursor-pointer"
                 >
                   Back
-                </button>
-                <button type="button" onClick={() => void handleResendOtp()} className="transition hover:text-white cursor-pointer">
+                </RippleButton>
+                <RippleButton type="button" onClick={() => void handleResendOtp()} className="transition hover:text-white cursor-pointer">
                   Resend OTP
-                </button>
+                </RippleButton>
               </div>
             </form>
           )}
@@ -628,7 +629,7 @@ export function Login() {
 
               {error && <div className="rounded-2xl border border-red-400/60 bg-red-400/40 px-4 py-3 text-sm font-bold text-red-900 backdrop-blur-md shadow-[inset_0_2px_4px_rgba(255,255,255,0.5)]">{error}</div>}
 
-              <button
+              <RippleButton
                 type="submit"
                 disabled={submitting}
                 className="relative mt-8 inline-flex h-[60px] w-full items-center justify-center gap-2 rounded-full bg-gradient-to-b from-[#4eb69c]/90 to-[#235e4f]/90 text-[1.15rem] font-black text-white shadow-[inset_0_3px_6px_rgba(255,255,255,0.9),inset_0_-3px_8px_rgba(0,0,0,0.6),0_10px_25px_rgba(35,94,79,0.5)] border border-white/40 backdrop-blur-2xl transition hover:brightness-110 active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-70 overflow-hidden"
@@ -638,10 +639,10 @@ export function Login() {
                 
                 <span className="relative z-10 drop-shadow-md">{submitting ? 'Sending OTP...' : primaryButtonLabel}</span>
                 <ArrowRight size={22} className="relative z-10 ml-2 drop-shadow-md" />
-              </button>
+              </RippleButton>
 
               <div className="flex items-center justify-center pt-3 text-[0.95rem] font-black text-gray-900 dark:text-white drop-shadow-md">
-                <button
+                <RippleButton
                   type="button"
                   onClick={() => {
                     setForgotPasswordStep('none');
@@ -651,7 +652,7 @@ export function Login() {
                   className="transition hover:text-white"
                 >
                   Back to Login
-                </button>
+                </RippleButton>
               </div>
             </form>
           )}
@@ -672,7 +673,7 @@ export function Login() {
 
               {error && <div className="rounded-2xl border border-red-400/60 bg-red-400/40 px-4 py-3 text-sm font-bold text-red-900 backdrop-blur-md shadow-[inset_0_2px_4px_rgba(255,255,255,0.5)]">{error}</div>}
 
-              <button
+              <RippleButton
                 type="submit"
                 disabled={submitting}
                 className="relative mt-8 inline-flex h-[60px] w-full items-center justify-center gap-2 rounded-full bg-gradient-to-b from-[#4eb69c]/90 to-[#235e4f]/90 text-[1.15rem] font-black text-white shadow-[inset_0_3px_6px_rgba(255,255,255,0.9),inset_0_-3px_8px_rgba(0,0,0,0.6),0_10px_25px_rgba(35,94,79,0.5)] border border-white/40 backdrop-blur-2xl transition hover:brightness-110 active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-70 overflow-hidden"
@@ -682,10 +683,10 @@ export function Login() {
                 
                 <span className="relative z-10 drop-shadow-md">{submitting ? 'Verifying...' : primaryButtonLabel}</span>
                 <ArrowRight size={22} className="relative z-10 ml-2 drop-shadow-md" />
-              </button>
+              </RippleButton>
 
               <div className="flex items-center justify-center gap-6 pt-3 text-[0.95rem] font-black text-gray-900 dark:text-white drop-shadow-md">
-                <button
+                <RippleButton
                   type="button"
                   onClick={() => {
                     setForgotPasswordStep('email');
@@ -694,14 +695,14 @@ export function Login() {
                   className="transition hover:text-white cursor-pointer"
                 >
                   Back
-                </button>
-                <button
+                </RippleButton>
+                <RippleButton
                   type="button"
                   onClick={() => void handleForgotPassword()}
                   className="transition hover:text-white cursor-pointer"
                 >
                   Resend OTP
-                </button>
+                </RippleButton>
               </div>
             </form>
           )}
@@ -721,7 +722,7 @@ export function Login() {
 
               {error && <div className="rounded-2xl border border-red-400/60 bg-red-400/40 px-4 py-3 text-sm font-bold text-red-900 backdrop-blur-md shadow-[inset_0_2px_4px_rgba(255,255,255,0.5)]">{error}</div>}
 
-              <button
+              <RippleButton
                 type="submit"
                 disabled={submitting}
                 className="relative mt-8 inline-flex h-[60px] w-full items-center justify-center gap-2 rounded-full bg-gradient-to-b from-[#4eb69c]/90 to-[#235e4f]/90 text-[1.15rem] font-black text-white shadow-[inset_0_3px_6px_rgba(255,255,255,0.9),inset_0_-3px_8px_rgba(0,0,0,0.6),0_10px_25px_rgba(35,94,79,0.5)] border border-white/40 backdrop-blur-2xl transition hover:brightness-110 active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-70 overflow-hidden"
@@ -731,28 +732,28 @@ export function Login() {
                 
                 <span className="relative z-10 drop-shadow-md">{submitting ? 'Updating...' : primaryButtonLabel}</span>
                 <ArrowRight size={22} className="relative z-10 ml-2 drop-shadow-md" />
-              </button>
+              </RippleButton>
             </form>
           )}
 
           {!inOtpStep && forgotPasswordStep === 'none' && switchLine && switchAction && (
             <div className="relative z-10 mt-10 text-center text-[1rem] font-bold text-gray-900 dark:text-white drop-shadow-md">
               <span>{switchLine} </span>
-              <button
+              <RippleButton
                 type="button"
                 onClick={() => handleModeSwitch(mode === 'register' ? 'login' : 'register')}
                 className="text-white drop-shadow-lg transition hover:text-gray-200 ml-1 font-black"
               >
                 {switchAction}
-              </button>
+              </RippleButton>
               <div className="mt-8">
-                <button
+                <RippleButton
                   type="button"
                   onClick={() => navigate('/owner')}
                   className="font-black text-[0.8rem] uppercase tracking-[0.2em] text-[#111] dark:text-white transition hover:text-white drop-shadow-md"
                 >
                   Owner Access
-                </button>
+                </RippleButton>
               </div>
             </div>
           )}

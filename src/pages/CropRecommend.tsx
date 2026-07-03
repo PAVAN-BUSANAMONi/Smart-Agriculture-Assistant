@@ -6,6 +6,7 @@ import { api, type CropRecommendationResult } from '../services/api';
 import { createAlert, shouldTriggerAlert } from '../utils/alertEngine';
 import { pushBrowserNotification } from '../utils/browserNotifications';
 import { CROP_IMAGES } from '../utils/cropImages';
+import { RippleButton } from '../components/ui/RippleButton';
 
 type SoilType = 'black' | 'red' | 'loamy' | 'sandy' | 'clay' | 'silt';
 type SeasonType = 'kharif' | 'rabi' | 'zaid';
@@ -183,13 +184,13 @@ export function CropRecommend() {
           </div>
           {t('crop_recommendation')}
         </h1>
-        <button
+        <RippleButton
           type="button"
           onClick={() => setShowDetailed((prev) => !prev)}
-          className="glass-button-secondary text-sm px-4 py-2 hidden"
+          variant="secondary" className="text-sm px-4 py-2 hidden"
         >
           {showDetailed ? 'Simple View' : 'Detailed View'}
-        </button>
+        </RippleButton>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-3">
@@ -261,16 +262,16 @@ export function CropRecommend() {
           </div>
 
           <div className="mt-6 space-y-3">
-            <button
+            <RippleButton
               type="button"
               onClick={handleAutofillWeather}
               className="inline-flex w-full items-center justify-center gap-2 glass-button-secondary py-3 text-blue-700 border-blue-200/60 bg-blue-500/20 backdrop-blur-md border border-blue-500/30 text-blue-900 dark:text-blue-300/50 hover:bg-blue-100/50"
             >
               <CloudSun size={18} />
               {fetchingWeather ? 'Fetching weather...' : 'Use current weather'}
-            </button>
+            </RippleButton>
 
-            <button
+            <RippleButton
               type="button"
               onClick={handleSubmit}
               disabled={loading}
@@ -282,7 +283,7 @@ export function CropRecommend() {
                     <span>{t('analyzing')}</span>
                  </div>
               ) : t('get_recommendation')}
-            </button>
+            </RippleButton>
 
             {error && <p className="rounded-lg bg-red-500/20 backdrop-blur-md border border-red-500/30 text-red-900 dark:text-red-300 p-2 text-sm text-red-700">{error}</p>}
           </div>

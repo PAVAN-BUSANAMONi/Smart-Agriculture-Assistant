@@ -201,33 +201,73 @@ export async function generateGeminiFarmingAnswer({ query, user, weatherSummary,
   }
 }
 
-export async function analyzeDiseaseImage(imageData, crop) {
+export async function analyzeDiseaseImage(imageData, crop, context = {}) {
   const activeClient = getClient();
   if (!activeClient) {
     throw new Error('Gemini API is not configured.');
   }
 
-  const prompt = `
-You are an expert agricultural botanist and plant pathologist.
-Analyze the following image. First, determine if it is actually a picture of a plant or crop.
-If the image is NOT a plant (e.g., a screenshot, a person, a random object), you MUST respond strictly in JSON format matching this schema exactly:
-{
-  "diseaseKey": "not_a_plant",
-  "confidence": 100,
-  "cause": "The uploaded image does not appear to be a plant.",
-  "treatment": ["Please upload a clear picture of a plant leaf."],
-  "prevention": []
-}
+  const weatherCtx = context.weather || {};
+  const contextBlock = `
+ENVIRONMENTAL CONTEXT (use this to tailor your recommendations):
+- Current temperature: ${weatherCtx.temperature || 'unknown'}
+- Humidity: ${weatherCtx.humidity || 'unknown'}
+- Weather condition: ${weatherCtx.condition || 'unknown'}
+- Season: ${context.season || 'unknown'}
+- Crop growth stage: ${context.growthStage || 'unknown'}
+- Geographic region: ${context.region || 'unknown'}
+- Month: ${context.month || 'unknown'}
+`;
 
-If it IS a plant, identify any visible diseases or nutritional deficiencies for the crop: ${crop || 'unknown'}.
-Identify any visible diseases or nutritional deficiencies.
-Respond strictly in JSON format matching this schema exactly:
+  const prompt = `
+You are a highly scientific and strict agricultural botanist and plant pathologist.
+${contextBlock}
+Follow this exact 5-step validation process to analyze the image:
+
+Step 1 (Entity Check): Is this a plant? If the image contains ANY of the following:
+- Humans
+- Animals
+- Buildings
+- Cars
+- Electronic devices
+- Food items
+- Screenshots
+- Cartoons
+- AI-generated images
+- Random objects
+Immediately return diseaseKey="not_a_plant". DO NOT GUESS.
+Step 2 (Quality Check): Is the image clear and well-lit?
+- If the image is too blurry to see details, return diseaseKey="blurry".
+- If the image is too dark to analyze colors, return diseaseKey="low_light".
+- If the affected leaf/plant part is not clearly visible, return diseaseKey="leaf_not_visible".
+- If there are multiple different plants mixed together confusingly, return diseaseKey="multiple_plants".
+Step 3 (Crop Identification): Identify the crop in the image. Ensure the diseases you consider are strictly scientifically related to this specific crop.
+Step 4 (Diagnosis): Attempt to identify any visible diseases or nutritional deficiencies based on scientifically recognized agricultural knowledge. NEVER mix diseases from unrelated crops.
+Step 5 (Confidence): Estimate your confidence strictly. If your confidence is below 70%, DO NOT GUESS. Return diseaseKey="uncertain".
+
+If you pass all validation steps, return the disease or "healthy".
+You MUST respond strictly in JSON format matching this schema exactly:
 {
-  "diseaseKey": "leaf_blight" | "powdery_mildew" | "rust" | "healthy" | "unknown" | "not_a_plant",
+  "diseaseKey": "not_a_plant" | "blurry" | "low_light" | "leaf_not_visible" | "multiple_plants" | "uncertain" | "healthy" | "leaf_blight" | "powdery_mildew" | "rust" | "unknown",
+  "diseaseName": "<Common name of the disease>",
+  "scientificName": "<Scientific name of the pathogen/disease>",
   "confidence": <number between 0 and 100>,
-  "cause": "<Short description of the cause>",
-  "treatment": ["<treatment step 1>", "<treatment step 2>"],
-  "prevention": ["<prevention step 1>", "<prevention step 2>"]
+  "description": "<Detailed description of the disease and its cause>",
+  "symptoms": ["<symptom 1>", "<symptom 2>"],
+  "organicTreatment": ["<organic method 1>", "<organic method 2>"],
+  "chemicalTreatment": ["<chemical method 1>", "<chemical method 2>"],
+  "applicationSteps": ["<step 1>", "<step 2>"],
+  "safetyPrecautions": ["<precaution 1>", "<precaution 2>"],
+  "recoveryTime": "<expected recovery time>",
+  "preventionMethods": ["<prevention method 1>", "<prevention method 2>"],
+  "cropRotation": "<crop rotation suggestions>",
+  "waterManagement": "<water management recommendations>",
+  "soilHealth": "<soil health improvements>",
+  "spacingTechniques": "<proper spacing techniques>",
+  "resistantVarieties": "<disease-resistant varieties>",
+  "toolSanitation": "<tool sanitation methods>",
+  "seasonalPrecautions": "<seasonal precautions>",
+  "contextAdvice": ["<context-specific advice based on current weather/season/growth stage>"]
 }
 If the disease doesn't perfectly match the allowed keys, pick the closest one or "unknown".
 `;

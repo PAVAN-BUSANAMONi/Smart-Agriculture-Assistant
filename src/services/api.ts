@@ -359,9 +359,24 @@ export type DiseaseAnalyzeResponse = {
     diseaseKey: string;
     diseaseName: string;
     confidence: number;
-    cause: string;
-    treatment: string[];
-    prevention: string[];
+    scientificName?: string;
+    description?: string;
+    symptoms?: string[];
+    organicTreatment?: string[];
+    chemicalTreatment?: string[];
+    applicationSteps?: string[];
+    safetyPrecautions?: string[];
+    recoveryTime?: string;
+    preventionMethods?: string[];
+    cropRotation?: string;
+    waterManagement?: string;
+    soilHealth?: string;
+    spacingTechniques?: string;
+    resistantVarieties?: string;
+    toolSanitation?: string;
+    seasonalPrecautions?: string;
+    referenceImages?: Array<{ stage: string; url: string; caption: string; source: string }>;
+    contextAdvice?: string[];
     level: 'low' | 'medium' | 'high';
     source: string;
   };
@@ -376,6 +391,12 @@ export type DiseaseAnalyzeResponse = {
     notes: string;
     createdAt: string;
   };
+  verificationResults?: Array<{
+    type: string;
+    diseaseKey: string;
+    diseaseName: string;
+    confidence: number;
+  }>;
 };
 
 export type AlertsDebugResponse = {
@@ -730,7 +751,7 @@ export const api = {
   getSchemes: () => request('/schemes'),
   getFertilizerPlan: (payload: { land: number; crop: string; soilType: string; farmingType: string }) => 
     request<any>('/ai/fertilizer', { method: 'POST', body: JSON.stringify(payload) }),
-  analyzeDisease: (payload: { imageData: string; crop?: string }) =>
+  analyzeDisease: (payload: { images: Array<{ type: string; data: string }>; crop?: string; context?: { weather?: { temperature?: string; humidity?: string; condition?: string }; season?: string; growthStage?: string; region?: string; month?: string } }) =>
     request<DiseaseAnalyzeResponse>('/disease/analyze', { method: 'POST', body: JSON.stringify(payload) }),
   logDiseaseScan: (payload: DiseaseScanPayload) => request('/disease/scans', { method: 'POST', body: JSON.stringify(payload) }),
   getDiseaseHistory: () => request<{ scans: Array<{
