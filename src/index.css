@@ -61,6 +61,16 @@
   .input-focus-ring {
     @apply transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] focus:ring-4 focus:ring-[#4eb69c]/30 focus:border-[#4eb69c] focus:-translate-y-0.5 focus:shadow-md;
   }
+
+  /* Fix browser autofill white background overriding transparent inputs */
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover, 
+  input:-webkit-autofill:focus, 
+  input:-webkit-autofill:active {
+      -webkit-box-shadow: 0 0 0 30px transparent inset !important;
+      -webkit-text-fill-color: inherit !important;
+      transition: background-color 5000s ease-in-out 0s;
+  }
 }
 
 /* Base interactive elements fallback styling */

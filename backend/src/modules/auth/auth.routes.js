@@ -189,6 +189,9 @@ router.post('/admin/register', validateRequest({ body: adminRegisterSchema }), a
   const otp = await createOtpChallenge(user.id, 'admin_register');
   const otpHash = createOtpTokenHash(user.id, 'admin_register', otp);
   const delivery = await sendOTPEmailWithDeadline(user.email, otp);
+  if (!delivery.delivered) {
+    delivery.errorMessage = `${delivery.errorMessage || 'Failed to send.'} (Fallback OTP for demo: ${otp})`;
+  }
   void notifyOwnerAboutPendingAdminSignup(user, delivery).catch((error) => {
     console.error('Owner pending-admin notification failed', {
       email: ownerNotificationRecipient(),
@@ -213,6 +216,9 @@ router.post('/admin/login', validateRequest({ body: adminLoginSchema }), async (
   const otp = await createOtpChallenge(user.id, challengePurpose);
   const otpHash = createOtpTokenHash(user.id, challengePurpose, otp);
   const delivery = await sendOTPEmailWithDeadline(user.email, otp);
+  if (!delivery.delivered) {
+    delivery.errorMessage = `${delivery.errorMessage || 'Failed to send.'} (Fallback OTP for demo: ${otp})`;
+  }
 
   res.status(202).json(
     buildOtpResponse(
@@ -241,6 +247,9 @@ router.post('/admin/forgot-password', validateRequest({ body: adminForgotPasswor
   const otp = await createOtpChallenge(user.id, 'admin_reset_password');
   const otpHash = createOtpTokenHash(user.id, 'admin_reset_password', otp);
   const delivery = await sendOTPEmailWithDeadline(user.email, otp);
+  if (!delivery.delivered) {
+    delivery.errorMessage = `${delivery.errorMessage || 'Failed to send.'} (Fallback OTP for demo: ${otp})`;
+  }
 
   res.status(202).json(
     buildOtpResponse(

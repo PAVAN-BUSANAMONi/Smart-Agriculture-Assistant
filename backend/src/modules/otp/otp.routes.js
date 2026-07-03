@@ -119,6 +119,9 @@ router.post('/admin/resend', validateRequest({ body: otpResendSchema }), async (
   const otp = await createOtpChallenge(user.id, challenge.purpose);
   const otpHash = createOtpTokenHash(user.id, challenge.purpose, otp);
   const delivery = await sendOTPEmailWithDeadline(user.email, otp);
+  if (!delivery.delivered) {
+    delivery.errorMessage = `${delivery.errorMessage || 'Failed to send.'} (Fallback OTP for demo: ${otp})`;
+  }
 
   res.json(
     buildOtpResponse(
@@ -140,6 +143,9 @@ router.post('/admin/request', requireAuth, requireAdmin, validateRequest({ body:
   const otp = await createOtpChallenge(user.id, purpose);
   const otpHash = createOtpTokenHash(user.id, purpose, otp);
   const delivery = await sendOTPEmailWithDeadline(user.email, otp);
+  if (!delivery.delivered) {
+    delivery.errorMessage = `${delivery.errorMessage || 'Failed to send.'} (Fallback OTP for demo: ${otp})`;
+  }
 
   res.json(
     buildOtpResponse(
