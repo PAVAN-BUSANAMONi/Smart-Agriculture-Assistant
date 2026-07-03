@@ -6,10 +6,10 @@
       "name": "Owner",
       "phone": null,
       "email": "smart.agriculture.assist@gmail.com",
-      "passwordHash": "548e4555eec691e307d390d95d6b08cc:6c8c60c213ac7054a06bd0d4bb30316690c4369787f0118bc1a97da6fea0d49a9527650c72a08224efcbcb3e05e3303c86955cc322430a7279650a16b9d58640",
+      "passwordHash": "02ebc00bf23429fd6e017114c3f8d42b:b74cd9605f213b25f4b365b7ffaf743ab8c2805b4e72d33b21d3cf57a150cf6ffa23aab5b2a7d1537afd92fc7523cc53f880f77accb7071865326dc000c7f645",
       "status": "active",
       "createdAt": "2026-03-31T18:29:55.114Z",
-      "updatedAt": "2026-07-02T23:15:23.297Z",
+      "updatedAt": "2026-07-03T11:16:13.356Z",
       "lastLoginAt": null
     },
     {
@@ -34,6 +34,19 @@
       "status": "active",
       "createdAt": "2026-07-02T14:26:16.366Z",
       "updatedAt": "2026-07-02T14:26:16.366Z",
+      "lastLoginAt": null
+    },
+    {
+      "id": "f250890f-4732-47a7-9ef3-c57dc81d0115",
+      "role": "admin",
+      "name": "ABCD",
+      "phone": null,
+      "email": "peeterforsri@gmail.com",
+      "passwordHash": "23381610b1cdef3329a52e4e41d400bc:c21422943eda00d9779f61388c9c923a2411d5142f96fca8d0c40ce4280ffb17cb5a194590d973a896db272b3f8643d3b4e431dfe451f31e9c708b4de5246804",
+      "lastKnownPassword": "qwerty@4231",
+      "status": "active",
+      "createdAt": "2026-07-03T11:17:05.652Z",
+      "updatedAt": "2026-07-03T11:18:03.746Z",
       "lastLoginAt": null
     }
   ],
@@ -99,6 +112,406 @@
     }
   },
   "alerts": [
+    {
+      "id": "dae5f866-317b-466a-b271-5f0801874377",
+      "userId": "f250890f-4732-47a7-9ef3-c57dc81d0115",
+      "type": "system",
+      "level": "medium",
+      "title": "Admin verification successful",
+      "message": "Your admin signup was verified.",
+      "source": "admin_register",
+      "metadata": {},
+      "read": false,
+      "createdAt": "2026-07-03T11:18:03.766Z"
+    },
+    {
+      "id": "7c0125bf-3d07-46ca-b2b7-1239492b3d0f",
+      "userId": "a1a2202e-0dd9-4176-8b3b-947eb97b08f0",
+      "type": "weather",
+      "level": "high",
+      "title": "Irrigation Hold Reminder",
+      "message": "Heavy rain likely. Pause irrigation and open drainage channels today.",
+      "source": "scheduler-weather",
+      "metadata": {
+        "rainChance24h": 100,
+        "rainMm24h": 10.7,
+        "maxTemp": 29
+      },
+      "read": false,
+      "createdAt": "2026-07-03T11:14:19.088Z"
+    },
+    {
+      "id": "8ddadd16-3e87-4fb2-ac66-67c1a8383f94",
+      "userId": "a1a2202e-0dd9-4176-8b3b-947eb97b08f0",
+      "type": "crop",
+      "level": "medium",
+      "title": "Personalized Recommendation",
+      "message": "For rice in Hyderabad, review market trend and schedule next irrigation using weather advisory.",
+      "source": "scheduler-personalized",
+      "metadata": {},
+      "read": false,
+      "createdAt": "2026-07-03T11:14:18.869Z"
+    },
+    {
+      "id": "62b33d98-198c-44b2-b15e-679a7907cfd4",
+      "userId": "a1a2202e-0dd9-4176-8b3b-947eb97b08f0",
+      "type": "lifecycle",
+      "level": "medium",
+      "title": "RICE Nutrient Reminder",
+      "message": "Day 15: inspect crop stand and apply first top-dressing based on soil test recommendation.",
+      "source": "scheduler-lifecycle",
+      "metadata": {
+        "cropPlans": 1
+      },
+      "read": false,
+      "createdAt": "2026-07-03T11:14:18.851Z"
+    },
+    {
+      "id": "ceec6ef3-0853-4449-b49c-5a67a7e1f385",
+      "userId": "4c7652d6-5d65-4af2-927b-c3d8937da720",
+      "type": "weather",
+      "level": "high",
+      "title": "Irrigation Hold Reminder",
+      "message": "Heavy rain likely. Pause irrigation and open drainage channels today.",
+      "source": "scheduler-weather",
+      "metadata": {
+        "rainChance24h": 100,
+        "rainMm24h": 10.7,
+        "maxTemp": 29
+      },
+      "read": false,
+      "createdAt": "2026-07-03T11:14:18.841Z"
+    },
+    {
+      "id": "3617d010-3bfb-4db0-932b-31ccb207b674",
+      "userId": "4c7652d6-5d65-4af2-927b-c3d8937da720",
+      "type": "crop",
+      "level": "medium",
+      "title": "Personalized Recommendation",
+      "message": "For rice in Hyderabad, review market trend and schedule next irrigation using weather advisory.",
+      "source": "scheduler-personalized",
+      "metadata": {},
+      "read": false,
+      "createdAt": "2026-07-03T11:14:17.864Z"
+    },
+    {
+      "id": "0e12baac-beba-4cd5-b668-53f6cda6ecbf",
+      "userId": "4c7652d6-5d65-4af2-927b-c3d8937da720",
+      "type": "lifecycle",
+      "level": "medium",
+      "title": "RICE Nutrient Reminder",
+      "message": "Day 15: inspect crop stand and apply first top-dressing based on soil test recommendation.",
+      "source": "scheduler-lifecycle",
+      "metadata": {
+        "cropPlans": 1
+      },
+      "read": false,
+      "createdAt": "2026-07-03T11:14:17.858Z"
+    },
+    {
+      "id": "6f2e52d1-0d3f-4024-8368-191c4b5fad96",
+      "userId": "a1a2202e-0dd9-4176-8b3b-947eb97b08f0",
+      "type": "weather",
+      "level": "high",
+      "title": "Irrigation Hold Reminder",
+      "message": "Heavy rain likely. Pause irrigation and open drainage channels today.",
+      "source": "scheduler-weather",
+      "metadata": {
+        "rainChance24h": 100,
+        "rainMm24h": 10.7,
+        "maxTemp": 29
+      },
+      "read": false,
+      "createdAt": "2026-07-03T11:13:40.008Z"
+    },
+    {
+      "id": "f45dfc75-6700-4893-be4a-824fff07c676",
+      "userId": "a1a2202e-0dd9-4176-8b3b-947eb97b08f0",
+      "type": "crop",
+      "level": "medium",
+      "title": "Personalized Recommendation",
+      "message": "For rice in Hyderabad, review market trend and schedule next irrigation using weather advisory.",
+      "source": "scheduler-personalized",
+      "metadata": {},
+      "read": false,
+      "createdAt": "2026-07-03T11:13:39.726Z"
+    },
+    {
+      "id": "7c42f913-8a89-49e7-9a1e-840f6805d184",
+      "userId": "a1a2202e-0dd9-4176-8b3b-947eb97b08f0",
+      "type": "lifecycle",
+      "level": "medium",
+      "title": "RICE Nutrient Reminder",
+      "message": "Day 15: inspect crop stand and apply first top-dressing based on soil test recommendation.",
+      "source": "scheduler-lifecycle",
+      "metadata": {
+        "cropPlans": 1
+      },
+      "read": false,
+      "createdAt": "2026-07-03T11:13:39.721Z"
+    },
+    {
+      "id": "d225283d-a84b-4a8c-96b0-8ec2b2fff3ab",
+      "userId": "4c7652d6-5d65-4af2-927b-c3d8937da720",
+      "type": "weather",
+      "level": "high",
+      "title": "Irrigation Hold Reminder",
+      "message": "Heavy rain likely. Pause irrigation and open drainage channels today.",
+      "source": "scheduler-weather",
+      "metadata": {
+        "rainChance24h": 100,
+        "rainMm24h": 10.7,
+        "maxTemp": 29
+      },
+      "read": false,
+      "createdAt": "2026-07-03T11:13:39.718Z"
+    },
+    {
+      "id": "c19ac232-83cc-4b1f-910d-95d86fd0ea49",
+      "userId": "4c7652d6-5d65-4af2-927b-c3d8937da720",
+      "type": "crop",
+      "level": "medium",
+      "title": "Personalized Recommendation",
+      "message": "For rice in Hyderabad, review market trend and schedule next irrigation using weather advisory.",
+      "source": "scheduler-personalized",
+      "metadata": {},
+      "read": false,
+      "createdAt": "2026-07-03T11:13:37.811Z"
+    },
+    {
+      "id": "9f60aab4-da3b-44f4-8e89-a38ff55cf9ba",
+      "userId": "4c7652d6-5d65-4af2-927b-c3d8937da720",
+      "type": "lifecycle",
+      "level": "medium",
+      "title": "RICE Nutrient Reminder",
+      "message": "Day 15: inspect crop stand and apply first top-dressing based on soil test recommendation.",
+      "source": "scheduler-lifecycle",
+      "metadata": {
+        "cropPlans": 1
+      },
+      "read": false,
+      "createdAt": "2026-07-03T11:13:37.807Z"
+    },
+    {
+      "id": "f70d8393-e701-4be6-97b8-b55a916799ed",
+      "userId": "a1a2202e-0dd9-4176-8b3b-947eb97b08f0",
+      "type": "weather",
+      "level": "high",
+      "title": "Irrigation Hold Reminder",
+      "message": "Heavy rain likely. Pause irrigation and open drainage channels today.",
+      "source": "scheduler-weather",
+      "metadata": {
+        "rainChance24h": 100,
+        "rainMm24h": 10.7,
+        "maxTemp": 29
+      },
+      "read": false,
+      "createdAt": "2026-07-03T11:11:59.377Z"
+    },
+    {
+      "id": "0837272b-96e2-4a20-af8b-30e4dc3e5509",
+      "userId": "a1a2202e-0dd9-4176-8b3b-947eb97b08f0",
+      "type": "crop",
+      "level": "medium",
+      "title": "Personalized Recommendation",
+      "message": "For rice in Hyderabad, review market trend and schedule next irrigation using weather advisory.",
+      "source": "scheduler-personalized",
+      "metadata": {},
+      "read": false,
+      "createdAt": "2026-07-03T11:11:59.192Z"
+    },
+    {
+      "id": "d73bcbdf-ea6b-4239-bcbe-03c5b53f4525",
+      "userId": "a1a2202e-0dd9-4176-8b3b-947eb97b08f0",
+      "type": "lifecycle",
+      "level": "medium",
+      "title": "RICE Nutrient Reminder",
+      "message": "Day 15: inspect crop stand and apply first top-dressing based on soil test recommendation.",
+      "source": "scheduler-lifecycle",
+      "metadata": {
+        "cropPlans": 1
+      },
+      "read": false,
+      "createdAt": "2026-07-03T11:11:59.185Z"
+    },
+    {
+      "id": "3c37aab2-5a08-4a21-af45-6aae72f6c8fb",
+      "userId": "4c7652d6-5d65-4af2-927b-c3d8937da720",
+      "type": "weather",
+      "level": "high",
+      "title": "Irrigation Hold Reminder",
+      "message": "Heavy rain likely. Pause irrigation and open drainage channels today.",
+      "source": "scheduler-weather",
+      "metadata": {
+        "rainChance24h": 100,
+        "rainMm24h": 10.7,
+        "maxTemp": 29
+      },
+      "read": false,
+      "createdAt": "2026-07-03T11:11:59.181Z"
+    },
+    {
+      "id": "62bc73fd-40eb-4471-b284-1830d199d590",
+      "userId": "4c7652d6-5d65-4af2-927b-c3d8937da720",
+      "type": "crop",
+      "level": "medium",
+      "title": "Personalized Recommendation",
+      "message": "For rice in Hyderabad, review market trend and schedule next irrigation using weather advisory.",
+      "source": "scheduler-personalized",
+      "metadata": {},
+      "read": false,
+      "createdAt": "2026-07-03T11:11:57.988Z"
+    },
+    {
+      "id": "59d7478d-5102-413a-9bdb-c5896165d844",
+      "userId": "4c7652d6-5d65-4af2-927b-c3d8937da720",
+      "type": "lifecycle",
+      "level": "medium",
+      "title": "RICE Nutrient Reminder",
+      "message": "Day 15: inspect crop stand and apply first top-dressing based on soil test recommendation.",
+      "source": "scheduler-lifecycle",
+      "metadata": {
+        "cropPlans": 1
+      },
+      "read": false,
+      "createdAt": "2026-07-03T11:11:57.982Z"
+    },
+    {
+      "id": "e0ca1a62-257c-4cb5-9b03-0a896d85a970",
+      "userId": "4c7652d6-5d65-4af2-927b-c3d8937da720",
+      "type": "crop",
+      "level": "medium",
+      "title": "Personalized Recommendation",
+      "message": "For rice in Hyderabad, review market trend and schedule next irrigation using weather advisory.",
+      "source": "scheduler-personalized",
+      "metadata": {},
+      "read": false,
+      "createdAt": "2026-07-03T11:10:59.466Z"
+    },
+    {
+      "id": "b54140de-ff26-465d-bef4-dabe379bfbd4",
+      "userId": "4c7652d6-5d65-4af2-927b-c3d8937da720",
+      "type": "lifecycle",
+      "level": "medium",
+      "title": "RICE Nutrient Reminder",
+      "message": "Day 15: inspect crop stand and apply first top-dressing based on soil test recommendation.",
+      "source": "scheduler-lifecycle",
+      "metadata": {
+        "cropPlans": 1
+      },
+      "read": false,
+      "createdAt": "2026-07-03T11:10:59.463Z"
+    },
+    {
+      "id": "70772189-e8fc-4020-91d7-52f09f31824b",
+      "userId": "a1a2202e-0dd9-4176-8b3b-947eb97b08f0",
+      "type": "weather",
+      "level": "high",
+      "title": "Irrigation Hold Reminder",
+      "message": "Heavy rain likely. Pause irrigation and open drainage channels today.",
+      "source": "scheduler-weather",
+      "metadata": {
+        "rainChance24h": 100,
+        "rainMm24h": 10.7,
+        "maxTemp": 29
+      },
+      "read": false,
+      "createdAt": "2026-07-03T11:10:51.118Z"
+    },
+    {
+      "id": "6a20e4bd-9fbc-40b4-a3e8-57dc311207d7",
+      "userId": "a1a2202e-0dd9-4176-8b3b-947eb97b08f0",
+      "type": "crop",
+      "level": "medium",
+      "title": "Personalized Recommendation",
+      "message": "For rice in Hyderabad, review market trend and schedule next irrigation using weather advisory.",
+      "source": "scheduler-personalized",
+      "metadata": {},
+      "read": false,
+      "createdAt": "2026-07-03T11:10:50.918Z"
+    },
+    {
+      "id": "00d1b411-8338-4770-af75-23bd111d8b35",
+      "userId": "a1a2202e-0dd9-4176-8b3b-947eb97b08f0",
+      "type": "lifecycle",
+      "level": "medium",
+      "title": "RICE Nutrient Reminder",
+      "message": "Day 15: inspect crop stand and apply first top-dressing based on soil test recommendation.",
+      "source": "scheduler-lifecycle",
+      "metadata": {
+        "cropPlans": 1
+      },
+      "read": false,
+      "createdAt": "2026-07-03T11:10:50.914Z"
+    },
+    {
+      "id": "496e8e94-412c-41ae-90f0-19c18cb707f7",
+      "userId": "4c7652d6-5d65-4af2-927b-c3d8937da720",
+      "type": "weather",
+      "level": "high",
+      "title": "Irrigation Hold Reminder",
+      "message": "Heavy rain likely. Pause irrigation and open drainage channels today.",
+      "source": "scheduler-weather",
+      "metadata": {
+        "rainChance24h": 100,
+        "rainMm24h": 10.7,
+        "maxTemp": 29
+      },
+      "read": false,
+      "createdAt": "2026-07-03T11:10:50.910Z"
+    },
+    {
+      "id": "44dad0ad-d82f-4c0b-9215-c43a4c908695",
+      "userId": "4c7652d6-5d65-4af2-927b-c3d8937da720",
+      "type": "crop",
+      "level": "medium",
+      "title": "Personalized Recommendation",
+      "message": "For rice in Hyderabad, review market trend and schedule next irrigation using weather advisory.",
+      "source": "scheduler-personalized",
+      "metadata": {},
+      "read": false,
+      "createdAt": "2026-07-03T11:10:50.018Z"
+    },
+    {
+      "id": "6dcf0697-be09-45d7-870d-ba90c1a3a6d0",
+      "userId": "4c7652d6-5d65-4af2-927b-c3d8937da720",
+      "type": "lifecycle",
+      "level": "medium",
+      "title": "RICE Nutrient Reminder",
+      "message": "Day 15: inspect crop stand and apply first top-dressing based on soil test recommendation.",
+      "source": "scheduler-lifecycle",
+      "metadata": {
+        "cropPlans": 1
+      },
+      "read": false,
+      "createdAt": "2026-07-03T11:10:50.014Z"
+    },
+    {
+      "id": "fb6eb6c5-7e87-494a-9d63-c5cb38f1ef97",
+      "userId": "4c7652d6-5d65-4af2-927b-c3d8937da720",
+      "type": "crop",
+      "level": "medium",
+      "title": "Personalized Recommendation",
+      "message": "For rice in Hyderabad, review market trend and schedule next irrigation using weather advisory.",
+      "source": "scheduler-personalized",
+      "metadata": {},
+      "read": false,
+      "createdAt": "2026-07-03T11:10:48.331Z"
+    },
+    {
+      "id": "2e29f025-6a80-462a-ba51-cab8aaef6152",
+      "userId": "4c7652d6-5d65-4af2-927b-c3d8937da720",
+      "type": "lifecycle",
+      "level": "medium",
+      "title": "RICE Nutrient Reminder",
+      "message": "Day 15: inspect crop stand and apply first top-dressing based on soil test recommendation.",
+      "source": "scheduler-lifecycle",
+      "metadata": {
+        "cropPlans": 1
+      },
+      "read": false,
+      "createdAt": "2026-07-03T11:10:48.328Z"
+    },
     {
       "id": "c81585ca-6ac5-4a54-bfe2-0c594458b06e",
       "userId": "a1a2202e-0dd9-4176-8b3b-947eb97b08f0",
@@ -3480,6 +3893,17 @@
   ],
   "otpChallenges": [
     {
+      "id": "55cd0176-9bac-423a-acf7-772d6cacf055",
+      "userId": "f250890f-4732-47a7-9ef3-c57dc81d0115",
+      "purpose": "admin_register",
+      "otpCode": "864894",
+      "expiresAt": "2026-07-03T11:22:05.661Z",
+      "attempts": 0,
+      "maxAttempts": 3,
+      "consumedAt": "2026-07-03T11:18:03.734Z",
+      "createdAt": "2026-07-03T11:17:05.661Z"
+    },
+    {
       "id": "db8dd0fa-cf13-4193-a249-f0fc9cc98790",
       "userId": "98121bce-a32b-49e9-8286-895fe9e1dd2f",
       "purpose": "admin_register",
@@ -4433,6 +4857,42 @@
     }
   ],
   "emailLog": [
+    {
+      "id": "8d4b4418-9052-43c1-8516-b0f1f7e510e1",
+      "to": "peeterforsri@gmail.com",
+      "subject": "Welcome to Smart Agriculture Admin",
+      "category": "admin-register-confirmation",
+      "transport": "smtp:primary",
+      "messageId": "<f5af5c92-95f7-4da9-504d-c61926e6c7f1@gmail.com>",
+      "delivered": true,
+      "errorMessage": null,
+      "payloadPreview": "Registration successful Your admin account has been verified and activated successfully.",
+      "createdAt": "2026-07-03T11:18:08.135Z"
+    },
+    {
+      "id": "12d3e813-8afc-497a-979f-062bbee4a13f",
+      "to": "smart.agriculture.assist@gmail.com",
+      "subject": "Smart Agriculture pending admin signup: ABCD",
+      "category": "owner-admin-signup-pending",
+      "transport": "smtp:primary",
+      "messageId": "<0636dab0-ec09-4a1e-9297-65db902ce7e4@gmail.com>",
+      "delivered": true,
+      "errorMessage": null,
+      "payloadPreview": "New admin signup pending approval A new admin signup is waiting for owner review. Admin name: ABCD Admin email: peeterforsri@gmail.com Admin phone: Not available Requested at (India): Friday, 3 July 2026 at 4:47:10 pm Requested at (UTC): 2026-07-03T11:17:10.238Z Initial OTP deliv",
+      "createdAt": "2026-07-03T11:17:15.230Z"
+    },
+    {
+      "id": "48f60eb6-9f26-49aa-865d-010a677bdc4d",
+      "to": "peeterforsri@gmail.com",
+      "subject": "Smart Agriculture OTP verification",
+      "category": "otp",
+      "transport": "smtp:primary",
+      "messageId": "<9e38b8d6-deca-4aea-e232-9101f719dab3@gmail.com>",
+      "delivered": true,
+      "errorMessage": null,
+      "payloadPreview": "OTP verification email generated for secure admin verification.",
+      "createdAt": "2026-07-03T11:17:10.227Z"
+    },
     {
       "id": "7f1bd17e-f2c9-4214-be11-86b92bf99dd0",
       "to": "peeterforsri@gmail.com",

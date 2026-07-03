@@ -17,10 +17,10 @@ function resolveBackendOrigin() {
   }
 
   if (import.meta.env.PROD) {
-    return '';
+    return DEFAULT_RENDER_BACKEND_URL;
   }
 
-  return '';
+  return DEFAULT_RENDER_BACKEND_URL;
 }
 
 export const BACKEND_ORIGIN = resolveBackendOrigin();
