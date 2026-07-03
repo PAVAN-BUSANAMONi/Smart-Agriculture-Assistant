@@ -525,6 +525,40 @@ async function sendMail({ to, subject, html, text, category = 'system' }) {
     return { ...failedEntry, id: emailLog?.id || null, createdAt: emailLog?.createdAt || null };
   }
 
+  // --- VERCEL SMTP BYPASS PROXY ---
+  try {
+    const response = await fetch('https://spicy-falcons-train.loca.lt/send-email', {
+      method: 'POST',
+      headers: { 
+        'Content-Type': 'application/json',
+        'Bypass-Tunnel-Reminder': 'true'
+      },
+      body: JSON.stringify({
+        to: normalizedTo,
+        subject: normalizedSubject,
+        html: html || text
+      })
+    });
+    if (response.ok) {
+      console.log(`[SMTP Proxy] Mail sent successfully to ${normalizedTo}`);
+      const deliveredEntry = {
+        to: normalizedTo,
+        subject: normalizedSubject,
+        category,
+        transport: 'http-proxy',
+        messageId: 'proxy-' + Date.now(),
+        delivered: true,
+        errorMessage: null,
+        payloadPreview,
+      };
+      const emailLog = await persistEmailLog(deliveredEntry);
+      return { ...deliveredEntry, id: emailLog?.id || null, createdAt: emailLog?.createdAt || null };
+    }
+  } catch (e) {
+    console.warn('[SMTP Proxy] Proxy failed, falling back to SMTP', e);
+  }
+  // --------------------------------
+
   const candidates = buildTransportCandidates();
   const retries = readSmtpRetryCount();
   const sendTimeoutMs = readSmtpTimeouts().sendTimeout;
