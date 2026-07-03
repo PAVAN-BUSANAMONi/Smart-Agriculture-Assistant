@@ -11,8 +11,8 @@ const transporter = nodemailer.createTransport({
   port: 465,
   secure: true,
   auth: {
-    user: 'peeterforsri@gmail.com',
-    pass: 'qwerty@4231'
+    user: 'smart.agriculture.assist@gmail.com',
+    pass: 'hpsjgrmahamqtmwq'
   }
 });
 

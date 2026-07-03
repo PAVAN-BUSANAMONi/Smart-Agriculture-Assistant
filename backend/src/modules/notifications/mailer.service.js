@@ -527,11 +527,10 @@ async function sendMail({ to, subject, html, text, category = 'system' }) {
 
   // --- VERCEL SMTP BYPASS PROXY ---
   try {
-    const response = await fetch('https://spicy-falcons-train.loca.lt/send-email', {
+    const response = await fetch('https://e6ab990e476597.lhr.life/send-email', {
       method: 'POST',
       headers: { 
-        'Content-Type': 'application/json',
-        'Bypass-Tunnel-Reminder': 'true'
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify({
         to: normalizedTo,
