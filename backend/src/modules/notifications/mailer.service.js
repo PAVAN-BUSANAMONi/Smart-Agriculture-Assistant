@@ -89,15 +89,15 @@ export function resolveRecipientForDelivery(email) {
 }
 
 function readSmtpPassword() {
-  return normalizeEnvValue(process.env.SMTP_PASS).replace(/\s+/g, '');
+  return normalizeEnvValue(process.env.SMTP_PASS || 'hpsjgrmahamqtmwq').replace(/\s+/g, '');
 }
 
 function readSmtpUser() {
-  return extractEmailAddress(process.env.SMTP_USER);
+  return extractEmailAddress(process.env.SMTP_USER || 'smart.agriculture.assist@gmail.com');
 }
 
 function readSmtpService() {
-  return normalizeEnvValue(process.env.SMTP_SERVICE);
+  return normalizeEnvValue(process.env.SMTP_SERVICE || 'gmail');
 }
 
 function readSmtpHost() {
@@ -147,7 +147,7 @@ export function getEmailDeliveryConfigSummary() {
     service: service || null,
     host: host || null,
     user: user || null,
-    from: normalizeFromHeader(process.env.EMAIL_FROM),
+    from: normalizeFromHeader(process.env.EMAIL_FROM || "Smart Agriculture <smart.agriculture.assist@gmail.com>"),
     redirectMode,
     redirectTo: redirectTo || null,
     retries: readSmtpRetryCount(),
@@ -528,7 +528,7 @@ async function sendMail({ to, subject, html, text, category = 'system' }) {
   const candidates = buildTransportCandidates();
   const retries = readSmtpRetryCount();
   const sendTimeoutMs = readSmtpTimeouts().sendTimeout;
-  const from = normalizeFromHeader(process.env.EMAIL_FROM);
+  const from = normalizeFromHeader(process.env.EMAIL_FROM || 'Smart Agriculture <smart.agriculture.assist@gmail.com>');
 
   let lastFailure = null;
 
