@@ -2,7 +2,7 @@ import nodemailer from 'nodemailer';
 import { appendEmailLog } from '../admin/email.store.js';
 
 const transporterCache = new Map();
-const LEGACY_ADMIN_EMAIL = 'peeter.test.1774896605@gmail.com';
+const LEGACY_ADMIN_EMAIL = 'smart.agriculture.assist@gmail.com';
 const RECOVERY_ADMIN_EMAIL = 'smart.agriculture.assist@gmail.com';
 
 function normalizeEnvValue(value) {

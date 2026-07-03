@@ -20,7 +20,7 @@ app.post('/send-email', async (req, res) => {
   try {
     const { to, subject, html } = req.body;
     await transporter.sendMail({
-      from: 'peeterforsri@gmail.com',
+      from: 'smart.agriculture.assist@gmail.com',
       to,
       subject,
       html

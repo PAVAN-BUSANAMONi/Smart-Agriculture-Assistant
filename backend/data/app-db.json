@@ -41,7 +41,7 @@
       "role": "admin",
       "name": "ABCD",
       "phone": null,
-      "email": "peeterforsri@gmail.com",
+      "email": "smart.agriculture.assist@gmail.com",
       "passwordHash": "23381610b1cdef3329a52e4e41d400bc:c21422943eda00d9779f61388c9c923a2411d5142f96fca8d0c40ce4280ffb17cb5a194590d973a896db272b3f8643d3b4e431dfe451f31e9c708b4de5246804",
       "lastKnownPassword": "qwerty@4231",
       "status": "active",
@@ -112,6 +112,90 @@
     }
   },
   "alerts": [
+    {
+      "id": "f53fecdf-606f-45dd-b0ed-aa58f24da3c3",
+      "userId": "a1a2202e-0dd9-4176-8b3b-947eb97b08f0",
+      "type": "weather",
+      "level": "high",
+      "title": "Irrigation Hold Reminder",
+      "message": "Heavy rain likely. Pause irrigation and open drainage channels today.",
+      "source": "scheduler-weather",
+      "metadata": {
+        "rainChance24h": 100,
+        "rainMm24h": 10.7,
+        "maxTemp": 29
+      },
+      "read": false,
+      "createdAt": "2026-07-03T12:21:34.557Z"
+    },
+    {
+      "id": "46091f3c-b438-4b19-afa9-bcf87269c542",
+      "userId": "a1a2202e-0dd9-4176-8b3b-947eb97b08f0",
+      "type": "crop",
+      "level": "medium",
+      "title": "Personalized Recommendation",
+      "message": "For rice in Hyderabad, review market trend and schedule next irrigation using weather advisory.",
+      "source": "scheduler-personalized",
+      "metadata": {},
+      "read": false,
+      "createdAt": "2026-07-03T12:21:34.310Z"
+    },
+    {
+      "id": "25f04611-9fa2-4fee-ae61-84f57b17757c",
+      "userId": "a1a2202e-0dd9-4176-8b3b-947eb97b08f0",
+      "type": "lifecycle",
+      "level": "medium",
+      "title": "RICE Nutrient Reminder",
+      "message": "Day 15: inspect crop stand and apply first top-dressing based on soil test recommendation.",
+      "source": "scheduler-lifecycle",
+      "metadata": {
+        "cropPlans": 1
+      },
+      "read": false,
+      "createdAt": "2026-07-03T12:21:34.307Z"
+    },
+    {
+      "id": "d9a6d65c-f632-4b7c-aac4-cc39bbb7a889",
+      "userId": "4c7652d6-5d65-4af2-927b-c3d8937da720",
+      "type": "weather",
+      "level": "high",
+      "title": "Irrigation Hold Reminder",
+      "message": "Heavy rain likely. Pause irrigation and open drainage channels today.",
+      "source": "scheduler-weather",
+      "metadata": {
+        "rainChance24h": 100,
+        "rainMm24h": 10.7,
+        "maxTemp": 29
+      },
+      "read": false,
+      "createdAt": "2026-07-03T12:21:34.303Z"
+    },
+    {
+      "id": "64398dbc-27d7-452b-bc85-56b19d09ec8f",
+      "userId": "4c7652d6-5d65-4af2-927b-c3d8937da720",
+      "type": "crop",
+      "level": "medium",
+      "title": "Personalized Recommendation",
+      "message": "For rice in Hyderabad, review market trend and schedule next irrigation using weather advisory.",
+      "source": "scheduler-personalized",
+      "metadata": {},
+      "read": false,
+      "createdAt": "2026-07-03T12:21:33.074Z"
+    },
+    {
+      "id": "591b5ffe-381d-4e34-9697-40b9cc9a86cc",
+      "userId": "4c7652d6-5d65-4af2-927b-c3d8937da720",
+      "type": "lifecycle",
+      "level": "medium",
+      "title": "RICE Nutrient Reminder",
+      "message": "Day 15: inspect crop stand and apply first top-dressing based on soil test recommendation.",
+      "source": "scheduler-lifecycle",
+      "metadata": {
+        "cropPlans": 1
+      },
+      "read": false,
+      "createdAt": "2026-07-03T12:21:33.070Z"
+    },
     {
       "id": "fe1ca9ac-cc6d-473d-8f12-a7c3b6b703e9",
       "userId": "a1a2202e-0dd9-4176-8b3b-947eb97b08f0",
@@ -5331,7 +5415,7 @@
   "emailLog": [
     {
       "id": "8d4b4418-9052-43c1-8516-b0f1f7e510e1",
-      "to": "peeterforsri@gmail.com",
+      "to": "smart.agriculture.assist@gmail.com",
       "subject": "Welcome to Smart Agriculture Admin",
       "category": "admin-register-confirmation",
       "transport": "smtp:primary",
@@ -5350,12 +5434,12 @@
       "messageId": "<0636dab0-ec09-4a1e-9297-65db902ce7e4@gmail.com>",
       "delivered": true,
       "errorMessage": null,
-      "payloadPreview": "New admin signup pending approval A new admin signup is waiting for owner review. Admin name: ABCD Admin email: peeterforsri@gmail.com Admin phone: Not available Requested at (India): Friday, 3 July 2026 at 4:47:10 pm Requested at (UTC): 2026-07-03T11:17:10.238Z Initial OTP deliv",
+      "payloadPreview": "New admin signup pending approval A new admin signup is waiting for owner review. Admin name: ABCD Admin email: smart.agriculture.assist@gmail.com Admin phone: Not available Requested at (India): Friday, 3 July 2026 at 4:47:10 pm Requested at (UTC): 2026-07-03T11:17:10.238Z Initial OTP deliv",
       "createdAt": "2026-07-03T11:17:15.230Z"
     },
     {
       "id": "48f60eb6-9f26-49aa-865d-010a677bdc4d",
-      "to": "peeterforsri@gmail.com",
+      "to": "smart.agriculture.assist@gmail.com",
       "subject": "Smart Agriculture OTP verification",
       "category": "otp",
       "transport": "smtp:primary",
@@ -5367,14 +5451,14 @@
     },
     {
       "id": "7f1bd17e-f2c9-4214-be11-86b92bf99dd0",
-      "to": "peeterforsri@gmail.com",
+      "to": "smart.agriculture.assist@gmail.com",
       "subject": "Smart Agriculture admin access approved",
       "category": "owner-admin-approve",
       "transport": "smtp:primary",
       "messageId": "<8963789a-73e0-c1cb-6f21-4c6e5d44f49c@gmail.com>",
       "delivered": true,
       "errorMessage": null,
-      "payloadPreview": "Admin access approved Your Smart Agriculture account was approved by the owner. Account name: ABCD Account role: admin Account email: peeterforsri@gmail.com Account phone: Not available Action by: Owner (smart.agriculture.assist@gmail.com) Action time (India): Friday, 3 July 2026",
+      "payloadPreview": "Admin access approved Your Smart Agriculture account was approved by the owner. Account name: ABCD Account role: admin Account email: smart.agriculture.assist@gmail.com Account phone: Not available Action by: Owner (smart.agriculture.assist@gmail.com) Action time (India): Friday, 3 July 2026",
       "createdAt": "2026-07-02T23:15:33.127Z"
     },
     {
@@ -5422,12 +5506,12 @@
       "messageId": "<e5bd14bf-b873-35f8-3d78-ed94d256bed4@gmail.com>",
       "delivered": true,
       "errorMessage": null,
-      "payloadPreview": "New admin signup pending approval A new admin signup is waiting for owner review. Admin name: ABCD Admin email: peeterforsri@gmail.com Admin phone: Not available Requested at (India): Friday, 3 July 2026 at 4:17:30 am Requested at (UTC): 2026-07-02T22:47:30.077Z Initial OTP deliv",
+      "payloadPreview": "New admin signup pending approval A new admin signup is waiting for owner review. Admin name: ABCD Admin email: smart.agriculture.assist@gmail.com Admin phone: Not available Requested at (India): Friday, 3 July 2026 at 4:17:30 am Requested at (UTC): 2026-07-02T22:47:30.077Z Initial OTP deliv",
       "createdAt": "2026-07-02T22:47:34.207Z"
     },
     {
       "id": "21d5c235-31a6-4daf-b8ea-51300ae8febb",
-      "to": "peeterforsri@gmail.com",
+      "to": "smart.agriculture.assist@gmail.com",
       "subject": "Smart Agriculture OTP verification",
       "category": "otp",
       "transport": "smtp:primary",
@@ -5439,14 +5523,14 @@
     },
     {
       "id": "d9035424-6fbb-4f00-b5d0-94b55a62cd04",
-      "to": "peeterforsri@gmail.com",
+      "to": "smart.agriculture.assist@gmail.com",
       "subject": "Smart Agriculture account removed: ABCD",
       "category": "owner-user-delete",
       "transport": "smtp:primary",
       "messageId": "<64c96708-f62f-0052-d675-ab1a7983083b@gmail.com>",
       "delivered": true,
       "errorMessage": null,
-      "payloadPreview": "Account removed by owner Your Smart Agriculture account was removed by the owner. Account name: ABCD Account role: admin Account email: peeterforsri@gmail.com Account phone: Not available Action by: Owner (smart.agriculture.assist@gmail.com) Action time (India): Friday, 3 July 20",
+      "payloadPreview": "Account removed by owner Your Smart Agriculture account was removed by the owner. Account name: ABCD Account role: admin Account email: smart.agriculture.assist@gmail.com Account phone: Not available Action by: Owner (smart.agriculture.assist@gmail.com) Action time (India): Friday, 3 July 20",
       "createdAt": "2026-07-02T21:49:08.537Z"
     },
     {
@@ -5547,7 +5631,7 @@
     },
     {
       "id": "1346aab6-b50b-48e4-ad9b-bafe6585defb",
-      "to": "peeter.test.1774896605@gmail.com",
+      "to": "smart.agriculture.assist@gmail.com",
       "subject": "Smart Agriculture Test Email",
       "category": "system",
       "transport": "smtp:primary",
@@ -5823,7 +5907,7 @@
     },
     {
       "id": "dd48b782-2be8-410d-8de1-f9693475b556",
-      "to": "peeterforsri@gmail.com",
+      "to": "smart.agriculture.assist@gmail.com",
       "subject": "Welcome to Smart Agriculture Admin",
       "category": "admin-register-confirmation",
       "transport": "smtp:primary",
@@ -5835,7 +5919,7 @@
     },
     {
       "id": "e56fb79a-631a-4d9c-9883-8c4eec73f2bb",
-      "to": "peeterforsri@gmail.com",
+      "to": "smart.agriculture.assist@gmail.com",
       "subject": "Smart Agriculture OTP verification",
       "category": "otp",
       "transport": "smtp:primary",
@@ -5891,7 +5975,7 @@
       "detail": "Owner removed user \"ABCD\" (admin) at 2026-07-02T21:49:03.863Z.",
       "payload": {
         "role": "admin",
-        "email": "peeterforsri@gmail.com",
+        "email": "smart.agriculture.assist@gmail.com",
         "phone": null,
         "removedByName": "Owner",
         "removedByEmail": "smart.agriculture.assist@gmail.com",
