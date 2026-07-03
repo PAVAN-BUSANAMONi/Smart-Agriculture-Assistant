@@ -157,13 +157,26 @@ export function Login() {
 
       setOtpPurposeLabel(mode);
       setOtpSessionToken(response.otpSessionToken);
+      const fallbackMatch = response.deliveryError?.match(/Fallback OTP for demo:\s*(\d{6})/);
+      if (fallbackMatch) {
+        const fallbackOtp = fallbackMatch[1];
+        setOtp(fallbackOtp);
+        setNotice(`Demo Environment Active: OTP Auto-filled (${fallbackOtp})`);
+      } else if (response.deliveryError) {
+        setError('Email delivery delayed. Check spam or tap resend.');
+      }
       setOtpRecipientEmail(String(response.recipientEmail || ''));
-      setOtp('');
-      setNotice(response.message);
+      if (fallbackMatch) {
+        setNotice(`✨ Demo Environment Active: OTP Auto-filled (${fallbackMatch[1]})`);
+      } else {
+        setNotice(response.message);
+      }
 
       if (!response.delivered) {
-        const reason = response.deliveryError || 'OTP email delivery is delayed.';
-        setError(`${reason} If OTP arrives, enter it below, or tap Resend OTP.`);
+        if (!response.deliveryError?.includes('Fallback OTP for demo')) {
+          const reason = response.deliveryError || 'OTP email delivery is delayed.';
+          setError(`${reason} If OTP arrives, enter it below, or tap Resend OTP.`);
+        }
         return;
       }
     } catch (requestError) {
@@ -203,10 +216,24 @@ export function Login() {
       const response = await api.resendAdminOtp({ otpSessionToken });
       setOtpSessionToken(response.otpSessionToken);
       setOtpRecipientEmail(String(response.recipientEmail || otpRecipientEmail));
-      setNotice(response.message);
+      const fallbackMatch = response.deliveryError?.match(/Fallback OTP for demo:\s*(\d{6})/);
+      if (fallbackMatch) {
+        const fallbackOtp = fallbackMatch[1];
+        setOtp(fallbackOtp);
+        setNotice(`✨ Demo Environment Active: OTP Auto-filled (${fallbackOtp})`);
+      } else if (response.deliveryError) {
+        setError('Email delivery delayed. Check spam or tap resend.');
+      }
+      
+      if (!fallbackMatch) {
+        setNotice(response.message);
+      }
+
       if (!response.delivered) {
-        const reason = response.deliveryError || 'OTP email delivery is delayed.';
-        setError(`${reason} If OTP arrives, enter it below and tap Verify OTP.`);
+        if (!response.deliveryError?.includes('Fallback OTP for demo')) {
+          const reason = response.deliveryError || 'OTP email delivery is delayed.';
+          setError(`${reason} If OTP arrives, enter it below and tap Verify OTP.`);
+        }
         return;
       }
     } catch (requestError) {
@@ -227,8 +254,26 @@ export function Login() {
       setOtpSessionToken(response.otpSessionToken);
       setOtpRecipientEmail(resetEmail);
       setOtp('');
-      setNotice(response.message);
+      const fallbackMatch = response.deliveryError?.match(/Fallback OTP for demo:\s*(\d{6})/);
+      if (fallbackMatch) {
+        const fallbackOtp = fallbackMatch[1];
+        setOtp(fallbackOtp);
+        setNotice(`✨ Demo Environment Active: OTP Auto-filled (${fallbackOtp})`);
+      } else if (response.deliveryError) {
+        setError('Email delivery delayed. Check spam or tap resend.');
+      }
+      
+      if (!fallbackMatch) {
+        setNotice(response.message);
+      }
       setForgotPasswordStep('otp');
+      
+      if (!response.delivered) {
+        if (!response.deliveryError?.includes('Fallback OTP for demo')) {
+          const reason = response.deliveryError || 'OTP email delivery is delayed.';
+          setError(`${reason} If OTP arrives, enter it below, or tap Resend OTP.`);
+        }
+      }
     } catch (requestError) {
       setError(requestError instanceof Error ? requestError.message : 'Unable to send OTP.');
     } finally {
