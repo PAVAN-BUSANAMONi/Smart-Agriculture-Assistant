@@ -1,6 +1,6 @@
 import { useEffect, useState, ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Moon, Sun, CheckCircle2, ShieldAlert, Trash2, UserCheck, UserPlus, Users, UserX, ArrowRight, UserRound, Lock } from 'lucide-react';
+import { Moon, Sun, CheckCircle2, ShieldAlert, Trash2, UserCheck, UserPlus, Users, UserX, ArrowRight, UserRound, Lock, Edit2 } from 'lucide-react';
 import { api, type AuthUser, type OwnerStatusResponse } from '../services/api';
 import { useAuth } from '../contexts/AuthContext';
 import { useTheme } from '../contexts/ThemeContext';
@@ -53,6 +53,9 @@ export function OwnerAccess() {
     password: '',
   });
   const [busyUserId, setBusyUserId] = useState('');
+  const [editingUser, setEditingUser] = useState<AuthUser | null>(null);
+  const [editFormData, setEditFormData] = useState({ name: '', phone: '', email: '', password: '', role: '' });
+  const [savingEdit, setSavingEdit] = useState(false);
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState('');
@@ -176,6 +179,40 @@ export function OwnerAccess() {
     }
   };
 
+  const handleEditClick = (user: AuthUser) => {
+    setEditingUser(user);
+    setEditFormData({
+      name: user.name,
+      phone: user.phone || '',
+      email: user.email || '',
+      password: '', // only fill if they want to change it
+      role: user.role,
+    });
+  };
+
+  const handleEditSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingUser) return;
+    setSavingEdit(true);
+    setError('');
+    setMessage('');
+    try {
+      const payload: any = { name: editFormData.name };
+      if (editFormData.phone) payload.phone = editFormData.phone;
+      if (editFormData.email) payload.email = editFormData.email;
+      if (editFormData.password) payload.password = editFormData.password;
+      
+      await api.ownerUpdateUser(editingUser.id, payload);
+      setMessage(`User ${editingUser.name} updated successfully.`);
+      setEditingUser(null);
+      await loadOwnerData();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Unable to update user.');
+    } finally {
+      setSavingEdit(false);
+    }
+  };
+
   const handleDeleteUser = async (user: AuthUser) => {
     setBusyUserId(user.id);
     setError('');
@@ -235,6 +272,7 @@ export function OwnerAccess() {
                       value={credentials.name}
                       onChange={(event) => setCredentials((prev) => ({ ...prev, name: event.target.value }))}
                       required
+                      autoComplete="username"
                       placeholder="Owner name"
                       className="w-full bg-transparent text-[1.05rem] font-bold text-gray-900 dark:text-white outline-none placeholder:text-gray-700/80 dark:text-gray-300/80 drop-shadow-sm"
                     />
@@ -246,6 +284,7 @@ export function OwnerAccess() {
                       value={credentials.password}
                       onChange={(event) => setCredentials((prev) => ({ ...prev, password: event.target.value }))}
                       required
+                      autoComplete="current-password"
                       placeholder="Owner password"
                       className="w-full bg-transparent text-[1.05rem] font-bold text-gray-900 dark:text-white outline-none placeholder:text-gray-700/80 dark:text-gray-300/80 drop-shadow-sm"
                     />
@@ -520,6 +559,87 @@ export function OwnerAccess() {
           )}
         </div>
       </div>
+
+      {/* Edit User Modal */}
+      {editingUser && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+          <div className="w-full max-w-md rounded-[32px] border border-white/20 bg-[#f8fafc] dark:bg-slate-900 p-8 shadow-2xl">
+            <div className="mb-6 flex items-center justify-between">
+              <h3 className="text-xl font-black text-slate-900 dark:text-white flex items-center gap-2">
+                <Edit2 size={20} className="text-[#4eb69c]" />
+                Edit User
+              </h3>
+              <button 
+                onClick={() => setEditingUser(null)}
+                className="text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white"
+              >
+                ✕
+              </button>
+            </div>
+            
+            <form onSubmit={handleEditSubmit} className="space-y-4">
+              <div>
+                <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1">Name</label>
+                <input
+                  type="text"
+                  value={editFormData.name}
+                  onChange={(e) => setEditFormData({ ...editFormData, name: e.target.value })}
+                  className="w-full rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-4 py-2 font-medium text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#4eb69c]"
+                  required
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1">Phone</label>
+                <input
+                  type="text"
+                  value={editFormData.phone}
+                  onChange={(e) => setEditFormData({ ...editFormData, phone: e.target.value })}
+                  className="w-full rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-4 py-2 font-medium text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#4eb69c]"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1">Email</label>
+                <input
+                  type="email"
+                  value={editFormData.email}
+                  onChange={(e) => setEditFormData({ ...editFormData, email: e.target.value })}
+                  className="w-full rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-4 py-2 font-medium text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#4eb69c]"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1">New Password (optional)</label>
+                <input
+                  type="text"
+                  value={editFormData.password}
+                  onChange={(e) => setEditFormData({ ...editFormData, password: e.target.value })}
+                  placeholder="Leave blank to keep current"
+                  className="w-full rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-4 py-2 font-medium text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#4eb69c]"
+                />
+              </div>
+
+              <div className="mt-6 flex justify-end gap-3">
+                <button
+                  type="button"
+                  onClick={() => setEditingUser(null)}
+                  className="rounded-full px-5 py-2 text-sm font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 transition"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={savingEdit || !editFormData.name.trim()}
+                  className="rounded-full bg-[#4eb69c] px-6 py-2 text-sm font-bold text-white hover:bg-[#3d9880] transition disabled:opacity-50"
+                >
+                  {savingEdit ? 'Saving...' : 'Save Changes'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

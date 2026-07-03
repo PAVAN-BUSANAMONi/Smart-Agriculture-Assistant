@@ -326,7 +326,7 @@ router.post('/users', validateRequest({ body: ownerCreateUserSchema }), requireO
   }
 
   if (user.email) {
-    await sendSystemEmail({
+    sendSystemEmail({
       email: user.email,
       subject: `Smart Agriculture account created: ${user.name}`,
       title: 'Account created by owner',
@@ -338,7 +338,7 @@ router.post('/users', validateRequest({ body: ownerCreateUserSchema }), requireO
         extra: 'You can now use Smart Agriculture with this account.',
       }),
       category: 'owner-user-create',
-    });
+    }).catch((err) => console.error('Failed to send owner-user-create email:', err));
   }
 
   res.status(201).json({ message: 'User created by owner.', user });
@@ -376,7 +376,7 @@ router.patch('/users/:id', validateRequest({ params: idParamSchema, body: ownerU
       .map(([key, value]) => `${key}=${String(value)}`)
       .join(', ');
 
-    await sendSystemEmail({
+    sendSystemEmail({
       email: updated.email,
       subject: `Smart Agriculture account updated: ${updated.name}`,
       title: 'Account updated by owner',
@@ -388,7 +388,7 @@ router.patch('/users/:id', validateRequest({ params: idParamSchema, body: ownerU
         extra: patchSummary ? `Updated fields: ${patchSummary}` : 'Your account details were updated by owner.',
       }),
       category: 'owner-user-update',
-    });
+    }).catch((err) => console.error('Failed to send owner-user-update email:', err));
   }
 
   res.json({ message: 'User updated by owner.', user: updated });
@@ -429,7 +429,7 @@ router.delete('/users/:id', validateRequest({ params: idParamSchema }), requireO
   }
 
   if (user.email) {
-    await sendSystemEmail({
+    sendSystemEmail({
       email: user.email,
       subject: `Smart Agriculture account removed: ${user.name}`,
       title: 'Account removed by owner',
@@ -440,7 +440,7 @@ router.delete('/users/:id', validateRequest({ params: idParamSchema }), requireO
         actionTime: removedAt,
       }),
       category: 'owner-user-delete',
-    });
+    }).catch((err) => console.error('Failed to send owner-user-delete email:', err));
   }
 
   res.json({ message: 'User removed by owner.', user });
