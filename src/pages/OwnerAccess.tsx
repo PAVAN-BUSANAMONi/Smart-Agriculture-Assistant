@@ -532,6 +532,15 @@ export function OwnerAccess() {
                                 <button
                                   type="button"
                                   disabled={busyUserId === user.id}
+                                  onClick={() => handleEditClick(user)}
+                                  className="inline-flex items-center gap-1 rounded-full border border-blue-400/50 bg-blue-500/20 px-3 py-1.5 text-xs font-black text-blue-900 shadow-[inset_0_2px_4px_rgba(255,255,255,0.6)] hover:bg-blue-500/40 transition disabled:opacity-60"
+                                >
+                                  <Edit2 size={14} />
+                                  Edit
+                                </button>
+                                <button
+                                  type="button"
+                                  disabled={busyUserId === user.id}
                                   onClick={() => void handleToggleUserStatus(user)}
                                   className="rounded-full border border-white/50 bg-white/40 dark:bg-black/50 px-3 py-1.5 text-xs font-black text-gray-900 dark:text-white shadow-[inset_0_2px_4px_rgba(255,255,255,0.6)] hover:bg-white/60 transition disabled:opacity-60"
                                 >
