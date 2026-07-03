@@ -14,6 +14,9 @@ export const CustomCursor = () => {
   const cursorXSpring = useSpring(cursorX, springConfig);
   const cursorYSpring = useSpring(cursorY, springConfig);
 
+  const dotXSpring = useSpring(cursorX, { damping: 40, stiffness: 1000 });
+  const dotYSpring = useSpring(cursorY, { damping: 40, stiffness: 1000 });
+
   useEffect(() => {
     // Only show custom cursor on devices with a mouse (pointer: fine)
     const mediaQuery = window.matchMedia("(pointer: fine)");
@@ -72,8 +75,8 @@ export const CustomCursor = () => {
       <motion.div
         className="fixed top-0 left-0 w-3 h-3 bg-[#4eb69c] rounded-full pointer-events-none z-[9999] mix-blend-difference shadow-[0_0_10px_rgba(78,182,156,0.8)]"
         style={{
-          x: useSpring(cursorX, { damping: 40, stiffness: 1000 }),
-          y: useSpring(cursorY, { damping: 40, stiffness: 1000 }),
+          x: dotXSpring,
+          y: dotYSpring,
           translateX: "-50%",
           translateY: "-50%",
           opacity: isVisible ? 1 : 0,
