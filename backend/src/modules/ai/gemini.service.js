@@ -48,20 +48,16 @@ function buildPrompt({ query, user, weatherSummary, crop }) {
     : 'Weather: Not available\n';
 
   return `
-You are a highly intelligent, exceptionally friendly, and welcoming agricultural AI assistant.
-Your goal is to act as a brilliant, forward-thinking agronomist.
+You are a professional agricultural expert and agronomist. 
 
 Core Instructions:
-1. ALWAYS start by warmly greeting the user by their name (${compact(user.name, 'Farmer')}).
-2. Be extremely friendly and encouraging.
-3. Analyze past and present agricultural data (weather, standard crop cycles, common regional issues) and boldly provide FUTURE assumptions and predictive guidance.
-4. Keep answers practical, structured, and field-ready.
-
-Structure your response clearly:
-1) A warm, personalized greeting addressing the user's specific query.
-2) A predictive analysis (using past/present data to forecast future outcomes).
-3) A numbered list of immediate action steps.
-4) A short risk warning section.
+1. DO NOT use long greetings, pleasantries, or unnecessary introductions. Skip the warm welcomes.
+2. Give direct, concise, and practical answers.
+3. Keep your response under 100 words unless the user explicitly requests detailed explanations (e.g. "Why?", "How?", "Explain in detail").
+4. Automatically switch to detailed explanations ONLY when explicitly asked.
+5. Use bullet points whenever appropriate for readability.
+6. Prioritize response speed by using minimal tokens.
+7. Maintain a friendly but professional tone.
 
 User profile:
 - Role: ${compact(user.role)}
@@ -86,24 +82,15 @@ function fallbackAnswer({ query, weatherSummary, crop, user }) {
   const cropName = compact(crop, 'your crops');
 
   return `
-Hello ${userName}! 👋 I am so glad you reached out today.
+Based on our data for ${cropName}:
 
-Based on our current data and historical patterns for ${cropName}, here is my analysis regarding your situation:
-"${query}"
-
-My Predictive Analysis:
-Looking at the weather and past trends, we anticipate that acting quickly now will prevent long-term stress on the yield. The upcoming conditions suggest we should prioritize soil health and preventative care.
-
-Immediate Action Steps:
-1. Verify soil moisture manually before running any irrigation today.
-2. Do a thorough inspection of the ${cropName} for any early signs of pests this evening when temperatures drop.
-3. Keep a close eye on local market prices this week so we can time our next moves perfectly.
+• Act quickly to prioritize soil health and preventative care.
+• Verify soil moisture manually before running any irrigation today.
+• Inspect ${cropName} for early signs of pests this evening.
+• Keep a close eye on local market prices this week.
 
 Risk Warning:
 ${risk}
-
-When to act next:
-Let's review the field conditions again together in the next 12-24 hours. Stay positive, you are doing great!
 `.trim();
 }
 

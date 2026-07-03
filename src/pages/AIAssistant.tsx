@@ -15,9 +15,11 @@ type ChatItem = {
 };
 
 const QUICK_PROMPTS = [
-  'My paddy field may get heavy rain tomorrow. What should I do today?',
-  'Give a 3-day action plan for cotton under high temperature.',
-  'How do I prevent disease spread after sudden humidity rise?',
+  'Best crop for my soil',
+  'Fertilizer recommendation',
+  'Weather advice',
+  'Pest prevention',
+  'Disease detection',
 ];
 
 function readPrimaryCrop() {
@@ -105,7 +107,7 @@ export function AIAssistant() {
       id: 'initial-greeting',
       threadId: 'initial-greeting',
       role: 'assistant',
-      text: `Welcome ${farmerName}! 👋\n\nI am your highly intelligent Smart Agriculture Assistant. I analyze past records, monitor present conditions, and provide highly accurate future assumptions for your farming needs.\n\nHow can I help you today?`,
+      text: `Hello ${farmerName}. I am your agricultural AI assistant. How can I help you today?`,
       createdAt: new Date().toISOString(),
     }]);
   }, [farmerName]);
@@ -256,7 +258,7 @@ export function AIAssistant() {
         id: `greeting-${Date.now()}`,
         threadId: `greeting-${Date.now()}`,
         role: 'assistant',
-        text: `Welcome ${farmerName}! 👋\n\nI am your highly intelligent Smart Agriculture Assistant. I analyze past records, monitor present conditions, and provide highly accurate future assumptions for your farming needs.\n\nHow can I help you today?`,
+        text: `Hello ${farmerName}. I am your agricultural AI assistant. How can I help you today?`,
         createdAt: new Date().toISOString(),
       }]);
       setActiveTab('chat');
@@ -282,6 +284,7 @@ export function AIAssistant() {
 
   return (
     <div className="container mx-auto max-w-6xl p-4 flex flex-col h-[calc(100vh-2rem)]">
+      {liveMessages.length <= 1 && (
       <section className="shrink-0 rounded-[28px] border border-[#d3e8cc] bg-[linear-gradient(130deg,#f7fff4_0%,#f0f8e8_50%,#edf8ff_100%)] p-5 shadow-[0_20px_45px_rgba(58,107,78,0.12)]">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
@@ -322,6 +325,7 @@ export function AIAssistant() {
             </button>
         </div>
       </section>
+      )}
 
       {activeTab === 'history' && (
         <section className="shrink-0 mt-5 rounded-[20px] border border-[#dbe8d8] bg-white/85 p-4 shadow-sm animate-fade-in">
@@ -429,6 +433,18 @@ export function AIAssistant() {
 
           {activeTab === 'chat' && (
               liveMessages.map((item) => <ChatMessage key={item.id} item={item} />)
+          )}
+          {activeTab === 'chat' && loading && (
+            <article className="flex gap-3 justify-start animate-fade-in">
+              <div className="mt-1 rounded-full bg-[linear-gradient(135deg,#2c7d41,#4c9f5c)] p-2 text-white shadow-sm h-9 w-9 flex items-center justify-center shrink-0">
+                <Bot size={18} />
+              </div>
+              <div className="max-w-[78%] rounded-2xl px-5 py-4 shadow-sm border border-[#d7e2ef] bg-[linear-gradient(130deg,#f8fcff,#eef5ff)] rounded-tl-sm flex items-center gap-1.5 h-12">
+                <span className="h-2 w-2 bg-[#5d9964] rounded-full animate-bounce [animation-delay:-0.3s]"></span>
+                <span className="h-2 w-2 bg-[#5d9964] rounded-full animate-bounce [animation-delay:-0.15s]"></span>
+                <span className="h-2 w-2 bg-[#5d9964] rounded-full animate-bounce"></span>
+              </div>
+            </article>
           )}
         </div>
 
