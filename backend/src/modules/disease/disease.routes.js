@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { addDiseaseScan, listDiseaseScansByUser } from './disease.store.js';
 import { inferDisease } from './disease.ai.js';
 import { validateRequest } from '../../lib/validate.js';
+import { notifyUser } from '../notifications/notification.service.js';
 
 const router = Router();
 
@@ -120,6 +121,19 @@ router.post('/analyze', validateRequest({ body: analyzeBodySchema }), async (req
     imageUrl: images[0].data,
     notes: `Verified by ${images.length} images. Consensus: ${finalDiseaseKey}.`,
   });
+
+  if (level === 'high' || level === 'medium') {
+    void notifyUser({
+      userId,
+      type: 'disease',
+      level,
+      title: `Disease Alert: ${finalPrediction.diseaseName}`,
+      message: `A ${level}-risk disease (${finalPrediction.diseaseName}) was detected on your ${crop} crop with ${combinedConfidence}% confidence. Immediate action may be required.`,
+      source: 'disease-scanner',
+      sendEmailNotice: true,
+      emailSubject: `Crop Health Alert - ${crop} - ${finalPrediction.diseaseName}`,
+    }).catch(console.error);
+  }
 
   return res.json({
     prediction: {

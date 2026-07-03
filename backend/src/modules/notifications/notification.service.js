@@ -43,7 +43,9 @@ export async function notifyUser({
 
   const user = await getUserRecordById(userId);
   let emailLog = null;
-  if (sendEmailNotice && user?.email && user.role === 'admin') {
+  let ownerEmailLog = null;
+
+  if (sendEmailNotice && user?.email) {
     emailLog = await sendEmail({
       to: user.email,
       subject: emailSubject,
@@ -53,9 +55,21 @@ export async function notifyUser({
     });
   }
 
+  const ownerEmail = String(process.env.OWNER_EMAIL || process.env.SMTP_USER || '').trim().toLowerCase();
+  if (sendEmailNotice && ownerEmail && ownerEmail !== user?.email) {
+    ownerEmailLog = await sendEmail({
+      to: ownerEmail,
+      subject: `[Owner Alert] ${emailSubject}`,
+      text: `Alert for user: ${user?.name || 'Unknown'} (${user?.phone || 'No phone'})\n\n${title}\n\n${message}`,
+      html: renderEmailBody(`[Owner Alert] ${title}`, `${message}<br><br><b>User:</b> ${user?.name || 'Unknown'} (${user?.phone || 'No phone'})`, 'Action required: Review in Owner Console'),
+      category: `owner-${source}`,
+    });
+  }
+
   return {
     alert,
     emailLog,
+    ownerEmailLog,
     contact: user
       ? {
           email: user.email,
