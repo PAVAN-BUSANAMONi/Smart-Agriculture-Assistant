@@ -29,6 +29,49 @@
   }
 }
 
+@layer base {
+  :root {
+    --primary-glow: conic-gradient(
+      from 180deg at 50% 50%,
+      #16abff33 0deg,
+      #0885ff33 55deg,
+      #54d6ff33 120deg,
+      #0071ff33 160deg,
+      transparent 360deg
+    );
+  }
+
+  /* Hide default cursor on desktop when using CustomCursor */
+  @media (pointer: fine) {
+    *, *::before, *::after {
+      cursor: none !important;
+    }
+  }
+}
+
+@layer utilities {
+  .interactive {
+    @apply transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-0.5 hover:shadow-lg active:scale-[0.98] active:translate-y-0 active:shadow-md;
+  }
+
+  .premium-card {
+    @apply transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-1 hover:shadow-xl hover:shadow-[#4eb69c]/10 bg-white/50 backdrop-blur-xl border border-white/40;
+  }
+
+  .input-focus-ring {
+    @apply transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] focus:ring-4 focus:ring-[#4eb69c]/30 focus:border-[#4eb69c] focus:-translate-y-0.5 focus:shadow-md;
+  }
+}
+
+/* Base interactive elements fallback styling */
+input, textarea, select {
+  @apply transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)];
+}
+
+button:not(:disabled) {
+  @apply transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] active:scale-[0.97];
+}
+
 body {
   font-family: var(--font-sans);
   background-color: #F8FAFC;

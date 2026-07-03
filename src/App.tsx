@@ -21,12 +21,14 @@ import { AdminPanel } from './pages/AdminPanel';
 import { NotificationsDebug } from './pages/NotificationsDebug';
 import { AIAssistant } from './pages/AIAssistant';
 import { OwnerAccess } from './pages/OwnerAccess';
+import { CustomCursor } from './components/ui/CustomCursor';
 
 function AppShell() {
   const { simpleMode } = useAppSettings();
 
   return (
     <Router>
+      <CustomCursor />
       <div className={`flex flex-col min-h-screen ${simpleMode ? 'simple-mode' : ''}`}>
         <Routes>
           <Route path="/login" element={<Login />} />

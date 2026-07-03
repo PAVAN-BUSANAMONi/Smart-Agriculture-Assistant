@@ -4,6 +4,7 @@ import { ArrowRight, KeyRound, Lock, Mail, Moon, Phone, ShieldCheck, Sun, Tracto
 import { api } from '../services/api';
 import { useAuth } from '../contexts/AuthContext';
 import { useTheme } from '../contexts/ThemeContext';
+import { Magnetic } from '../components/ui/Magnetic';
 
 type AuthMode = 'login' | 'register';
 type AuthRole = 'farmer' | 'admin';
@@ -460,18 +461,20 @@ export function Login() {
               {error && <div className="rounded-2xl border border-red-400/60 bg-red-400/40 px-4 py-3 text-sm font-bold text-red-900 backdrop-blur-md shadow-[inset_0_2px_4px_rgba(255,255,255,0.5)]">{error}</div>}
 
               {/* ADVANCED GLOSSY EMERALD BUTTON */}
-              <button
-                type="submit"
-                disabled={submitting}
-                className="relative mt-8 inline-flex h-[60px] w-full items-center justify-center gap-2 rounded-full bg-gradient-to-b from-[#4eb69c]/90 to-[#235e4f]/90 text-[1.15rem] font-black text-white shadow-[inset_0_3px_6px_rgba(255,255,255,0.9),inset_0_-3px_8px_rgba(0,0,0,0.6),0_10px_25px_rgba(35,94,79,0.5)] border border-white/40 backdrop-blur-2xl transition hover:brightness-110 active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-70 overflow-hidden"
-              >
-                {/* Advanced 3D Gel Highlights */}
-                <div className="pointer-events-none absolute inset-x-2 top-[3px] h-[45%] rounded-full bg-gradient-to-b from-white/70 to-transparent" />
-                <div className="pointer-events-none absolute inset-x-6 bottom-[2px] h-[30%] rounded-full bg-gradient-to-t from-white/30 to-transparent blur-[2px]" />
-                
-                <span className="relative z-10 drop-shadow-md">{submitting ? 'verifying...' : primaryButtonLabel}</span>
-                <ArrowRight size={22} className="relative z-10 ml-2 drop-shadow-md" />
-              </button>
+              <Magnetic pull={0.2}>
+                <button
+                  type="submit"
+                  disabled={submitting}
+                  className="relative mt-8 inline-flex h-[60px] w-full items-center justify-center gap-2 rounded-full bg-gradient-to-b from-[#4eb69c]/90 to-[#235e4f]/90 text-[1.15rem] font-black text-white shadow-[inset_0_3px_6px_rgba(255,255,255,0.9),inset_0_-3px_8px_rgba(0,0,0,0.6),0_10px_25px_rgba(35,94,79,0.5)] border border-white/40 backdrop-blur-2xl transition hover:brightness-110 active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-70 overflow-hidden"
+                >
+                  {/* Advanced 3D Gel Highlights */}
+                  <div className="pointer-events-none absolute inset-x-2 top-[3px] h-[45%] rounded-full bg-gradient-to-b from-white/70 to-transparent" />
+                  <div className="pointer-events-none absolute inset-x-6 bottom-[2px] h-[30%] rounded-full bg-gradient-to-t from-white/30 to-transparent blur-[2px]" />
+                  
+                  <span className="relative z-10 drop-shadow-md">{submitting ? 'verifying...' : primaryButtonLabel}</span>
+                  <ArrowRight size={22} className="relative z-10 ml-2 drop-shadow-md" />
+                </button>
+              </Magnetic>
             </form>
           )}
 
@@ -531,18 +534,20 @@ export function Login() {
               {error && <div className="rounded-2xl border border-red-400/60 bg-red-400/40 px-4 py-3 text-sm font-bold text-red-900 backdrop-blur-md shadow-[inset_0_2px_4px_rgba(255,255,255,0.5)]">{error}</div>}
 
               {/* ADVANCED GLOSSY EMERALD BUTTON */}
-              <button
-                type="submit"
-                disabled={submitting}
-                className="relative mt-8 inline-flex h-[60px] w-full items-center justify-center gap-2 rounded-full bg-gradient-to-b from-[#4eb69c]/90 to-[#235e4f]/90 text-[1.15rem] font-black text-white shadow-[inset_0_3px_6px_rgba(255,255,255,0.9),inset_0_-3px_8px_rgba(0,0,0,0.6),0_10px_25px_rgba(35,94,79,0.5)] border border-white/40 backdrop-blur-2xl transition hover:brightness-110 active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-70 overflow-hidden"
-              >
-                {/* Advanced 3D Gel Highlights */}
-                <div className="pointer-events-none absolute inset-x-2 top-[3px] h-[45%] rounded-full bg-gradient-to-b from-white/70 to-transparent" />
-                <div className="pointer-events-none absolute inset-x-6 bottom-[2px] h-[30%] rounded-full bg-gradient-to-t from-white/30 to-transparent blur-[2px]" />
-                
-                <span className="relative z-10 drop-shadow-md">{submitting ? 'Sending OTP...' : primaryButtonLabel}</span>
-                <ArrowRight size={22} className="relative z-10 ml-2 drop-shadow-md" />
-              </button>
+              <Magnetic pull={0.2}>
+                <button
+                  type="submit"
+                  disabled={submitting}
+                  className="relative mt-8 inline-flex h-[60px] w-full items-center justify-center gap-2 rounded-full bg-gradient-to-b from-[#4eb69c]/90 to-[#235e4f]/90 text-[1.15rem] font-black text-white shadow-[inset_0_3px_6px_rgba(255,255,255,0.9),inset_0_-3px_8px_rgba(0,0,0,0.6),0_10px_25px_rgba(35,94,79,0.5)] border border-white/40 backdrop-blur-2xl transition hover:brightness-110 active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-70 overflow-hidden"
+                >
+                  {/* Advanced 3D Gel Highlights */}
+                  <div className="pointer-events-none absolute inset-x-2 top-[3px] h-[45%] rounded-full bg-gradient-to-b from-white/70 to-transparent" />
+                  <div className="pointer-events-none absolute inset-x-6 bottom-[2px] h-[30%] rounded-full bg-gradient-to-t from-white/30 to-transparent blur-[2px]" />
+                  
+                  <span className="relative z-10 drop-shadow-md">{submitting ? 'Sending OTP...' : primaryButtonLabel}</span>
+                  <ArrowRight size={22} className="relative z-10 ml-2 drop-shadow-md" />
+                </button>
+              </Magnetic>
             </form>
           )}
 
@@ -563,18 +568,20 @@ export function Login() {
               {error && <div className="rounded-2xl border border-red-400/60 bg-red-400/40 px-4 py-3 text-sm font-bold text-red-900 backdrop-blur-md shadow-[inset_0_2px_4px_rgba(255,255,255,0.5)]">{error}</div>}
 
               {/* ADVANCED GLOSSY EMERALD BUTTON */}
-              <button
-                type="submit"
-                disabled={submitting}
-                className="relative mt-8 inline-flex h-[60px] w-full items-center justify-center gap-2 rounded-full bg-gradient-to-b from-[#4eb69c]/90 to-[#235e4f]/90 text-[1.15rem] font-black text-white shadow-[inset_0_3px_6px_rgba(255,255,255,0.9),inset_0_-3px_8px_rgba(0,0,0,0.6),0_10px_25px_rgba(35,94,79,0.5)] border border-white/40 backdrop-blur-2xl transition hover:brightness-110 active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-70 overflow-hidden"
-              >
-                {/* Advanced 3D Gel Highlights */}
-                <div className="pointer-events-none absolute inset-x-2 top-[3px] h-[45%] rounded-full bg-gradient-to-b from-white/70 to-transparent" />
-                <div className="pointer-events-none absolute inset-x-6 bottom-[2px] h-[30%] rounded-full bg-gradient-to-t from-white/30 to-transparent blur-[2px]" />
-                
-                <span className="relative z-10 drop-shadow-md">{submitting ? 'Verifying...' : primaryButtonLabel}</span>
-                <ArrowRight size={22} className="relative z-10 ml-2 drop-shadow-md" />
-              </button>
+              <Magnetic pull={0.2}>
+                <button
+                  type="submit"
+                  disabled={submitting}
+                  className="relative mt-8 inline-flex h-[60px] w-full items-center justify-center gap-2 rounded-full bg-gradient-to-b from-[#4eb69c]/90 to-[#235e4f]/90 text-[1.15rem] font-black text-white shadow-[inset_0_3px_6px_rgba(255,255,255,0.9),inset_0_-3px_8px_rgba(0,0,0,0.6),0_10px_25px_rgba(35,94,79,0.5)] border border-white/40 backdrop-blur-2xl transition hover:brightness-110 active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-70 overflow-hidden"
+                >
+                  {/* Advanced 3D Gel Highlights */}
+                  <div className="pointer-events-none absolute inset-x-2 top-[3px] h-[45%] rounded-full bg-gradient-to-b from-white/70 to-transparent" />
+                  <div className="pointer-events-none absolute inset-x-6 bottom-[2px] h-[30%] rounded-full bg-gradient-to-t from-white/30 to-transparent blur-[2px]" />
+                  
+                  <span className="relative z-10 drop-shadow-md">{submitting ? 'Verifying...' : primaryButtonLabel}</span>
+                  <ArrowRight size={22} className="relative z-10 ml-2 drop-shadow-md" />
+                </button>
+              </Magnetic>
 
               <div className="flex items-center justify-center gap-6 pt-3 text-[0.95rem] font-black text-gray-900 dark:text-white drop-shadow-md">
                 <button
