@@ -113,6 +113,107 @@
   },
   "alerts": [
     {
+      "id": "08635ba3-e107-4738-9679-e1c2c7e0b315",
+      "userId": "a1a2202e-0dd9-4176-8b3b-947eb97b08f0",
+      "type": "weather",
+      "level": "high",
+      "title": "Irrigation Hold Reminder",
+      "message": "Heavy rain likely. Pause irrigation and open drainage channels today.",
+      "source": "scheduler-weather",
+      "metadata": {
+        "rainChance24h": 100,
+        "rainMm24h": 6.5,
+        "maxTemp": 28
+      },
+      "read": false,
+      "createdAt": "2026-07-03T14:14:45.980Z"
+    },
+    {
+      "id": "a26a5afa-aad2-4748-b23c-0009b3ff5871",
+      "userId": "a1a2202e-0dd9-4176-8b3b-947eb97b08f0",
+      "type": "crop",
+      "level": "medium",
+      "title": "Personalized Recommendation",
+      "message": "For rice in Hyderabad, review market trend and schedule next irrigation using weather advisory.",
+      "source": "scheduler-personalized",
+      "metadata": {},
+      "read": false,
+      "createdAt": "2026-07-03T14:14:45.771Z"
+    },
+    {
+      "id": "7ba07602-6257-47a9-8029-d33751924b1f",
+      "userId": "a1a2202e-0dd9-4176-8b3b-947eb97b08f0",
+      "type": "lifecycle",
+      "level": "medium",
+      "title": "RICE Nutrient Reminder",
+      "message": "Day 15: inspect crop stand and apply first top-dressing based on soil test recommendation.",
+      "source": "scheduler-lifecycle",
+      "metadata": {
+        "cropPlans": 1
+      },
+      "read": false,
+      "createdAt": "2026-07-03T14:14:45.762Z"
+    },
+    {
+      "id": "4d4335ed-ff54-4df9-a7b5-f45eb7b5e992",
+      "userId": "4c7652d6-5d65-4af2-927b-c3d8937da720",
+      "type": "weather",
+      "level": "high",
+      "title": "Irrigation Hold Reminder",
+      "message": "Heavy rain likely. Pause irrigation and open drainage channels today.",
+      "source": "scheduler-weather",
+      "metadata": {
+        "rainChance24h": 100,
+        "rainMm24h": 6.5,
+        "maxTemp": 28
+      },
+      "read": false,
+      "createdAt": "2026-07-03T14:14:45.754Z"
+    },
+    {
+      "id": "bc761366-6c82-4348-b572-083ea3676941",
+      "userId": "4c7652d6-5d65-4af2-927b-c3d8937da720",
+      "type": "crop",
+      "level": "medium",
+      "title": "Personalized Recommendation",
+      "message": "For rice in Hyderabad, review market trend and schedule next irrigation using weather advisory.",
+      "source": "scheduler-personalized",
+      "metadata": {},
+      "read": false,
+      "createdAt": "2026-07-03T14:14:44.683Z"
+    },
+    {
+      "id": "aca34c3f-387e-434e-96e4-d981226e8a9f",
+      "userId": "4c7652d6-5d65-4af2-927b-c3d8937da720",
+      "type": "lifecycle",
+      "level": "medium",
+      "title": "RICE Nutrient Reminder",
+      "message": "Day 15: inspect crop stand and apply first top-dressing based on soil test recommendation.",
+      "source": "scheduler-lifecycle",
+      "metadata": {
+        "cropPlans": 1
+      },
+      "read": false,
+      "createdAt": "2026-07-03T14:14:44.678Z"
+    },
+    {
+      "id": "2412809e-62cf-4f18-bd77-1e36d105fd75",
+      "userId": "a1a2202e-0dd9-4176-8b3b-947eb97b08f0",
+      "type": "disease",
+      "level": "medium",
+      "title": "Disease Risk Detected",
+      "message": "Leaf Blight / Rust detected with 73% confidence",
+      "source": "web-farmer-disease-ai",
+      "metadata": {
+        "diseaseKey": "leaf_blight",
+        "confidence": 73,
+        "fingerprint": "disease-leaf_blight-15",
+        "inferenceSource": "multi-image-consensus"
+      },
+      "read": false,
+      "createdAt": "2026-07-03T14:07:54.501Z"
+    },
+    {
       "id": "3c2874e9-a91f-4893-a921-3d0ad977952d",
       "userId": "4c7652d6-5d65-4af2-927b-c3d8937da720",
       "type": "system",
