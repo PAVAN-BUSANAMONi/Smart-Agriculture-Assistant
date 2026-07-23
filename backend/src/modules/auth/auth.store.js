@@ -163,6 +163,7 @@ async function createAdminRecord(payload, status = 'pending') {
   const name = String(payload.name || '').trim();
   const email = normalizeEmail(payload.email);
   const password = String(payload.password || '');
+  const id = payload.id || randomUUID();
 
   if (!name) {
     throw new AppError(400, 'Name is required.');
@@ -196,7 +197,6 @@ async function createAdminRecord(payload, status = 'pending') {
       }
 
       const { salt, hash } = hashPassword(password);
-      const id = randomUUID();
       await query(
         `
           INSERT INTO users (id, role, name, email, password_hash, status)
@@ -207,7 +207,7 @@ async function createAdminRecord(payload, status = 'pending') {
 
       return getUserById(id);
     },
-    () => createAdminLocal({ name, email, password }, status),
+    () => createAdminLocal({ id, name, email, password }, status),
   );
 }
 
@@ -375,6 +375,7 @@ export async function createManagedUser(payload) {
 export async function ensureOwnerAdmin(payload) {
   const name = String(payload.name || '').trim() || 'Owner';
   const email = normalizeEmail(payload.email);
+  const OWNER_UUID = '00000000-0000-4000-8000-owner0000000'; // Deterministic ID
 
   if (!email) {
     throw new AppError(400, 'Owner email is required.');
@@ -408,6 +409,7 @@ export async function ensureOwnerAdmin(payload) {
 
       return createAdminRecord(
         {
+          id: OWNER_UUID,
           name,
           email,
           password: buildOwnerPassword(),
@@ -420,6 +422,7 @@ export async function ensureOwnerAdmin(payload) {
       if (!existing) {
         return createAdminLocal(
           {
+            id: OWNER_UUID,
             name,
             email,
             password: buildOwnerPassword(),

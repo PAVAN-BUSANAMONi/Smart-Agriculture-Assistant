@@ -26,7 +26,18 @@ export async function attachRequestAuth(req, _res, next) {
       return next();
     }
 
-    const user = await getUserById(payload.sub);
+    let user = await getUserById(payload.sub);
+    
+    // Vercel stateless workaround: re-create owner if ephemeral local store was reset
+    if (!user && payload.sub === '00000000-0000-4000-8000-owner0000000') {
+      const { ensureOwnerAdmin } = await import('./auth.store.js');
+      const ownerEmail = String(process.env.OWNER_EMAIL || process.env.SMTP_USER || '').trim().toLowerCase();
+      const ownerName = String(process.env.OWNER_NAME || 'Owner').trim() || 'Owner';
+      if (ownerEmail) {
+        user = await ensureOwnerAdmin({ name: ownerName, email: ownerEmail });
+      }
+    }
+
     if (!user || user.status !== 'active') {
       return next();
     }

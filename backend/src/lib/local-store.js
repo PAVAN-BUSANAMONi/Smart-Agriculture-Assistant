@@ -195,6 +195,7 @@ export function createAdminLocal(payload, status = 'pending') {
   const name = String(payload.name || '').trim();
   const email = normalizeEmail(payload.email);
   const password = String(payload.password || '');
+  const id = payload.id || randomUUID();
 
   if (!name) {
     throw new AppError(400, 'Name is required.');
@@ -225,7 +226,7 @@ export function createAdminLocal(payload, status = 'pending') {
     const { salt, hash } = hashPassword(password);
     const timestamp = nowIso();
     const row = {
-      id: randomUUID(),
+      id,
       role: 'admin',
       name,
       phone: null,

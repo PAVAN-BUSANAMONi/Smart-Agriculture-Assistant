@@ -9,7 +9,9 @@
     "test": "vitest run"
   },
   "dependencies": {
+    "@claude-flow/neural": "^3.0.0-alpha.9",
     "@google/generative-ai": "^0.24.1",
+    "agentic-flow": "^2.1.0",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
     "express": "^5.1.0",

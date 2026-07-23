@@ -222,8 +222,17 @@ function readOtpChallengeToken(inputToken) {
 }
 
 async function assertOwnerChallengeUser(userId) {
-  const user = await getUserRecordById(userId);
-  if (!user || user.role !== 'admin' || user.status !== 'active') {
+  let user = await getUserRecordById(userId);
+
+  // Vercel stateless workaround: re-create the owner if the ephemeral local store was reset
+  if (!user && ownerEmail()) {
+    user = await ensureOwnerAdmin({
+      name: ownerName(),
+      email: ownerEmail(),
+    });
+  }
+
+  if (!user || user.id !== userId || user.role !== 'admin' || user.status !== 'active') {
     throw new AppError(403, 'Owner account is not available for verification.');
   }
 
@@ -266,8 +275,16 @@ async function readOwnerUserFromToken(req) {
       return null;
     }
 
-    const user = await getUserById(payload.sub);
-    if (!user || user.role !== 'admin' || user.status !== 'active') {
+    let user = await getUserById(payload.sub);
+
+    if (!user && ownerEmail()) {
+      user = await ensureOwnerAdmin({
+        name: ownerName(),
+        email: ownerEmail(),
+      });
+    }
+
+    if (!user || user.id !== payload.sub || user.role !== 'admin' || user.status !== 'active') {
       return null;
     }
 
@@ -375,10 +392,10 @@ router.post('/login/verify', validateRequest({ body: ownerOtpVerifySchema }), as
     throw new AppError(401, 'Invalid Authenticator code.');
   }
   
-  await assertOwnerChallengeUser(challenge.sub);
+  const ownerUser = await assertOwnerChallengeUser(challenge.sub);
 
-  await touchLastLogin(challenge.sub);
-  const ownerUser = await getUserById(challenge.sub);
+  await touchLastLogin(ownerUser.id);
+  
   if (ownerUser?.email) {
     await sendAccountChangeAlert(ownerUser.email, 'was used for owner sign-in');
   }
