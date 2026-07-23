@@ -684,7 +684,19 @@ export const api = {
   adminResetPassword: (payload: { email: string; password: string; otpProofToken: string }) =>
     request<{ message: string }>('/auth/admin/reset-password', { method: 'POST', body: JSON.stringify(payload), auth: false }),
   ownerLogin: (payload: OwnerLoginPayload) =>
-    request<AuthSessionResponse>('/owner/login', {
+    request<OtpChallengeResponse>('/owner/login', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+      auth: false,
+    }),
+  ownerVerifyOtp: (payload: { otpSessionToken: string; otp: string }) =>
+    request<AuthSessionResponse>('/owner/login/verify', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+      auth: false,
+    }),
+  ownerResendOtp: (payload: { otpSessionToken: string }) =>
+    request<OtpChallengeResponse>('/owner/login/resend', {
       method: 'POST',
       body: JSON.stringify(payload),
       auth: false,

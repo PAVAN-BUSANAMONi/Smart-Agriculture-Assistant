@@ -1,6 +1,6 @@
 import { useEffect, useState, ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Moon, Sun, CheckCircle2, ShieldAlert, Trash2, UserCheck, UserPlus, Users, UserX, ArrowRight, UserRound, Lock, Edit2 } from 'lucide-react';
+import { Moon, Sun, CheckCircle2, ShieldAlert, Trash2, UserCheck, UserPlus, Users, UserX, ArrowRight, UserRound, Lock, Edit2, KeyRound } from 'lucide-react';
 import { api, type AuthUser, type OwnerStatusResponse } from '../services/api';
 import { useAuth } from '../contexts/AuthContext';
 import { useTheme } from '../contexts/ThemeContext';
@@ -42,6 +42,10 @@ export function OwnerAccess() {
     name: '',
     password: '',
   });
+  const [otpSessionToken, setOtpSessionToken] = useState('');
+  const [otp, setOtp] = useState('');
+  const [recipientEmail, setRecipientEmail] = useState('');
+  const [inOtpStep, setInOtpStep] = useState(false);
   const [ownerStatus, setOwnerStatus] = useState<OwnerStatusResponse | null>(null);
   const [pendingAdmins, setPendingAdmins] = useState<AuthUser[]>([]);
   const [managedUsers, setManagedUsers] = useState<AuthUser[]>([]);
@@ -87,20 +91,71 @@ export function OwnerAccess() {
     void loadOwnerData();
   }, [ownerLoggedIn]);
 
+  const resetOtpState = () => {
+    setOtpSessionToken('');
+    setOtp('');
+    setRecipientEmail('');
+    setInOtpStep(false);
+  };
+
   const handleOwnerLogin = async (event: React.FormEvent) => {
     event.preventDefault();
     setLoading(true);
     setError('');
     setMessage('');
     try {
-      const session = await api.ownerLogin({
+      const response = await api.ownerLogin({
         name: credentials.name.trim(),
         password: credentials.password,
       });
-      acceptSession(session);
-      setMessage('Owner session started.');
+      setOtpSessionToken(response.otpSessionToken);
+      setRecipientEmail(response.recipientEmail || '');
+      setInOtpStep(true);
+      setMessage(response.message);
+      if (response.deliveryError) {
+        setError(response.deliveryError);
+      }
     } catch (requestError) {
       setError(requestError instanceof Error ? requestError.message : 'Owner login failed.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleVerifyOwnerOtp = async (event: React.FormEvent) => {
+    event.preventDefault();
+    setLoading(true);
+    setError('');
+    setMessage('');
+    try {
+      const session = await api.ownerVerifyOtp({
+        otpSessionToken,
+        otp: otp.trim(),
+      });
+      acceptSession(session);
+      resetOtpState();
+      setMessage('Owner session started.');
+    } catch (requestError) {
+      setError(requestError instanceof Error ? requestError.message : 'OTP verification failed.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleResendOwnerOtp = async () => {
+    setLoading(true);
+    setError('');
+    setMessage('');
+    try {
+      const response = await api.ownerResendOtp({ otpSessionToken });
+      setOtpSessionToken(response.otpSessionToken);
+      setRecipientEmail(response.recipientEmail || recipientEmail);
+      setMessage(response.message);
+      if (response.deliveryError) {
+        setError(response.deliveryError);
+      }
+    } catch (requestError) {
+      setError(requestError instanceof Error ? requestError.message : 'Unable to resend OTP.');
     } finally {
       setLoading(false);
     }
@@ -265,7 +320,18 @@ export function OwnerAccess() {
                 </div>
 
                 {error && <div className="relative z-10 mt-6 rounded-2xl border border-red-400/60 bg-red-400/40 px-4 py-3 text-sm font-bold text-red-900 backdrop-blur-md shadow-[inset_0_2px_4px_rgba(255,255,255,0.5)]">{error}</div>}
-                
+                {message && inOtpStep ? (
+                  <div className="relative z-10 mt-6 rounded-2xl border border-[#3c8e7a]/60 bg-[#3c8e7a]/30 px-4 py-3 text-sm font-bold text-[#113a30] backdrop-blur-md shadow-[inset_0_2px_4px_rgba(255,255,255,0.6)]">
+                    {message}
+                    {recipientEmail ? (
+                      <p className="mt-2 text-xs font-bold uppercase tracking-wide opacity-80">
+                        Sent to {recipientEmail}
+                      </p>
+                    ) : null}
+                  </div>
+                ) : null}
+
+                {!inOtpStep ? (
                 <form onSubmit={handleOwnerLogin} className="relative z-10 mt-8 space-y-6">
                   <PillField label="Name" icon={<UserRound size={20} />}>
                     <input
@@ -298,10 +364,52 @@ export function OwnerAccess() {
                     <div className="pointer-events-none absolute inset-x-2 top-[3px] h-[45%] rounded-full bg-gradient-to-b from-white/70 to-transparent" />
                     <div className="pointer-events-none absolute inset-x-6 bottom-[2px] h-[30%] rounded-full bg-gradient-to-t from-white/30 to-transparent blur-[2px]" />
                     
-                    <span className="relative z-10 drop-shadow-md">{loading ? 'Authenticating...' : 'Start owner session'}</span>
+                    <span className="relative z-10 drop-shadow-md">{loading ? 'Verifying...' : 'Continue to Authenticator'}</span>
                     <ArrowRight size={22} className="relative z-10 ml-2 drop-shadow-md" />
                   </button>
                 </form>
+                ) : (
+                <form onSubmit={handleVerifyOwnerOtp} className="relative z-10 mt-8 space-y-6">
+                  <PillField label="Authenticator Code" icon={<KeyRound size={20} />}>
+                    <input
+                      value={otp}
+                      onChange={(event) => setOtp(event.target.value)}
+                      inputMode="numeric"
+                      maxLength={6}
+                      required
+                      autoComplete="one-time-code"
+                      placeholder="Enter 6-digit authenticator code"
+                      className="w-full bg-transparent text-[1.05rem] font-bold text-gray-900 dark:text-white outline-none placeholder:text-gray-700/80 dark:text-gray-300/80 drop-shadow-sm"
+                    />
+                  </PillField>
+
+                  <button
+                    type="submit"
+                    disabled={loading || otp.trim().length !== 6}
+                    className="relative mt-8 inline-flex h-[60px] w-full items-center justify-center gap-2 rounded-full bg-gradient-to-b from-[#4eb69c]/90 to-[#235e4f]/90 text-[1.15rem] font-black text-white shadow-[inset_0_3px_6px_rgba(255,255,255,0.9),inset_0_-3px_8px_rgba(0,0,0,0.6),0_10px_25px_rgba(35,94,79,0.5)] border border-white/40 backdrop-blur-2xl transition hover:brightness-110 active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-70 overflow-hidden"
+                  >
+                    <div className="pointer-events-none absolute inset-x-2 top-[3px] h-[45%] rounded-full bg-gradient-to-b from-white/70 to-transparent" />
+                    <div className="pointer-events-none absolute inset-x-6 bottom-[2px] h-[30%] rounded-full bg-gradient-to-t from-white/30 to-transparent blur-[2px]" />
+
+                    <span className="relative z-10 drop-shadow-md">{loading ? 'Verifying...' : 'Verify and start session'}</span>
+                    <ArrowRight size={22} className="relative z-10 ml-2 drop-shadow-md" />
+                  </button>
+
+                  <div className="flex items-center justify-center gap-6 pt-3 text-[0.95rem] font-black text-gray-900 dark:text-white drop-shadow-md">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        resetOtpState();
+                        setError('');
+                        setMessage('');
+                      }}
+                      className="transition hover:text-white"
+                    >
+                      Back
+                    </button>
+                  </div>
+                </form>
+                )}
 
                 <div className="relative z-10 mt-8 text-center">
                   <button

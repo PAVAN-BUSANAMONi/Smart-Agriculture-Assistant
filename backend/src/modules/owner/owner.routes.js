@@ -1,15 +1,19 @@
 import { Router } from 'express';
 import { timingSafeEqual } from 'node:crypto';
 import { z } from 'zod';
+import { verifySync } from 'otplib';
 import {
   createManagedUser,
   deleteUserByAdmin,
   ensureOwnerAdmin,
   getUserById,
+  getUserRecordById,
   listUsers,
+  touchLastLogin,
   updateUserByAdmin,
 } from '../auth/auth.store.js';
-import { issueAccessToken, verifyToken } from '../auth/token.service.js';
+import { issueAccessToken, issueOtpChallengeToken, verifyToken } from '../auth/token.service.js';
+import { createOtpChallenge, createOtpTokenHash, verifyOtpChallenge } from '../otp/otp.store.js';
 import { listFeatureFlags } from '../admin/feature.store.js';
 import { addAlert } from '../alerts/alerts.store.js';
 import { appendAuditLog } from '../admin/audit.store.js';
@@ -17,6 +21,8 @@ import {
   getEmailDeliveryConfigSummary,
   isEmailTransportConfigured,
   resolveRecipientForDelivery,
+  sendAccountChangeAlert,
+  sendOTPEmailWithDeadline,
   sendSystemEmail,
 } from '../notifications/mailer.service.js';
 import { validateRequest } from '../../lib/validate.js';
@@ -32,6 +38,17 @@ const ownerLoginSchema = z.object({
   name: z.string().trim().min(1).max(120),
   password: z.string().trim().min(1).max(120),
 }).strict();
+
+const ownerOtpVerifySchema = z.object({
+  otpSessionToken: z.string().trim().min(16),
+  otp: z.string().trim().regex(/^\d{6}$/),
+}).strict();
+
+const ownerOtpResendSchema = z.object({
+  otpSessionToken: z.string().trim().min(16),
+}).strict();
+
+const OWNER_LOGIN_PURPOSE = 'owner_login';
 
 const ownerPendingActionSchema = z.object({
   ownerSecret: z.string().trim().min(8).optional(),
@@ -89,6 +106,10 @@ function ownerAllowedInProduction() {
 
 function ownerConfiguredSecret() {
   return String(process.env.OWNER_MODULE_SECRET || '').trim();
+}
+
+function ownerTotpSecret() {
+  return String(process.env.OWNER_TOTP_SECRET || '').trim();
 }
 
 function ownerEmail() {
@@ -163,6 +184,58 @@ function compareSecrets(input, expected) {
   }
   return timingSafeEqual(left, right);
 }
+
+function maskEmail(email) {
+  const value = String(email || '').trim().toLowerCase();
+  const [localPart = '', domain = ''] = value.split('@');
+  if (!localPart || !domain) {
+    return '';
+  }
+  if (localPart.length <= 2) {
+    return `${localPart[0] || '*'}***@${domain}`;
+  }
+  return `${localPart.slice(0, 2)}***${localPart.slice(-1)}@${domain}`;
+}
+
+function buildOtpResponse(otpSessionToken, successMessage, failureMessage, delivery) {
+  const recipient = String(delivery?.to || '').trim();
+  return {
+    message: delivery.delivered ? successMessage : failureMessage,
+    otpSessionToken,
+    delivered: delivery.delivered,
+    deliveryError: delivery.errorMessage || null,
+    recipientEmail: recipient ? maskEmail(recipient) : null,
+  };
+}
+
+function readOtpChallengeToken(inputToken) {
+  if (!inputToken || typeof inputToken !== 'string') {
+    throw new AppError(400, 'OTP session token is required.');
+  }
+
+  const payload = verifyToken(inputToken);
+  if (payload.type !== 'otp_challenge' || payload.purpose !== OWNER_LOGIN_PURPOSE) {
+    throw new AppError(400, 'Invalid OTP session token.');
+  }
+
+  return payload;
+}
+
+async function assertOwnerChallengeUser(userId) {
+  const user = await getUserRecordById(userId);
+  if (!user || user.role !== 'admin' || user.status !== 'active') {
+    throw new AppError(403, 'Owner account is not available for verification.');
+  }
+
+  const configuredOwnerEmail = ownerEmail();
+  if (configuredOwnerEmail && String(user.email || '').trim().toLowerCase() !== configuredOwnerEmail) {
+    throw new AppError(403, 'OTP challenge does not belong to the configured owner account.');
+  }
+
+  return user;
+}
+
+// Owner Login uses Google Authenticator strictly; no email OTP is sent.
 
 function ensureOwnerModuleAvailable() {
   if (!ownerModuleEnabled()) {
@@ -268,10 +341,71 @@ router.post('/login', validateRequest({ body: ownerLoginSchema }), async (req, r
     throw new AppError(401, 'Invalid owner credentials.');
   }
 
+  const user = await ensureOwnerAdmin({
+    name: ownerName(),
+    email: ownerEmail(),
+  });
+
+  const totpSecret = ownerTotpSecret();
+  if (!totpSecret) {
+    throw new AppError(503, 'Owner Authenticator is not configured. Please set OWNER_TOTP_SECRET in Vercel.');
+  }
+
+  const token = issueOtpChallengeToken(user.id, OWNER_LOGIN_PURPOSE, { isTotp: true });
+  return res.status(202).json({
+    message: 'Please enter the 6-digit code from your Authenticator app.',
+    otpSessionToken: token,
+    delivered: true,
+    deliveryError: null,
+    recipientEmail: 'Authenticator App',
+  });
+});
+
+router.post('/login/verify', validateRequest({ body: ownerOtpVerifySchema }), async (req, res) => {
+  ensureOwnerModuleAvailable();
+  const challenge = readOtpChallengeToken(req.body?.otpSessionToken);
+  
+  const totpSecret = ownerTotpSecret();
+  if (!totpSecret) {
+    throw new AppError(503, 'Owner Authenticator is not configured.');
+  }
+
+  const { valid } = verifySync({ token: req.body?.otp, secret: totpSecret });
+  if (!valid) {
+    throw new AppError(401, 'Invalid Authenticator code.');
+  }
+  
+  await assertOwnerChallengeUser(challenge.sub);
+
+  await touchLastLogin(challenge.sub);
+  const ownerUser = await getUserById(challenge.sub);
+  if (ownerUser?.email) {
+    await sendAccountChangeAlert(ownerUser.email, 'was used for owner sign-in');
+  }
+
   const session = await buildOwnerSession();
   res.json({
     message: 'Owner login successful.',
     ...session,
+  });
+});
+
+router.post('/login/resend', validateRequest({ body: ownerOtpResendSchema }), async (req, res) => {
+  ensureOwnerModuleAvailable();
+  const challenge = readOtpChallengeToken(req.body?.otpSessionToken);
+  await assertOwnerChallengeUser(challenge.sub);
+
+  const totpSecret = ownerTotpSecret();
+  if (!totpSecret) {
+    throw new AppError(503, 'Owner Authenticator is not configured.');
+  }
+
+  return res.json({
+    message: 'Check your Authenticator app for the latest code.',
+    otpSessionToken: req.body?.otpSessionToken,
+    delivered: true,
+    deliveryError: null,
+    recipientEmail: 'Authenticator App',
   });
 });
 
