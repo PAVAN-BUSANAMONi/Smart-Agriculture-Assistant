@@ -17,10 +17,11 @@ function resolveBackendOrigin() {
   }
 
   if (import.meta.env.PROD) {
-    return DEFAULT_RENDER_BACKEND_URL;
+    // If not configured, default to relative paths to hit Vercel Serverless Functions
+    return '';
   }
 
-  return DEFAULT_RENDER_BACKEND_URL;
+  return '';
 }
 
 export const BACKEND_ORIGIN = resolveBackendOrigin();
