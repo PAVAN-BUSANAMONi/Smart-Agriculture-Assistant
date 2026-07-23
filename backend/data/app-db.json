@@ -6,11 +6,11 @@
       "name": "Owner",
       "phone": null,
       "email": "smart.agriculture.assist@gmail.com",
-      "passwordHash": "eefcafb4c21dc2662168ba41d27e7316:1254c05f441a133f94297b233287aa65b0f78cb2481825f4839bfa3134b2d4c9ecedd41feb29cf310f0a199946d1575c8dd8e7c0b27461a45a15065ef05293eb",
+      "passwordHash": "fdd599ae834800dfb727c686fcc4ae8a:a0aa0758075435e23d5e24d1639b68442e519d2d5ba1de675fdd4d4644db783a6776093bdc8a0a6109de07c52f7b999cc85b4449603a76ffeab997b58cb71562",
       "status": "active",
       "createdAt": "2026-03-31T18:29:55.114Z",
-      "updatedAt": "2026-07-23T13:24:30.512Z",
-      "lastLoginAt": "2026-07-23T13:24:25.155Z"
+      "updatedAt": "2026-07-23T14:16:59.498Z",
+      "lastLoginAt": "2026-07-23T14:16:50.913Z"
     },
     {
       "id": "4c7652d6-5d65-4af2-927b-c3d8937da720",
@@ -8045,6 +8045,18 @@
     }
   ],
   "emailLog": [
+    {
+      "id": "62538775-7cb3-4487-af39-64ea15cdc6f6",
+      "to": "smart.agriculture.assist@gmail.com",
+      "subject": "Smart Agriculture account change alert",
+      "category": "account-change",
+      "transport": "smtp:primary",
+      "messageId": "<f4a360ce-3933-1d81-3828-28bbd75b587f@gmail.com>",
+      "delivered": true,
+      "errorMessage": null,
+      "payloadPreview": "Your account was used for owner sign-in. If this was not you, contact the platform administrator immediately. Review latest activity in your Smart Agriculture account dashboard.",
+      "createdAt": "2026-07-23T14:16:59.341Z"
+    },
     {
       "id": "8d6e6be6-2019-48fb-b175-8a56610bdcb0",
       "to": "smart.agriculture.assist@gmail.com",

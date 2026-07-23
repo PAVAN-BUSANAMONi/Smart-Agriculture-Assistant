@@ -116,7 +116,11 @@ function loadState() {
     return normalizeState(JSON.parse(raw));
   } catch {
     const fallback = baseState();
-    fs.writeFileSync(DB_FILE, JSON.stringify(fallback, null, 2));
+    try {
+      fs.writeFileSync(DB_FILE, JSON.stringify(fallback, null, 2));
+    } catch (err) {
+      console.warn('Could not write local store file (read-only filesystem?)', err.message);
+    }
     return fallback;
   }
 }
@@ -124,7 +128,11 @@ function loadState() {
 let state = loadState();
 
 function persistState() {
-  fs.writeFileSync(DB_FILE, JSON.stringify(state, null, 2));
+  try {
+    fs.writeFileSync(DB_FILE, JSON.stringify(state, null, 2));
+  } catch (err) {
+    console.warn('Could not persist local store (read-only filesystem?)', err.message);
+  }
 }
 
 export function readDb() {
