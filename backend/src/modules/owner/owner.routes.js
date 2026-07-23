@@ -370,7 +370,7 @@ router.post('/login/verify', validateRequest({ body: ownerOtpVerifySchema }), as
     throw new AppError(503, 'Owner Authenticator is not configured.');
   }
 
-  const { valid } = verifySync({ token: req.body?.otp, secret: totpSecret });
+  const { valid } = verifySync({ token: req.body?.otp, secret: totpSecret, window: 1 });
   if (!valid) {
     throw new AppError(401, 'Invalid Authenticator code.');
   }
