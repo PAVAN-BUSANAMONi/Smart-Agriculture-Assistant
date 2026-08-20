@@ -1,4 +1,3 @@
-import mongoose from 'mongoose';
 import { setDatabaseConnecting, setDatabaseReady, setDatabaseUnavailable } from './state.js';
 
 let initPromise = null;
@@ -78,6 +77,7 @@ export async function initDatabase() {
     return initPromise;
   }
 
+  const { default: mongoose } = await import('mongoose');
   if (mongoose.connection.readyState === 1) {
     return mongoose.connection;
   }

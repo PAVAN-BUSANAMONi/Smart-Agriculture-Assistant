@@ -1,4 +1,3 @@
-import mysql from 'mysql2/promise';
 import { AppError } from '../lib/errors.js';
 import { observeDbQuery } from '../lib/metrics.js';
 import { setDatabaseConnecting, setDatabaseReady, setDatabaseUnavailable } from './state.js';
@@ -329,6 +328,7 @@ export async function initDatabase() {
 
   setDatabaseConnecting('mysql');
   initPromise = (async () => {
+    const { default: mysql } = await import('mysql2/promise');
     const databaseName = getDatabaseName();
     const rootConnection = await mysql.createConnection(getRootConfig(false));
 

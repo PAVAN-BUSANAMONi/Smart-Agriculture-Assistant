@@ -21,8 +21,8 @@
       "passwordHash": null,
       "status": "active",
       "createdAt": "2026-07-02T12:11:16.158Z",
-      "updatedAt": "2026-08-20T17:14:21.393Z",
-      "lastLoginAt": "2026-08-20T17:14:21.393Z"
+      "updatedAt": "2026-08-20T17:35:47.087Z",
+      "lastLoginAt": "2026-08-20T17:35:47.087Z"
     },
     {
       "id": "fd7cd3f5-a676-4cfc-be9c-adf04371080b",
@@ -79,7 +79,7 @@
         "lifecycle": true,
         "personalized": true
       },
-      "updatedAt": "2026-08-20T17:14:21.401Z"
+      "updatedAt": "2026-08-20T17:35:47.095Z"
     },
     "a1a2202e-0dd9-4176-8b3b-947eb97b08f0": {
       "userId": "a1a2202e-0dd9-4176-8b3b-947eb97b08f0",
@@ -112,6 +112,18 @@
     }
   },
   "alerts": [
+    {
+      "id": "fb9145a9-238d-4b03-a870-65640393a895",
+      "userId": "4c7652d6-5d65-4af2-927b-c3d8937da720",
+      "type": "system",
+      "level": "low",
+      "title": "Login successful",
+      "message": "You signed in to Smart Agriculture successfully.",
+      "source": "farmer-login",
+      "metadata": {},
+      "read": false,
+      "createdAt": "2026-08-20T17:35:47.100Z"
+    },
     {
       "id": "e9006681-5d58-455c-9a33-5ccfb38f4cc8",
       "userId": "4c7652d6-5d65-4af2-927b-c3d8937da720",
@@ -6922,18 +6934,6 @@
       },
       "read": false,
       "createdAt": "2026-07-02T16:25:47.691Z"
-    },
-    {
-      "id": "a9aba2f4-4eda-4160-b805-d657fe8dac6e",
-      "userId": "a1a2202e-0dd9-4176-8b3b-947eb97b08f0",
-      "type": "crop",
-      "level": "medium",
-      "title": "Personalized Recommendation",
-      "message": "For rice in Hyderabad, review market trend and schedule next irrigation using weather advisory.",
-      "source": "scheduler-personalized",
-      "metadata": {},
-      "read": false,
-      "createdAt": "2026-07-02T16:25:44.859Z"
     }
   ],
   "otpChallenges": [
