@@ -21,8 +21,8 @@
       "passwordHash": null,
       "status": "active",
       "createdAt": "2026-07-02T12:11:16.158Z",
-      "updatedAt": "2026-08-20T14:27:32.188Z",
-      "lastLoginAt": "2026-08-20T14:27:32.188Z"
+      "updatedAt": "2026-08-20T16:14:24.914Z",
+      "lastLoginAt": "2026-08-20T16:14:24.914Z"
     },
     {
       "id": "fd7cd3f5-a676-4cfc-be9c-adf04371080b",
@@ -79,7 +79,7 @@
         "lifecycle": true,
         "personalized": true
       },
-      "updatedAt": "2026-08-20T15:54:50.695Z"
+      "updatedAt": "2026-08-20T16:14:24.922Z"
     },
     "a1a2202e-0dd9-4176-8b3b-947eb97b08f0": {
       "userId": "a1a2202e-0dd9-4176-8b3b-947eb97b08f0",
@@ -112,6 +112,18 @@
     }
   },
   "alerts": [
+    {
+      "id": "f001f90b-12ec-41d3-8e31-c7d9ae55871f",
+      "userId": "4c7652d6-5d65-4af2-927b-c3d8937da720",
+      "type": "system",
+      "level": "low",
+      "title": "Login successful",
+      "message": "You signed in to Smart Agriculture successfully.",
+      "source": "farmer-login",
+      "metadata": {},
+      "read": false,
+      "createdAt": "2026-08-20T16:14:24.927Z"
+    },
     {
       "id": "193b5502-7096-4a6a-86de-3cb03b26758b",
       "userId": "a1a2202e-0dd9-4176-8b3b-947eb97b08f0",
@@ -6957,20 +6969,6 @@
       "metadata": {},
       "read": false,
       "createdAt": "2026-07-02T14:04:23.433Z"
-    },
-    {
-      "id": "2c0af8c1-3a90-4d1a-b1d0-cb81eb5e6605",
-      "userId": "4c7652d6-5d65-4af2-927b-c3d8937da720",
-      "type": "lifecycle",
-      "level": "medium",
-      "title": "RICE Nutrient Reminder",
-      "message": "Day 14: inspect crop stand and apply first top-dressing based on soil test recommendation.",
-      "source": "scheduler-lifecycle",
-      "metadata": {
-        "cropPlans": 1
-      },
-      "read": false,
-      "createdAt": "2026-07-02T14:04:23.426Z"
     }
   ],
   "otpChallenges": [
