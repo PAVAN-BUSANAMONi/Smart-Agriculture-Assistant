@@ -12,9 +12,8 @@
     "dev:frontend": "vite",
     "dev:backend": "npm --prefix backend run dev",
     "dev:fullstack": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
-    "build:api": "esbuild api/serverless.js --bundle --platform=node --format=esm --target=node18 --outfile=api/index.js --external:mongoose --external:mysql2 --loader:.json=json",
-    "build:client": "node ./node_modules/vite/bin/vite.js build",
-    "build": "npm run build:api && npm run build:client",
+    "build:api": "node ./node_modules/esbuild/bin/esbuild api/serverless.js --bundle --platform=node --format=esm --target=node18 --outfile=api/index.js --external:mongoose --external:mysql2 --loader:.json=json",
+    "build": "node ./node_modules/vite/bin/vite.js build",
     "preview": "vite preview"
   },
   "dependencies": {
@@ -50,6 +49,7 @@
     "@types/react-dom": "19.2.3",
     "@vitejs/plugin-react": "5.1.1",
     "concurrently": "^9.2.1",
+    "esbuild": "^0.25.0",
     "tailwindcss": "4.1.17",
     "typescript": "5.9.3",
     "vite": "7.2.4",
