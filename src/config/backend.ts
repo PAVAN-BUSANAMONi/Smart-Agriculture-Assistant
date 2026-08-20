@@ -1,5 +1,3 @@
-const DEFAULT_RENDER_BACKEND_URL = 'https://smart-agriculture-assistant-gnre.onrender.com';
-
 function trimTrailingSlash(value: string) {
   return value.replace(/\/+$/, '');
 }
@@ -12,13 +10,15 @@ function resolveBackendOrigin() {
     return devOverrideOrigin;
   }
 
-  if (configuredOrigin) {
-    return configuredOrigin;
+  // On Vercel deployments (*.vercel.app) or standard web deployments, use same-origin relative API routes
+  // to avoid cross-origin CORS blocks and latency from external Render instances.
+  if (typeof window !== 'undefined' && window.location.hostname.includes('vercel.app')) {
+    return '';
   }
 
-  if (import.meta.env.PROD) {
-    // If not configured, default to relative paths to hit Vercel Serverless Functions
-    return '';
+  // If VITE_API_URL points to onrender.com, bypass it in favor of same-origin serverless API
+  if (configuredOrigin && !configuredOrigin.includes('onrender.com')) {
+    return configuredOrigin;
   }
 
   return '';
@@ -27,3 +27,4 @@ function resolveBackendOrigin() {
 export const BACKEND_ORIGIN = resolveBackendOrigin();
 export const API_BASE_URL = BACKEND_ORIGIN ? `${BACKEND_ORIGIN}/api/v1` : '/api/v1';
 export const ALERTS_STREAM_URL = BACKEND_ORIGIN ? `${BACKEND_ORIGIN}/api/v1/alerts/stream` : '/api/v1/alerts/stream';
+
