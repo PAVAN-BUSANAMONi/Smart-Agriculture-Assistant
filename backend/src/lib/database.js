@@ -4,8 +4,27 @@ import { fileURLToPath } from 'node:url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const DATA_DIR = path.resolve(__dirname, '../../data');
-const DB_FILE = path.join(DATA_DIR, 'app-db.json');
+
+function resolveDataFile() {
+  const candidates = [
+    path.resolve(process.cwd(), 'backend/data/app-db.json'),
+    path.resolve(process.cwd(), 'data/app-db.json'),
+    path.resolve(__dirname, '../../data/app-db.json'),
+    path.resolve(__dirname, '../backend/data/app-db.json'),
+    path.resolve(__dirname, '../data/app-db.json'),
+    path.join(process.cwd(), 'app-db.json'),
+  ];
+  for (const candidate of candidates) {
+    try {
+      if (fs.existsSync(candidate)) {
+        return candidate;
+      }
+    } catch {}
+  }
+  return path.join('/tmp', 'app-db.json');
+}
+
+const DB_FILE = resolveDataFile();
 
 const FEATURE_DEFAULTS = {
   weather: {
@@ -80,30 +99,30 @@ function baseState() {
 
 function ensureDbFile() {
   try {
-    if (!fs.existsSync(DATA_DIR)) {
-      fs.mkdirSync(DATA_DIR, { recursive: true });
+    const dir = path.dirname(DB_FILE);
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir, { recursive: true });
     }
 
     if (!fs.existsSync(DB_FILE)) {
       fs.writeFileSync(DB_FILE, JSON.stringify(baseState(), null, 2));
     }
-  } catch (err) {
-    console.warn('Could not initialize local data directory (serverless/read-only filesystem):', err.message);
-  }
+  } catch {}
 }
 
 function normalizeState(raw) {
   const next = baseState();
-  const input = raw && typeof raw === 'object' ? raw : {};
+  const payload = raw && raw.default ? raw.default : raw;
+  const input = payload && typeof payload === 'object' ? payload : {};
 
-  next.users = Array.isArray(input.users) ? input.users : [];
-  next.sessions = Array.isArray(input.sessions) ? input.sessions : [];
-  next.profiles = input.profiles && typeof input.profiles === 'object' ? input.profiles : {};
-  next.alerts = Array.isArray(input.alerts) ? input.alerts : [];
-  next.otpChallenges = Array.isArray(input.otpChallenges) ? input.otpChallenges : [];
-  next.chatHistory = Array.isArray(input.chatHistory) ? input.chatHistory : [];
-  next.emailLog = Array.isArray(input.emailLog) ? input.emailLog : [];
-  next.auditLog = Array.isArray(input.auditLog) ? input.auditLog : [];
+  next.users = Array.isArray(input.users) ? structuredClone(input.users) : [];
+  next.sessions = Array.isArray(input.sessions) ? structuredClone(input.sessions) : [];
+  next.profiles = input.profiles && typeof input.profiles === 'object' ? structuredClone(input.profiles) : {};
+  next.alerts = Array.isArray(input.alerts) ? structuredClone(input.alerts) : [];
+  next.otpChallenges = Array.isArray(input.otpChallenges) ? structuredClone(input.otpChallenges) : [];
+  next.chatHistory = Array.isArray(input.chatHistory) ? structuredClone(input.chatHistory) : [];
+  next.emailLog = Array.isArray(input.emailLog) ? structuredClone(input.emailLog) : [];
+  next.auditLog = Array.isArray(input.auditLog) ? structuredClone(input.auditLog) : [];
   next.featureFlags = {
     ...structuredClone(FEATURE_DEFAULTS),
     ...(input.featureFlags && typeof input.featureFlags === 'object' ? input.featureFlags : {}),
@@ -111,6 +130,8 @@ function normalizeState(raw) {
 
   return next;
 }
+
+import seedDb from '../../data/app-db.json' with { type: 'json' };
 
 function loadState() {
   ensureDbFile();
@@ -135,7 +156,7 @@ function loadState() {
     console.warn('Could not read /tmp DB file:', err.message);
   }
 
-  const fallback = baseState();
+  const fallback = normalizeState(seedDb || baseState());
   try {
     fs.writeFileSync(tmpFile, JSON.stringify(fallback, null, 2));
   } catch {}
