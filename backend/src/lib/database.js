@@ -79,12 +79,16 @@ function baseState() {
 }
 
 function ensureDbFile() {
-  if (!fs.existsSync(DATA_DIR)) {
-    fs.mkdirSync(DATA_DIR, { recursive: true });
-  }
+  try {
+    if (!fs.existsSync(DATA_DIR)) {
+      fs.mkdirSync(DATA_DIR, { recursive: true });
+    }
 
-  if (!fs.existsSync(DB_FILE)) {
-    fs.writeFileSync(DB_FILE, JSON.stringify(baseState(), null, 2));
+    if (!fs.existsSync(DB_FILE)) {
+      fs.writeFileSync(DB_FILE, JSON.stringify(baseState(), null, 2));
+    }
+  } catch (err) {
+    console.warn('Could not initialize local data directory (serverless/read-only filesystem):', err.message);
   }
 }
 
@@ -112,17 +116,30 @@ function loadState() {
   ensureDbFile();
 
   try {
-    const raw = fs.readFileSync(DB_FILE, 'utf8');
-    return normalizeState(JSON.parse(raw));
-  } catch {
-    const fallback = baseState();
-    try {
-      fs.writeFileSync(DB_FILE, JSON.stringify(fallback, null, 2));
-    } catch (err) {
-      console.warn('Could not write local store file (read-only filesystem?)', err.message);
+    if (fs.existsSync(DB_FILE)) {
+      const raw = fs.readFileSync(DB_FILE, 'utf8');
+      return normalizeState(JSON.parse(raw));
     }
-    return fallback;
+  } catch (err) {
+    console.warn('Could not read DB_FILE:', err.message);
   }
+
+  // Fallback to /tmp in serverless environments
+  const tmpFile = path.join('/tmp', 'app-db.json');
+  try {
+    if (fs.existsSync(tmpFile)) {
+      const raw = fs.readFileSync(tmpFile, 'utf8');
+      return normalizeState(JSON.parse(raw));
+    }
+  } catch (err) {
+    console.warn('Could not read /tmp DB file:', err.message);
+  }
+
+  const fallback = baseState();
+  try {
+    fs.writeFileSync(tmpFile, JSON.stringify(fallback, null, 2));
+  } catch {}
+  return fallback;
 }
 
 let state = loadState();
@@ -130,8 +147,13 @@ let state = loadState();
 function persistState() {
   try {
     fs.writeFileSync(DB_FILE, JSON.stringify(state, null, 2));
-  } catch (err) {
-    console.warn('Could not persist local store (read-only filesystem?)', err.message);
+    return;
+  } catch {
+    // In serverless/read-only environment, persist to /tmp
+    try {
+      const tmpFile = path.join('/tmp', 'app-db.json');
+      fs.writeFileSync(tmpFile, JSON.stringify(state, null, 2));
+    } catch {}
   }
 }
 
