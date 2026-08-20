@@ -113,44 +113,43 @@ function buildHealthPayload() {
   };
 }
 
-app.get('/', (_req, res) => {
+const apiRouter = express.Router();
+
+apiRouter.get('/health', (_req, res) => {
   res.json(buildHealthPayload());
 });
 
-app.get('/api/v1/health', (_req, res) => {
-  res.json(buildHealthPayload());
-});
-
-app.use('/api/v1/owner', ownerRouter);
-app.use('/api/v1', attachRequestAuth);
-app.use('/api/v1/auth', authLimiter);
-app.use('/api/v1/otp', otpLimiter);
-app.use('/api/v1/ai', aiLimiter);
-app.use('/api/ai', aiLimiter);
-app.use('/api/v1/auth', authRouter);
-app.use('/api/v1/otp', otpRouter);
-app.use('/api/v1/profile', requireAuth, profileRouter);
-app.use('/api/v1/weather', requireAuth, weatherRouter);
-app.use('/api/v1/crops', requireAuth, cropRouter);
-app.use('/api/v1/disease', requireAuth, diseaseRouter);
-app.use('/api/v1/market', requireAuth, marketRouter);
-app.use('/api/v1/schemes', requireAuth, schemesRouter);
-app.use('/api/v1/alerts', requireAuth, alertsRouter);
-app.use('/api/v1/admin', requireAuth, requireAdmin, adminRouter);
-app.use('/api/v1/digital-twin', requireAuth, digitalTwinRouter);
-app.use('/api/v1/lifecycle', requireAuth, lifecycleRouter);
-app.use('/api/v1/assistant', requireAuth, assistantRouter);
-app.use('/api/v1/ai', requireAuth, aiRouter);
-app.use('/api/v1/data', requireAuth, dataRouter);
-app.use('/api/v1/risk', requireAuth, riskRouter);
-app.use('/api/v1/marketplace', requireAuth, marketplaceRouter);
-app.use('/api/v1/community', requireAuth, communityRouter);
-app.use('/api/v1/iot', requireAuth, iotRouter);
-app.use('/api/v1/transparency', requireAuth, transparencyRouter);
-app.use('/api/ai', attachRequestAuth, requireAuth, aiRouter);
-app.get('/api/v1/metrics', requireAuth, requireAdmin, (_req, res) => {
+apiRouter.use('/owner', ownerRouter);
+apiRouter.use(attachRequestAuth);
+apiRouter.use('/auth', authLimiter, authRouter);
+apiRouter.use('/otp', otpLimiter, otpRouter);
+apiRouter.use('/ai', aiLimiter, aiRouter);
+apiRouter.use('/profile', requireAuth, profileRouter);
+apiRouter.use('/weather', requireAuth, weatherRouter);
+apiRouter.use('/crops', requireAuth, cropRouter);
+apiRouter.use('/disease', requireAuth, diseaseRouter);
+apiRouter.use('/market', requireAuth, marketRouter);
+apiRouter.use('/schemes', requireAuth, schemesRouter);
+apiRouter.use('/alerts', requireAuth, alertsRouter);
+apiRouter.use('/admin', requireAuth, requireAdmin, adminRouter);
+apiRouter.use('/digital-twin', requireAuth, digitalTwinRouter);
+apiRouter.use('/lifecycle', requireAuth, lifecycleRouter);
+apiRouter.use('/assistant', requireAuth, assistantRouter);
+apiRouter.use('/data', requireAuth, dataRouter);
+apiRouter.use('/risk', requireAuth, riskRouter);
+apiRouter.use('/marketplace', requireAuth, marketplaceRouter);
+apiRouter.use('/community', requireAuth, communityRouter);
+apiRouter.use('/iot', requireAuth, iotRouter);
+apiRouter.use('/transparency', requireAuth, transparencyRouter);
+apiRouter.get('/metrics', requireAuth, requireAdmin, (_req, res) => {
   res.json(getMetricsSnapshot());
 });
+
+// Mount on all prefixes for seamless serverless routing
+app.use('/api/v1', apiRouter);
+app.use('/v1', apiRouter);
+app.use('/api', apiRouter);
+app.use('/', apiRouter);
 
 app.use((error, req, res, _next) => {
   if (req.log) {
@@ -172,7 +171,9 @@ app.use((error, req, res, _next) => {
     return res.status(error.status).json({ message: error.message, detail: error.detail || null });
   }
 
-  return res.status(500).json({ message: 'Internal server error', detail: error?.message || 'Unknown error' });
+  console.error('Unhandled API error:', error);
+  return res.status(500).json({ message: error?.message || 'Internal server error', detail: error?.message || null });
 });
 
 export default app;
+
