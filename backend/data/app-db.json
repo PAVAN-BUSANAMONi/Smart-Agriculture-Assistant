@@ -113,6 +113,58 @@
   },
   "alerts": [
     {
+      "id": "ef4ea2d4-8a5a-45d4-af38-8732bc9d6d35",
+      "userId": "a1a2202e-0dd9-4176-8b3b-947eb97b08f0",
+      "type": "crop",
+      "level": "medium",
+      "title": "Personalized Recommendation",
+      "message": "For rice in Hyderabad, review market trend and schedule next irrigation using weather advisory.",
+      "source": "scheduler-personalized",
+      "metadata": {},
+      "read": false,
+      "createdAt": "2026-08-20T16:31:07.506Z"
+    },
+    {
+      "id": "28efbd6d-bd58-4819-81df-45e8cb7389ec",
+      "userId": "a1a2202e-0dd9-4176-8b3b-947eb97b08f0",
+      "type": "lifecycle",
+      "level": "low",
+      "title": "Weekly Crop Check",
+      "message": "Record crop growth stage, pest signs, and moisture status for better recommendations.",
+      "source": "scheduler-lifecycle",
+      "metadata": {
+        "cropPlans": 1
+      },
+      "read": false,
+      "createdAt": "2026-08-20T16:31:07.499Z"
+    },
+    {
+      "id": "370665f0-f654-415a-9d93-c81015d3bbb7",
+      "userId": "4c7652d6-5d65-4af2-927b-c3d8937da720",
+      "type": "crop",
+      "level": "medium",
+      "title": "Personalized Recommendation",
+      "message": "For rice in Hyderabad, review market trend and schedule next irrigation using weather advisory.",
+      "source": "scheduler-personalized",
+      "metadata": {},
+      "read": false,
+      "createdAt": "2026-08-20T16:31:06.549Z"
+    },
+    {
+      "id": "95800797-ece8-4e12-9612-5053c5047c65",
+      "userId": "4c7652d6-5d65-4af2-927b-c3d8937da720",
+      "type": "lifecycle",
+      "level": "low",
+      "title": "Weekly Crop Check",
+      "message": "Record crop growth stage, pest signs, and moisture status for better recommendations.",
+      "source": "scheduler-lifecycle",
+      "metadata": {
+        "cropPlans": 1
+      },
+      "read": false,
+      "createdAt": "2026-08-20T16:31:06.544Z"
+    },
+    {
       "id": "f001f90b-12ec-41d3-8e31-c7d9ae55871f",
       "userId": "4c7652d6-5d65-4af2-927b-c3d8937da720",
       "type": "system",
@@ -6915,60 +6967,6 @@
       },
       "read": false,
       "createdAt": "2026-07-02T14:06:42.773Z"
-    },
-    {
-      "id": "2a7d917e-8149-4381-a931-f5b46f7acd3c",
-      "userId": "a1a2202e-0dd9-4176-8b3b-947eb97b08f0",
-      "type": "crop",
-      "level": "medium",
-      "title": "Personalized Recommendation",
-      "message": "For rice in Hyderabad, review market trend and schedule next irrigation using weather advisory.",
-      "source": "scheduler-personalized",
-      "metadata": {},
-      "read": false,
-      "createdAt": "2026-07-02T14:06:41.739Z"
-    },
-    {
-      "id": "335f1fbc-a3ab-4e6c-994b-7128f98af567",
-      "userId": "a1a2202e-0dd9-4176-8b3b-947eb97b08f0",
-      "type": "lifecycle",
-      "level": "medium",
-      "title": "RICE Nutrient Reminder",
-      "message": "Day 14: inspect crop stand and apply first top-dressing based on soil test recommendation.",
-      "source": "scheduler-lifecycle",
-      "metadata": {
-        "cropPlans": 1
-      },
-      "read": false,
-      "createdAt": "2026-07-02T14:06:41.734Z"
-    },
-    {
-      "id": "8e763913-0c06-46e0-a25b-ceea8897a371",
-      "userId": "4c7652d6-5d65-4af2-927b-c3d8937da720",
-      "type": "weather",
-      "level": "high",
-      "title": "Irrigation Hold Reminder",
-      "message": "Heavy rain likely. Pause irrigation and open drainage channels today.",
-      "source": "scheduler-weather",
-      "metadata": {
-        "rainChance24h": 95,
-        "rainMm24h": 4.9,
-        "maxTemp": 29
-      },
-      "read": false,
-      "createdAt": "2026-07-02T14:04:23.718Z"
-    },
-    {
-      "id": "b8c53cde-ab02-4700-98fd-84b02ca5ace5",
-      "userId": "4c7652d6-5d65-4af2-927b-c3d8937da720",
-      "type": "crop",
-      "level": "medium",
-      "title": "Personalized Recommendation",
-      "message": "For rice in Hyderabad, review market trend and schedule next irrigation using weather advisory.",
-      "source": "scheduler-personalized",
-      "metadata": {},
-      "read": false,
-      "createdAt": "2026-07-02T14:04:23.433Z"
     }
   ],
   "otpChallenges": [

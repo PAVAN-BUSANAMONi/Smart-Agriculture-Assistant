@@ -64,7 +64,7 @@ const aiLimiter = rateLimit({
   message: { message: 'AI request limit reached. Please retry shortly.' },
 });
 
-app.use(helmet());
+app.use(helmet({ crossOriginResourcePolicy: false, contentSecurityPolicy: false }));
 app.use(cors({ origin: true, credentials: true }));
 app.use(express.json({ limit: '5mb' }));
 app.use(

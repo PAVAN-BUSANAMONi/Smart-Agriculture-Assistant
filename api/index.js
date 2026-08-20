@@ -5,6 +5,16 @@ let dbInitPromise = null;
 
 export default async function handler(req, res) {
   try {
+    const matchedPath =
+      req.headers['x-vercel-matched-path'] ||
+      req.headers['x-matched-path'] ||
+      req.headers['x-forwarded-uri'] ||
+      req.headers['x-original-url'];
+
+    if (matchedPath && (req.url === '/api/index.js' || req.url === '/api/index' || req.url === '/api')) {
+      req.url = matchedPath;
+    }
+
     if (!dbInitPromise) {
       dbInitPromise = initDatabase().catch((err) => {
         console.warn('Serverless database bootstrap notice:', err?.message || err);
