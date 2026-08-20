@@ -68,10 +68,6 @@ export function shouldUseLocalStore() {
     return true;
   }
 
-  if (process.env.NODE_ENV !== 'production') {
-    return false;
-  }
-
   if (hasExplicitMysqlConnectionString()) {
     return false;
   }
