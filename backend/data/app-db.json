@@ -113,6 +113,58 @@
   },
   "alerts": [
     {
+      "id": "f9b91df7-a696-4ae6-91b2-5b8de8c82490",
+      "userId": "a1a2202e-0dd9-4176-8b3b-947eb97b08f0",
+      "type": "crop",
+      "level": "medium",
+      "title": "Personalized Recommendation",
+      "message": "For rice in Hyderabad, review market trend and schedule next irrigation using weather advisory.",
+      "source": "scheduler-personalized",
+      "metadata": {},
+      "read": false,
+      "createdAt": "2026-08-20T16:51:34.568Z"
+    },
+    {
+      "id": "bf5866ed-3d44-4a5a-a765-e126365e7f0f",
+      "userId": "a1a2202e-0dd9-4176-8b3b-947eb97b08f0",
+      "type": "lifecycle",
+      "level": "low",
+      "title": "Weekly Crop Check",
+      "message": "Record crop growth stage, pest signs, and moisture status for better recommendations.",
+      "source": "scheduler-lifecycle",
+      "metadata": {
+        "cropPlans": 1
+      },
+      "read": false,
+      "createdAt": "2026-08-20T16:51:34.562Z"
+    },
+    {
+      "id": "372e7c68-4327-4dd2-9436-b4044dc4facf",
+      "userId": "4c7652d6-5d65-4af2-927b-c3d8937da720",
+      "type": "crop",
+      "level": "medium",
+      "title": "Personalized Recommendation",
+      "message": "For rice in Hyderabad, review market trend and schedule next irrigation using weather advisory.",
+      "source": "scheduler-personalized",
+      "metadata": {},
+      "read": false,
+      "createdAt": "2026-08-20T16:51:33.776Z"
+    },
+    {
+      "id": "0c39f0a4-142b-4e26-bab7-92a7265ec018",
+      "userId": "4c7652d6-5d65-4af2-927b-c3d8937da720",
+      "type": "lifecycle",
+      "level": "low",
+      "title": "Weekly Crop Check",
+      "message": "Record crop growth stage, pest signs, and moisture status for better recommendations.",
+      "source": "scheduler-lifecycle",
+      "metadata": {
+        "cropPlans": 1
+      },
+      "read": false,
+      "createdAt": "2026-08-20T16:51:33.771Z"
+    },
+    {
       "id": "97276559-a182-4e30-9f95-fd526bd57e39",
       "userId": "4c7652d6-5d65-4af2-927b-c3d8937da720",
       "type": "system",
@@ -6890,65 +6942,6 @@
       },
       "read": false,
       "createdAt": "2026-07-02T14:41:40.199Z"
-    },
-    {
-      "id": "7ea5a889-90c1-40a0-9e46-4bc2af66c029",
-      "userId": "a1a2202e-0dd9-4176-8b3b-947eb97b08f0",
-      "type": "system",
-      "level": "medium",
-      "title": "User created",
-      "message": "farmer account created for qwerty.",
-      "source": "admin-user-create",
-      "metadata": {
-        "targetUserId": "fd7cd3f5-a676-4cfc-be9c-adf04371080b",
-        "targetRole": "farmer"
-      },
-      "read": false,
-      "createdAt": "2026-07-02T14:26:16.376Z"
-    },
-    {
-      "id": "2092c771-00d2-4682-8ac3-2bd55e9e0bd0",
-      "userId": "a1a2202e-0dd9-4176-8b3b-947eb97b08f0",
-      "type": "system",
-      "level": "high",
-      "title": "User removed",
-      "message": "Quick Verify (admin) was removed from the system.",
-      "source": "admin-user-delete",
-      "metadata": {
-        "targetUserId": "ea5924b1-2d0e-42c8-bc63-4f9a845a318d"
-      },
-      "read": false,
-      "createdAt": "2026-07-02T14:25:55.137Z"
-    },
-    {
-      "id": "7e324f7d-fab0-4f8a-a859-9a66572b6456",
-      "userId": "a1a2202e-0dd9-4176-8b3b-947eb97b08f0",
-      "type": "system",
-      "level": "high",
-      "title": "User removed",
-      "message": "Deadline Verify (admin) was removed from the system.",
-      "source": "admin-user-delete",
-      "metadata": {
-        "targetUserId": "6bc67fc6-509d-449e-bd86-31b71d68ccce"
-      },
-      "read": false,
-      "createdAt": "2026-07-02T14:25:45.704Z"
-    },
-    {
-      "id": "68037853-bd58-4b60-aa71-db2b9f01f90f",
-      "userId": "4c7652d6-5d65-4af2-927b-c3d8937da720",
-      "type": "weather",
-      "level": "high",
-      "title": "Irrigation Hold Reminder",
-      "message": "Heavy rain likely. Pause irrigation and open drainage channels today.",
-      "source": "scheduler-weather",
-      "metadata": {
-        "rainChance24h": 95,
-        "rainMm24h": 4.9,
-        "maxTemp": 29
-      },
-      "read": false,
-      "createdAt": "2026-07-02T14:17:09.187Z"
     }
   ],
   "otpChallenges": [

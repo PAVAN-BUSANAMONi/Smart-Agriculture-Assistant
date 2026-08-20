@@ -164,6 +164,16 @@ app.use('/v1', apiRouter);
 app.use('/api', apiRouter);
 app.use('/', apiRouter);
 
+// Fallback for unmatched routes so Express always sends a response
+app.use((req, res) => {
+  if (!res.headersSent) {
+    res.status(404).json({
+      error: 'Not Found',
+      message: `Cannot ${req.method} ${req.originalUrl || req.url}`,
+    });
+  }
+});
+
 app.use((error, req, res, _next) => {
   if (req.log) {
     req.log.error(
