@@ -30,8 +30,21 @@ import { ownerRouter } from './modules/owner/owner.routes.js';
 import { isAppError } from './lib/errors.js';
 import { getMetricsSnapshot, observeHttpRequest } from './lib/metrics.js';
 import { getDatabaseHealth } from './db/state.js';
+import { initDatabase } from './db/mongo.js';
 
 const app = express();
+let dbInitPromise = null;
+
+app.use(async (_req, _res, next) => {
+  if (!dbInitPromise) {
+    dbInitPromise = initDatabase().catch((err) => {
+      console.warn('Database initialization notice:', err?.message || err);
+      return null;
+    });
+  }
+  await dbInitPromise;
+  next();
+});
 const logger = pino({
   level: process.env.LOG_LEVEL || 'info',
   base: {

@@ -21,8 +21,8 @@
       "passwordHash": null,
       "status": "active",
       "createdAt": "2026-07-02T12:11:16.158Z",
-      "updatedAt": "2026-08-20T16:40:05.646Z",
-      "lastLoginAt": "2026-08-20T16:40:05.646Z"
+      "updatedAt": "2026-08-20T16:49:52.897Z",
+      "lastLoginAt": "2026-08-20T16:49:52.897Z"
     },
     {
       "id": "fd7cd3f5-a676-4cfc-be9c-adf04371080b",
@@ -79,7 +79,7 @@
         "lifecycle": true,
         "personalized": true
       },
-      "updatedAt": "2026-08-20T16:40:05.655Z"
+      "updatedAt": "2026-08-20T16:49:52.904Z"
     },
     "a1a2202e-0dd9-4176-8b3b-947eb97b08f0": {
       "userId": "a1a2202e-0dd9-4176-8b3b-947eb97b08f0",
@@ -112,6 +112,122 @@
     }
   },
   "alerts": [
+    {
+      "id": "97276559-a182-4e30-9f95-fd526bd57e39",
+      "userId": "4c7652d6-5d65-4af2-927b-c3d8937da720",
+      "type": "system",
+      "level": "low",
+      "title": "Login successful",
+      "message": "You signed in to Smart Agriculture successfully.",
+      "source": "farmer-login",
+      "metadata": {},
+      "read": false,
+      "createdAt": "2026-08-20T16:49:52.913Z"
+    },
+    {
+      "id": "95af7161-2fbf-4087-8bb8-d45a59c3c469",
+      "userId": "a1a2202e-0dd9-4176-8b3b-947eb97b08f0",
+      "type": "crop",
+      "level": "medium",
+      "title": "Personalized Recommendation",
+      "message": "For rice in Hyderabad, review market trend and schedule next irrigation using weather advisory.",
+      "source": "scheduler-personalized",
+      "metadata": {},
+      "read": false,
+      "createdAt": "2026-08-20T16:49:40.267Z"
+    },
+    {
+      "id": "dc14c6e4-9a0e-4c88-ba6e-1344b5605304",
+      "userId": "a1a2202e-0dd9-4176-8b3b-947eb97b08f0",
+      "type": "lifecycle",
+      "level": "low",
+      "title": "Weekly Crop Check",
+      "message": "Record crop growth stage, pest signs, and moisture status for better recommendations.",
+      "source": "scheduler-lifecycle",
+      "metadata": {
+        "cropPlans": 1
+      },
+      "read": false,
+      "createdAt": "2026-08-20T16:49:40.258Z"
+    },
+    {
+      "id": "6a11b459-b44a-4c63-8fd7-3893e2dc6195",
+      "userId": "4c7652d6-5d65-4af2-927b-c3d8937da720",
+      "type": "crop",
+      "level": "medium",
+      "title": "Personalized Recommendation",
+      "message": "For rice in Hyderabad, review market trend and schedule next irrigation using weather advisory.",
+      "source": "scheduler-personalized",
+      "metadata": {},
+      "read": false,
+      "createdAt": "2026-08-20T16:49:36.564Z"
+    },
+    {
+      "id": "c7d40943-1804-46e6-b12f-8c7f7f2fdaa8",
+      "userId": "4c7652d6-5d65-4af2-927b-c3d8937da720",
+      "type": "lifecycle",
+      "level": "low",
+      "title": "Weekly Crop Check",
+      "message": "Record crop growth stage, pest signs, and moisture status for better recommendations.",
+      "source": "scheduler-lifecycle",
+      "metadata": {
+        "cropPlans": 1
+      },
+      "read": false,
+      "createdAt": "2026-08-20T16:49:36.557Z"
+    },
+    {
+      "id": "85970849-996c-4cd0-b6ff-8d3cdf042701",
+      "userId": "a1a2202e-0dd9-4176-8b3b-947eb97b08f0",
+      "type": "crop",
+      "level": "medium",
+      "title": "Personalized Recommendation",
+      "message": "For rice in Hyderabad, review market trend and schedule next irrigation using weather advisory.",
+      "source": "scheduler-personalized",
+      "metadata": {},
+      "read": false,
+      "createdAt": "2026-08-20T16:48:25.395Z"
+    },
+    {
+      "id": "eaff5ff4-ba92-494a-a9a2-0aaf7ab4eecf",
+      "userId": "a1a2202e-0dd9-4176-8b3b-947eb97b08f0",
+      "type": "lifecycle",
+      "level": "low",
+      "title": "Weekly Crop Check",
+      "message": "Record crop growth stage, pest signs, and moisture status for better recommendations.",
+      "source": "scheduler-lifecycle",
+      "metadata": {
+        "cropPlans": 1
+      },
+      "read": false,
+      "createdAt": "2026-08-20T16:48:25.390Z"
+    },
+    {
+      "id": "d12fb62f-32fc-4583-b404-6eeac234a857",
+      "userId": "4c7652d6-5d65-4af2-927b-c3d8937da720",
+      "type": "crop",
+      "level": "medium",
+      "title": "Personalized Recommendation",
+      "message": "For rice in Hyderabad, review market trend and schedule next irrigation using weather advisory.",
+      "source": "scheduler-personalized",
+      "metadata": {},
+      "read": false,
+      "createdAt": "2026-08-20T16:48:24.272Z"
+    },
+    {
+      "id": "5ca977d7-6c93-4542-a40c-9a4ce694baca",
+      "userId": "4c7652d6-5d65-4af2-927b-c3d8937da720",
+      "type": "lifecycle",
+      "level": "low",
+      "title": "Weekly Crop Check",
+      "message": "Record crop growth stage, pest signs, and moisture status for better recommendations.",
+      "source": "scheduler-lifecycle",
+      "metadata": {
+        "cropPlans": 1
+      },
+      "read": false,
+      "createdAt": "2026-08-20T16:48:24.267Z"
+    },
     {
       "id": "544e892f-b111-4c39-8f95-2971d91b8d5c",
       "userId": "4c7652d6-5d65-4af2-927b-c3d8937da720",
@@ -6833,132 +6949,6 @@
       },
       "read": false,
       "createdAt": "2026-07-02T14:17:09.187Z"
-    },
-    {
-      "id": "3d5f4dd9-d697-479f-9dfb-d7276f2efac9",
-      "userId": "4c7652d6-5d65-4af2-927b-c3d8937da720",
-      "type": "crop",
-      "level": "medium",
-      "title": "Personalized Recommendation",
-      "message": "For rice in Hyderabad, review market trend and schedule next irrigation using weather advisory.",
-      "source": "scheduler-personalized",
-      "metadata": {},
-      "read": false,
-      "createdAt": "2026-07-02T14:17:08.971Z"
-    },
-    {
-      "id": "956bb9c4-548e-4d09-92de-663d73780439",
-      "userId": "4c7652d6-5d65-4af2-927b-c3d8937da720",
-      "type": "lifecycle",
-      "level": "medium",
-      "title": "RICE Nutrient Reminder",
-      "message": "Day 14: inspect crop stand and apply first top-dressing based on soil test recommendation.",
-      "source": "scheduler-lifecycle",
-      "metadata": {
-        "cropPlans": 1
-      },
-      "read": false,
-      "createdAt": "2026-07-02T14:17:08.968Z"
-    },
-    {
-      "id": "7ed11e53-bea2-4a60-a992-59f1dd2c94c8",
-      "userId": "a1a2202e-0dd9-4176-8b3b-947eb97b08f0",
-      "type": "weather",
-      "level": "high",
-      "title": "Irrigation Hold Reminder",
-      "message": "Heavy rain likely. Pause irrigation and open drainage channels today.",
-      "source": "scheduler-weather",
-      "metadata": {
-        "rainChance24h": 95,
-        "rainMm24h": 4.9,
-        "maxTemp": 29
-      },
-      "read": false,
-      "createdAt": "2026-07-02T14:17:08.965Z"
-    },
-    {
-      "id": "e6da0cd7-2ab4-4a70-9a66-9dc52ee55ed8",
-      "userId": "a1a2202e-0dd9-4176-8b3b-947eb97b08f0",
-      "type": "crop",
-      "level": "medium",
-      "title": "Personalized Recommendation",
-      "message": "For rice in Hyderabad, review market trend and schedule next irrigation using weather advisory.",
-      "source": "scheduler-personalized",
-      "metadata": {},
-      "read": false,
-      "createdAt": "2026-07-02T14:17:07.988Z"
-    },
-    {
-      "id": "befc756d-d6ef-4d69-a735-1a93edc1f0c2",
-      "userId": "a1a2202e-0dd9-4176-8b3b-947eb97b08f0",
-      "type": "lifecycle",
-      "level": "medium",
-      "title": "RICE Nutrient Reminder",
-      "message": "Day 14: inspect crop stand and apply first top-dressing based on soil test recommendation.",
-      "source": "scheduler-lifecycle",
-      "metadata": {
-        "cropPlans": 1
-      },
-      "read": false,
-      "createdAt": "2026-07-02T14:17:07.982Z"
-    },
-    {
-      "id": "eb1802e4-9a64-4265-999a-3e1e0442574d",
-      "userId": "4c7652d6-5d65-4af2-927b-c3d8937da720",
-      "type": "weather",
-      "level": "high",
-      "title": "Irrigation Hold Reminder",
-      "message": "Heavy rain likely. Pause irrigation and open drainage channels today.",
-      "source": "scheduler-weather",
-      "metadata": {
-        "rainChance24h": 95,
-        "rainMm24h": 4.9,
-        "maxTemp": 29
-      },
-      "read": false,
-      "createdAt": "2026-07-02T14:16:20.853Z"
-    },
-    {
-      "id": "9b342408-4d7b-4b3a-9c34-2a7c2b2b4559",
-      "userId": "4c7652d6-5d65-4af2-927b-c3d8937da720",
-      "type": "crop",
-      "level": "medium",
-      "title": "Personalized Recommendation",
-      "message": "For rice in Hyderabad, review market trend and schedule next irrigation using weather advisory.",
-      "source": "scheduler-personalized",
-      "metadata": {},
-      "read": false,
-      "createdAt": "2026-07-02T14:16:20.451Z"
-    },
-    {
-      "id": "4ee4e2c2-ac39-40b5-b1cf-142b45df433c",
-      "userId": "4c7652d6-5d65-4af2-927b-c3d8937da720",
-      "type": "lifecycle",
-      "level": "medium",
-      "title": "RICE Nutrient Reminder",
-      "message": "Day 14: inspect crop stand and apply first top-dressing based on soil test recommendation.",
-      "source": "scheduler-lifecycle",
-      "metadata": {
-        "cropPlans": 1
-      },
-      "read": false,
-      "createdAt": "2026-07-02T14:16:20.446Z"
-    },
-    {
-      "id": "5937014b-583d-42ab-80af-92db6c87f2c6",
-      "userId": "a1a2202e-0dd9-4176-8b3b-947eb97b08f0",
-      "type": "weather",
-      "level": "high",
-      "title": "Irrigation Hold Reminder",
-      "message": "Heavy rain likely. Pause irrigation and open drainage channels today.",
-      "source": "scheduler-weather",
-      "metadata": {
-        "rainChance24h": 95,
-        "rainMm24h": 4.9,
-        "maxTemp": 29
-      },
-      "read": false,
-      "createdAt": "2026-07-02T14:16:20.439Z"
     }
   ],
   "otpChallenges": [
