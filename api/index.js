@@ -1,31 +1,19 @@
-import app from '../backend/src/app.js';
-
 export default async function handler(req, res) {
   try {
-    const originalUrl =
-      req.headers['x-matched-path'] ||
-      req.headers['x-vercel-matched-path'] ||
-      req.headers['x-forwarded-uri'] ||
-      req.headers['x-original-url'] ||
-      req.url;
-
-    if (originalUrl && (req.url === '/api' || req.url === '/api/')) {
-      req.url = originalUrl;
-    }
-
+    const appModule = await import('../backend/src/app.js');
+    const app = appModule.default || appModule;
     return app(req, res);
-  } catch (err) {
-    console.error('Serverless Error:', err);
-    if (!res.headersSent) {
-      res.statusCode = 500;
-      res.setHeader('Content-Type', 'application/json');
-      res.end(
-        JSON.stringify({
-          error: 'Serverless Crash',
-          message: err?.message || String(err),
-          stack: err?.stack || null,
-        }),
-      );
-    }
+  } catch (error) {
+    console.error('Lambda crash caught:', error);
+    res.statusCode = 500;
+    res.setHeader('Content-Type', 'application/json');
+    res.end(
+      JSON.stringify({
+        error: 'CRASH_IN_LAMBDA',
+        message: error?.message || String(error),
+        stack: error?.stack || null,
+        cwd: process.cwd(),
+      }),
+    );
   }
 }
