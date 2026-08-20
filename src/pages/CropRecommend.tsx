@@ -1,12 +1,11 @@
 import { useEffect, useMemo, useState } from 'react';
-import { CircleAlert, CloudSun, Droplets, Leaf, Sprout } from 'lucide-react';
+import { CircleAlert, CloudSun, Droplets, Leaf, Sprout, TrendingUp, DollarSign, Sparkles, ChevronDown, ChevronUp, History } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useAppSettings } from '../contexts/AppSettingsContext';
 import { api, type CropRecommendationResult } from '../services/api';
 import { createAlert, shouldTriggerAlert } from '../utils/alertEngine';
 import { pushBrowserNotification } from '../utils/browserNotifications';
 import { CROP_IMAGES } from '../utils/cropImages';
-import { RippleButton } from '../components/ui/RippleButton';
 
 type SoilType = 'black' | 'red' | 'loamy' | 'sandy' | 'clay' | 'silt';
 type SeasonType = 'kharif' | 'rabi' | 'zaid';
@@ -57,10 +56,10 @@ async function fetchCurrentWeatherContext(): Promise<{ temperatureC: number; rai
   };
 }
 
-function riskStyles(risk: string) {
-  if (risk === 'High') return 'bg-red-100 text-red-700 border-red-200';
-  if (risk === 'Medium') return 'bg-amber-100 text-amber-700 border-amber-200';
-  return 'bg-green-100 text-[#2a6d5d] dark:text-[#4eb69c] border-green-200';
+function riskBadgeClass(risk: string) {
+  if (risk === 'High') return 'aurora-badge-danger';
+  if (risk === 'Medium') return 'aurora-badge-warning';
+  return 'aurora-badge-success';
 }
 
 function formatCurrency(value: number) {
@@ -176,259 +175,328 @@ export function CropRecommend() {
   };
 
   return (
-    <div className="mx-auto max-w-6xl animate-fade-in p-4 space-y-6">
-      <div className="mb-6 flex items-center justify-between gap-3">
-        <h1 className="flex items-center gap-3 text-3xl font-bold font-display text-gray-900 dark:text-white drop-shadow-sm">
-          <div className="bg-green-100 p-2.5 rounded-xl text-[#4eb69c] shadow-sm">
-            <Sprout size={28} />
-          </div>
-          {t('crop_recommendation')}
-        </h1>
-        <RippleButton
-          type="button"
-          onClick={() => setShowDetailed((prev) => !prev)}
-          variant="secondary" className="text-sm px-4 py-2 hidden"
-        >
-          {showDetailed ? 'Simple View' : 'Detailed View'}
-        </RippleButton>
-      </div>
-
-      <div className="grid gap-6 lg:grid-cols-3">
-        <section className="lg:col-span-1 glass-card p-6">
-          <h2 className="mb-5 text-xl font-bold font-display text-gray-900 dark:text-white drop-shadow-sm">Recommendation Inputs</h2>
-
-          <div className="space-y-4">
-            <div>
-              <label className="mb-1.5 block text-sm font-semibold text-gray-800 dark:text-gray-200">{t('select_soil')}</label>
-              <select
-                value={form.soilType}
-                onChange={(event) => setForm((prev) => ({ ...prev, soilType: event.target.value as SoilType }))}
-                className="glass-input w-full"
-              >
-                {SOIL_OPTIONS.map((soil) => (
-                  <option key={soil} value={soil}>
-                    {t(soil)}
-                  </option>
-                ))}
-              </select>
+    <div
+      className="relative -m-4 md:-m-6 lg:-m-8 p-4 md:p-8 lg:p-10 min-h-[calc(100vh-4rem)] flex flex-col bg-no-repeat bg-cover text-white rounded-2xl overflow-hidden font-sans"
+      style={{
+        backgroundImage: `linear-gradient(90deg, rgba(4,16,24,0.28) 0%, rgba(4,16,24,0.14) 50%, rgba(4,16,24,0.04) 100%), radial-gradient(ellipse at 30% 40%, rgba(6,26,35,0.30) 0%, rgba(4,15,22,0.72) 100%), url('/assets/storm-background.jpg')`,
+        backgroundPosition: 'center 25%',
+        backgroundAttachment: 'fixed',
+        backgroundSize: 'cover',
+      }}
+    >
+      <div className="relative z-10 mx-auto max-w-6xl w-full flex-1 space-y-7 animate-fade-in">
+        {/* ═══ Header Section ═══ */}
+        <div className="flex flex-wrap items-center justify-between gap-4 pb-2 border-b border-white/10">
+          <div>
+            <div className="aurora-glass-pill mb-1.5">
+              <span>Bio-Agronomy Engine</span>
             </div>
-
-            <div>
-              <label className="mb-1.5 block text-sm font-semibold text-gray-800 dark:text-gray-200">{t('select_season')}</label>
-              <select
-                value={form.season}
-                onChange={(event) => setForm((prev) => ({ ...prev, season: event.target.value as SeasonType }))}
-                className="glass-input w-full"
-              >
-                {SEASON_OPTIONS.map((season) => (
-                  <option key={season} value={season}>
-                    {t(season)}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div>
-              <label className="mb-1.5 block text-sm font-semibold text-gray-800 dark:text-gray-200">Temperature (°C)</label>
-              <input
-                type="number"
-                value={form.temperatureC}
-                onChange={(event) => setForm((prev) => ({ ...prev, temperatureC: Number(event.target.value) }))}
-                className="glass-input w-full"
-              />
-            </div>
-
-            <div>
-              <label className="mb-1.5 block text-sm font-semibold text-gray-800 dark:text-gray-200">Seasonal Rainfall (mm)</label>
-              <input
-                type="number"
-                value={form.rainfallMm}
-                onChange={(event) => setForm((prev) => ({ ...prev, rainfallMm: Number(event.target.value) }))}
-                className="glass-input w-full"
-              />
-            </div>
-
-            <div>
-              <label className="mb-1.5 block text-sm font-semibold text-gray-800 dark:text-gray-200">Land Size (acres)</label>
-              <input
-                type="number"
-                min={0.25}
-                step={0.25}
-                value={form.landSizeAcres}
-                onChange={(event) => setForm((prev) => ({ ...prev, landSizeAcres: Number(event.target.value) }))}
-                className="glass-input w-full"
-              />
-            </div>
+            <h1 className="text-2xl md:text-3xl font-semibold text-white/95 tracking-tight flex items-center gap-2.5">
+              <Sprout size={24} className="text-emerald-300" />
+              <span>{t('crop_recommendation')}</span>
+            </h1>
           </div>
 
-          <div className="mt-6 space-y-3">
-            <RippleButton
-              type="button"
-              onClick={handleAutofillWeather}
-              className="inline-flex w-full items-center justify-center gap-2 glass-button-secondary py-3 text-blue-700 border-blue-200/60 bg-blue-500/20 backdrop-blur-md border border-blue-500/30 text-blue-900 dark:text-blue-300/50 hover:bg-blue-100/50"
-            >
-              <CloudSun size={18} />
-              {fetchingWeather ? 'Fetching weather...' : 'Use current weather'}
-            </RippleButton>
-
-            <RippleButton
-              type="button"
-              onClick={handleSubmit}
-              disabled={loading}
-              className="w-full glass-button py-3 text-base shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {loading ? (
-                 <div className="flex justify-center items-center gap-2">
-                    <div className="w-5 h-5 rounded-full border-2 border-white/50 border-t-white animate-spin"></div>
-                    <span>{t('analyzing')}</span>
-                 </div>
-              ) : t('get_recommendation')}
-            </RippleButton>
-
-            {error && <p className="rounded-lg bg-red-500/20 backdrop-blur-md border border-red-500/30 text-red-900 dark:text-red-300 p-2 text-sm text-red-700">{error}</p>}
+          <div className="text-xs text-white/60">
+            Soil-adaptive crop suitability & profit forecasting
           </div>
-        </section>
+        </div>
 
-        <section className="lg:col-span-2 space-y-6">
-          {topRecommendation && (
-            <article className="glass-panel relative overflow-hidden bg-gradient-to-br from-green-50/80 to-emerald-100/80 dark:from-green-900/40 dark:to-emerald-900/40 p-8 shadow-md border-green-200/50 dark:border-green-800/50">
-              <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-green-400 blur-3xl opacity-20"></div>
-              
-              <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-green-400 blur-3xl opacity-20"></div>
-              
-              <div className="relative z-10 flex flex-col md:flex-row gap-8 items-center">
-                <div className="flex-1">
-                  <p className="text-sm font-semibold uppercase tracking-wider text-[#2a6d5d] dark:text-[#4eb69c] drop-shadow-sm mb-1">Top Recommendation</p>
-                  <h3 className="text-4xl font-extrabold font-display text-gray-900 dark:text-white drop-shadow-sm mb-4">{t(topRecommendation.cropKey)}</h3>
+        {/* ═══ Main 2-Column Grid: Inputs Workspace vs Results/Forecast ═══ */}
+        <div className="grid gap-6 lg:grid-cols-12 items-start">
+          {/* Inputs Section (4 cols on lg) */}
+          <section className="lg:col-span-4 aurora-glass-strong p-6 sm:p-7 rounded-[26px] space-y-5">
+            <div>
+              <h2 className="text-base font-semibold text-white/95">Farm & Soil Inputs</h2>
+              <p className="text-xs text-white/65">Define your field parameters to calculate crop suitability</p>
+            </div>
 
-                  <div className={`inline-flex items-center rounded-xl border px-4 py-1.5 text-sm font-bold shadow-sm ${riskStyles(topRecommendation.riskLevel)}`}>
-                    Suitability {topRecommendation.suitabilityScore}% • Risk {topRecommendation.riskLevel}
-                  </div>
-                </div>
-                
-                <div className="w-full md:w-48 h-32 shrink-0 rounded-2xl overflow-hidden shadow-md border-2 border-white/50">
-                  <img 
-                    src={CROP_IMAGES[topRecommendation.cropKey.toLowerCase()] || CROP_IMAGES.default} 
-                    alt={t(topRecommendation.cropKey)}
-                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
-                  />
-                </div>
+            <div className="space-y-4">
+              <div>
+                <label className="aurora-label mb-1.5 block">{t('select_soil')}</label>
+                <select
+                  value={form.soilType}
+                  onChange={(event) => setForm((prev) => ({ ...prev, soilType: event.target.value as SoilType }))}
+                  className="aurora-glass-input text-xs py-2.5 w-full"
+                >
+                  {SOIL_OPTIONS.map((soil) => (
+                    <option key={soil} value={soil} className="bg-[#04121b] text-white">
+                      {t(soil)}
+                    </option>
+                  ))}
+                </select>
               </div>
 
-              <div className="relative z-10 mt-6 grid md:grid-cols-2 gap-4">
-                  <div className="bg-white/40 dark:bg-black/20 backdrop-blur-sm rounded-xl p-4 border border-white/40 dark:border-white/10 shadow-[inset_0_2px_4px_rgba(255,255,255,0.1)]">
-                    <p className="text-sm text-gray-700 dark:text-gray-300 mb-1 font-semibold">Why Selected</p>
-                    <p className="text-gray-900 dark:text-white drop-shadow-sm font-medium">{topRecommendation.whyRecommended}</p>
+              <div>
+                <label className="aurora-label mb-1.5 block">{t('select_season')}</label>
+                <select
+                  value={form.season}
+                  onChange={(event) => setForm((prev) => ({ ...prev, season: event.target.value as SeasonType }))}
+                  className="aurora-glass-input text-xs py-2.5 w-full"
+                >
+                  {SEASON_OPTIONS.map((season) => (
+                    <option key={season} value={season} className="bg-[#04121b] text-white">
+                      {t(season)}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="aurora-label mb-1.5 block">Temperature (°C)</label>
+                <input
+                  type="number"
+                  value={form.temperatureC}
+                  onChange={(event) => setForm((prev) => ({ ...prev, temperatureC: Number(event.target.value) }))}
+                  className="aurora-glass-input text-xs py-2.5 w-full"
+                />
+              </div>
+
+              <div>
+                <label className="aurora-label mb-1.5 block">Seasonal Rainfall (mm)</label>
+                <input
+                  type="number"
+                  value={form.rainfallMm}
+                  onChange={(event) => setForm((prev) => ({ ...prev, rainfallMm: Number(event.target.value) }))}
+                  className="aurora-glass-input text-xs py-2.5 w-full"
+                />
+              </div>
+
+              <div>
+                <label className="aurora-label mb-1.5 block">Land Size (acres)</label>
+                <input
+                  type="number"
+                  min={0.25}
+                  step={0.25}
+                  value={form.landSizeAcres}
+                  onChange={(event) => setForm((prev) => ({ ...prev, landSizeAcres: Number(event.target.value) }))}
+                  className="aurora-glass-input text-xs py-2.5 w-full"
+                />
+              </div>
+            </div>
+
+            <div className="pt-2 space-y-2.5">
+              <button
+                type="button"
+                onClick={handleAutofillWeather}
+                disabled={fetchingWeather}
+                className="w-full aurora-glass-button text-xs py-2.5 flex items-center justify-center gap-2"
+              >
+                <CloudSun size={15} className="text-cyan-300" />
+                <span>{fetchingWeather ? 'Fetching live weather...' : 'Use current weather'}</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={handleSubmit}
+                disabled={loading}
+                className="w-full aurora-glass-button-primary text-xs sm:text-sm font-semibold py-3 flex items-center justify-center gap-2"
+              >
+                {loading ? (
+                  <>
+                    <div className="w-4 h-4 rounded-full border-2 border-white/60 border-t-transparent animate-spin" />
+                    <span>{t('analyzing')}</span>
+                  </>
+                ) : (
+                  <>
+                    <Sparkles size={16} className="text-emerald-300" />
+                    <span>{t('get_recommendation')}</span>
+                  </>
+                )}
+              </button>
+
+              {error && (
+                <div className="aurora-card p-3 border-rose-400/30 bg-rose-500/15 text-rose-200 text-xs">
+                  {error}
+                </div>
+              )}
+            </div>
+          </section>
+
+          {/* Results Section (8 cols on lg) */}
+          <section className="lg:col-span-8 space-y-6">
+            {/* Top Recommended Crop Hero Card */}
+            {topRecommendation && (
+              <article className="aurora-glass-strong p-6 sm:p-8 rounded-[26px] space-y-6 border border-emerald-400/30 relative overflow-hidden">
+                <div className="flex flex-col md:flex-row gap-6 items-center justify-between">
+                  <div className="flex-1 space-y-2">
+                    <span className="aurora-label text-emerald-300">Optimal Recommendation</span>
+                    <h3 className="text-3xl sm:text-4xl font-semibold text-white/95 tracking-tight">
+                      {t(topRecommendation.cropKey)}
+                    </h3>
+
+                    <div className="flex flex-wrap items-center gap-2 pt-1">
+                      <span className="aurora-badge-success text-xs px-3 py-1 rounded-full font-semibold">
+                        Suitability {topRecommendation.suitabilityScore}%
+                      </span>
+                      <span className={`text-xs px-3 py-1 rounded-full font-semibold ${riskBadgeClass(topRecommendation.riskLevel)}`}>
+                        {topRecommendation.riskLevel} Risk
+                      </span>
+                    </div>
                   </div>
-                  <div className="bg-white/40 dark:bg-black/20 backdrop-blur-sm rounded-xl p-4 border border-white/40 dark:border-white/10 shadow-[inset_0_2px_4px_rgba(255,255,255,0.1)]">
-                    <p className="text-sm text-gray-700 dark:text-gray-300 mb-1 font-semibold">Financial Estimate</p>
-                    <p className="text-gray-900 dark:text-white drop-shadow-sm font-bold text-lg">{formatCurrency(topRecommendation.economics.netProfit)} <span className="text-sm font-normal text-gray-700 dark:text-gray-300">net profit</span></p>
-                    <p className="text-xs text-gray-700 dark:text-gray-300 mt-1">{topRecommendation.expectedYieldQPerAcre} yield / {formatCurrency(topRecommendation.economics.estimatedCost)} cost</p>
+
+                  <div className="w-full md:w-44 h-32 shrink-0 rounded-2xl overflow-hidden aurora-glass-light p-1.5 border border-white/20 shadow-md">
+                    <img
+                      src={CROP_IMAGES[topRecommendation.cropKey.toLowerCase()] || CROP_IMAGES.default}
+                      alt={t(topRecommendation.cropKey)}
+                      className="w-full h-full object-cover rounded-xl"
+                    />
                   </div>
                 </div>
-            </article>
-          )}
 
-          {result?.advisory?.length ? (
-            <div className="glass-card border-amber-200/50 bg-amber-50/50 p-6 text-amber-900">
-              <p className="mb-4 flex items-center gap-2 font-bold font-display text-lg">
-                <CircleAlert size={20} className="text-amber-600" /> Actionable Advice
-              </p>
-              <ul className="space-y-3 font-medium">
-                {result.advisory.map((item) => (
-                  <li key={item} className="flex gap-3">
-                     <div className="mt-1.5 h-1.5 w-1.5 rounded-full bg-amber-500 shrink-0"></div>
-                     <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ) : null}
+                <div className="grid sm:grid-cols-2 gap-3.5 pt-2">
+                  <div className="aurora-glass-medium p-4 rounded-2xl">
+                    <span className="aurora-label block mb-1">Why Selected</span>
+                    <p className="text-xs sm:text-sm text-white/85 leading-relaxed">{topRecommendation.whyRecommended}</p>
+                  </div>
 
-          {result?.recommendations?.length ? (
-            <div className="grid gap-6 md:grid-cols-2">
-              {result.recommendations.map((crop) => {
-                const isExpanded = expandedCrop === crop.cropKey || showDetailed;
-                return (
-                  <article 
-                    key={crop.cropKey} 
-                    className={`glass-card p-0 flex flex-col overflow-hidden cursor-pointer transition-all duration-300 ${isExpanded ? 'ring-2 ring-green-400' : 'hover:scale-[1.02]'}`}
-                    onClick={() => setExpandedCrop(isExpanded ? null : crop.cropKey)}
-                  >
-                    <div className="h-48 w-full relative">
-                      <img 
-                        src={CROP_IMAGES[crop.cropKey.toLowerCase()] || CROP_IMAGES.default} 
-                        alt={t(crop.cropKey)}
-                        className="w-full h-full object-cover"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end p-5">
-                        <div className="flex w-full items-center justify-between">
-                          <h4 className="text-2xl font-bold font-display text-white drop-shadow-md">{t(crop.cropKey)}</h4>
-                          <span className={`rounded-xl border px-3 py-1 text-xs font-bold shadow-sm ${riskStyles(crop.riskLevel)} backdrop-blur-md bg-white/95`}>
-                            {crop.suitabilityScore}% Match
-                          </span>
+                  <div className="aurora-glass-medium p-4 rounded-2xl">
+                    <span className="aurora-label block mb-1">Financial Estimate</span>
+                    <p className="text-xl sm:text-2xl font-semibold text-emerald-300">
+                      {formatCurrency(topRecommendation.economics.netProfit)}
+                      <span className="text-xs font-normal text-white/60 ml-1.5">net profit</span>
+                    </p>
+                    <p className="text-xs text-white/70 mt-1">
+                      {topRecommendation.expectedYieldQPerAcre} yield / {formatCurrency(topRecommendation.economics.estimatedCost)} est. cost
+                    </p>
+                  </div>
+                </div>
+              </article>
+            )}
+
+            {/* Advisory Notice */}
+            {result?.advisory?.length ? (
+              <div className="aurora-glass-medium p-5 rounded-[22px] border-amber-300/30 space-y-2.5">
+                <p className="flex items-center gap-2 text-sm font-semibold text-amber-200">
+                  <CircleAlert size={16} />
+                  <span>Actionable Agronomic Advisory</span>
+                </p>
+                <ul className="space-y-1.5 text-xs text-white/85">
+                  {result.advisory.map((item) => (
+                    <li key={item} className="flex gap-2 items-start">
+                      <span className="h-1.5 w-1.5 rounded-full bg-amber-400 mt-1.5 shrink-0" />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ) : null}
+
+            {/* Grid of Other Recommended Crops */}
+            {result?.recommendations?.length ? (
+              <div className="grid gap-4 sm:grid-cols-2">
+                {result.recommendations.map((crop) => {
+                  const isExpanded = expandedCrop === crop.cropKey || showDetailed;
+                  return (
+                    <article
+                      key={crop.cropKey}
+                      className={`aurora-glass-medium p-0 flex flex-col rounded-[22px] overflow-hidden cursor-pointer transition-all duration-200 ${
+                        isExpanded ? 'border-emerald-400/40 ring-1 ring-emerald-400/30' : 'hover:bg-white/15'
+                      }`}
+                      onClick={() => setExpandedCrop(isExpanded ? null : crop.cropKey)}
+                    >
+                      <div className="h-40 w-full relative">
+                        <img
+                          src={CROP_IMAGES[crop.cropKey.toLowerCase()] || CROP_IMAGES.default}
+                          alt={t(crop.cropKey)}
+                          className="w-full h-full object-cover"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent flex items-end p-4">
+                          <div className="flex w-full items-center justify-between">
+                            <h4 className="text-xl font-semibold text-white tracking-tight">{t(crop.cropKey)}</h4>
+                            <span className={`text-[11px] px-2.5 py-0.5 rounded-full font-bold ${riskBadgeClass(crop.riskLevel)}`}>
+                              {crop.suitabilityScore}% Match
+                            </span>
+                          </div>
                         </div>
                       </div>
-                    </div>
 
-                    <div className="p-6 flex-1 flex flex-col">
-                      <div className="bg-white/30 dark:bg-white/5 backdrop-blur-md border border-white/40 dark:border-white/10 shadow-[inset_0_2px_4px_rgba(255,255,255,0.4)]/50 rounded-xl p-3 border border-gray-100 mb-4">
-                     <p className="text-sm text-gray-800 dark:text-gray-200 font-medium flex justify-between">
-                       <span className="text-gray-600 dark:text-gray-400">Risk Level</span> 
-                       <span>{crop.riskLevel}</span>
-                     </p>
-                     <p className="text-sm text-gray-800 dark:text-gray-200 font-medium flex justify-between mt-2">
-                       <span className="text-gray-600 dark:text-gray-400">{t('yield')}</span> 
-                       <span>{crop.expectedYieldQPerAcre}</span>
-                     </p>
-                  </div>
+                      <div className="p-4 flex-1 flex flex-col justify-between space-y-3">
+                        <div className="aurora-glass-light rounded-xl p-2.5 text-xs flex justify-between items-center text-white/80">
+                          <span>Risk: <strong className="text-white">{crop.riskLevel}</strong></span>
+                          <span>Yield: <strong className="text-white">{crop.expectedYieldQPerAcre}</strong></span>
+                        </div>
 
-                    <div className={`overflow-hidden transition-all duration-500 ease-in-out ${isExpanded ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'}`}>
-                      <div className="space-y-3 text-sm text-gray-800 dark:text-gray-200 font-medium mt-4 border-t border-gray-100 pt-4">
-                        <p className="flex items-start gap-3"><Droplets size={18} className="mt-0.5 text-blue-500 shrink-0" /> {crop.requiredWater}</p>
-                        <p className="flex items-start gap-3"><Leaf size={18} className="mt-0.5 text-[#4eb69c] shrink-0" /> {crop.requiredFertilizer}</p>
-                        <p><strong className="text-gray-900 dark:text-white drop-shadow-sm block mb-1">Why recommended:</strong> {crop.whyRecommended}</p>
-                        {crop.riskNote && <p><strong className="text-amber-800 block mb-1">Risk note:</strong> {crop.riskNote}</p>}
-                        <p className="text-lg font-bold text-gray-900 dark:text-white drop-shadow-sm mt-2">{formatCurrency(crop.economics.netProfit)} <span className="text-xs font-medium text-gray-600 dark:text-gray-400">Net Profit</span></p>
+                        {isExpanded ? (
+                          <div className="space-y-2 text-xs text-white/80 pt-2 border-t border-white/10 animate-fade-in">
+                            <p className="flex items-start gap-2">
+                              <Droplets size={14} className="mt-0.5 text-cyan-300 shrink-0" />
+                              <span>{crop.requiredWater}</span>
+                            </p>
+                            <p className="flex items-start gap-2">
+                              <Leaf size={14} className="mt-0.5 text-emerald-300 shrink-0" />
+                              <span>{crop.requiredFertilizer}</span>
+                            </p>
+                            <p className="text-white/70">
+                              <strong className="text-white/90">Why recommended:</strong> {crop.whyRecommended}
+                            </p>
+                            {crop.riskNote && (
+                              <p className="text-amber-200/90">
+                                <strong>Risk note:</strong> {crop.riskNote}
+                              </p>
+                            )}
+                            <div className="pt-2 text-sm font-semibold text-emerald-300">
+                              {formatCurrency(crop.economics.netProfit)}
+                              <span className="text-[11px] font-normal text-white/60 ml-1">est. Net Profit</span>
+                            </div>
+                          </div>
+                        ) : (
+                          <div className="pt-2 text-[11px] text-cyan-300/80 text-center flex items-center justify-center gap-1">
+                            <span>Click for detailed agronomy plan</span>
+                            <ChevronDown size={13} />
+                          </div>
+                        )}
                       </div>
-                    </div>
-
-                    {!isExpanded && (
-                      <p className="mt-4 pt-4 text-sm font-medium text-blue-600/80 text-center border-t border-gray-100 flex items-center justify-center gap-1 group-hover:text-blue-600 transition-colors">
-                        Click for detailed plan
-                        <svg className="w-4 h-4 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                        </svg>
-                      </p>
-                    )}
-                  </div>
-                </article>
-              );
-            })}
-            </div>
-          ) : (
-            <div className="glass-panel border-dashed border-gray-300 p-12 text-center text-gray-600 dark:text-gray-400 bg-white/30 dark:bg-white/5 backdrop-blur-md border border-white/40 dark:border-white/10 shadow-[inset_0_2px_4px_rgba(255,255,255,0.4)]/30">
-              Enter farm inputs to get AI-powered crop recommendations with suitability and profit estimates.
-            </div>
-          )}
-
-          <section className="glass-card p-6">
-            <h3 className="mb-4 text-xl font-bold font-display text-gray-900 dark:text-white drop-shadow-sm">Recent Queries</h3>
-            {history.length ? (
-              <div className="space-y-3 text-sm text-gray-800 dark:text-gray-200 font-medium">
-                {history.map((item) => (
-                  <div key={item.id} className="flex items-center justify-between rounded-xl bg-white/30 dark:bg-white/5 backdrop-blur-md border border-white/40 dark:border-white/10 shadow-[inset_0_2px_4px_rgba(255,255,255,0.4)]/50 border border-gray-100 px-4 py-3">
-                    <span className="text-gray-900 dark:text-white drop-shadow-sm">Top crop: <span className="font-bold">{t(item.topCrop)}</span></span>
-                    <span className="text-gray-600 dark:text-gray-400 text-xs">{new Date(item.createdAt).toLocaleString()}</span>
-                  </div>
-                ))}
+                    </article>
+                  );
+                })}
               </div>
             ) : (
-              <p className="text-sm text-gray-600 dark:text-gray-400 text-center py-4">No recommendation history found yet.</p>
+              <div className="aurora-glass-medium p-10 text-center rounded-[24px] text-sm text-white/65 space-y-2">
+                <Sprout size={32} className="mx-auto text-emerald-300/80 mb-2" />
+                <p className="font-semibold text-white/90">Enter your farm parameters on the left</p>
+                <p className="text-xs text-white/60 max-w-md mx-auto">
+                  Get AI-calculated crop recommendations, risk evaluations, and financial profit projections tailored to your soil.
+                </p>
+              </div>
             )}
+
+            {/* Recent Queries History */}
+            <aside className="aurora-glass-medium p-5 rounded-[24px] space-y-3">
+              <h3 className="flex items-center gap-2 text-sm font-semibold text-white/95 pb-2 border-b border-white/10">
+                <History size={15} className="text-emerald-300" />
+                <span>Recent Recommendation Queries</span>
+              </h3>
+
+              {history.length ? (
+                <div className="space-y-2 text-xs">
+                  {history.map((item) => (
+                    <div
+                      key={item.id}
+                      className="flex items-center justify-between rounded-xl aurora-glass-light px-3.5 py-2 text-white/80"
+                    >
+                      <span>
+                        Top crop: <strong className="text-white">{t(item.topCrop)}</strong>
+                      </span>
+                      <span className="text-[11px] text-white/50">
+                        {new Date(item.createdAt).toLocaleString(undefined, {
+                          month: 'short',
+                          day: 'numeric',
+                          hour: '2-digit',
+                          minute: '2-digit',
+                        })}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-xs text-white/50 text-center py-2">No past recommendations found.</p>
+              )}
+            </aside>
           </section>
-        </section>
+        </div>
       </div>
     </div>
   );
 }
+

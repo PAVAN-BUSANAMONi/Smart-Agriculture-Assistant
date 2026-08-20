@@ -1,10 +1,24 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { AlertTriangle, CloudRain, Droplets, LocateFixed, Thermometer, Wind, BotMessageSquare } from 'lucide-react';
+import {
+  AlertTriangle,
+  CloudRain,
+  Droplets,
+  LocateFixed,
+  Thermometer,
+  Wind,
+  BotMessageSquare,
+  Sparkles,
+  MapPin,
+  Calendar,
+  Layers,
+  Activity,
+  CheckCircle2,
+  AlertCircle
+} from 'lucide-react';
 import { api, WeatherDecisionResponse } from '../services/api';
 import { useLanguage } from '../contexts/LanguageContext';
 import { createAlert, shouldTriggerAlert } from '../utils/alertEngine';
 import { pushBrowserNotification } from '../utils/browserNotifications';
-import { RippleButton } from '../components/ui/RippleButton';
 
 type CachedWeather = WeatherDecisionResponse;
 type WeatherCoordinates = {
@@ -481,232 +495,430 @@ export function Weather() {
   }, [crop, language, t]);
 
   if (loading) {
-    return <div className="p-8 text-center">{t('analyzing')}</div>;
+    return (
+      <div
+        className="relative -m-4 md:-m-6 lg:-m-8 p-6 md:p-10 min-h-[calc(100vh-4rem)] flex items-center justify-center text-white rounded-2xl overflow-hidden font-sans"
+        style={{
+          backgroundImage: `linear-gradient(90deg, rgba(4,16,24,0.28) 0%, rgba(4,16,24,0.14) 50%, rgba(4,16,24,0.04) 100%), radial-gradient(ellipse at 30% 40%, rgba(6,26,35,0.30) 0%, rgba(4,15,22,0.72) 100%), url('/assets/storm-background.jpg')`,
+          backgroundPosition: 'center 25%',
+          backgroundAttachment: 'fixed',
+          backgroundSize: 'cover',
+        }}
+      >
+        <div className="aurora-glass-medium p-8 rounded-[26px] flex flex-col items-center gap-4 text-center max-w-sm">
+          <div className="w-8 h-8 rounded-full border-2 border-white/60 border-t-transparent animate-spin" />
+          <p className="text-white/90 text-sm font-medium tracking-wide">{t('analyzing')}</p>
+        </div>
+      </div>
+    );
   }
 
   if (!data) {
-    return <div className="p-8 text-center text-red-600">{error || t('weather_load_error')}</div>;
+    return (
+      <div
+        className="relative -m-4 md:-m-6 lg:-m-8 p-6 md:p-10 min-h-[calc(100vh-4rem)] flex items-center justify-center text-white rounded-2xl overflow-hidden font-sans"
+        style={{
+          backgroundImage: `linear-gradient(90deg, rgba(4,16,24,0.28) 0%, rgba(4,16,24,0.14) 50%, rgba(4,16,24,0.04) 100%), radial-gradient(ellipse at 30% 40%, rgba(6,26,35,0.30) 0%, rgba(4,15,22,0.72) 100%), url('/assets/storm-background.jpg')`,
+          backgroundPosition: 'center 25%',
+          backgroundAttachment: 'fixed',
+          backgroundSize: 'cover',
+        }}
+      >
+        <div className="aurora-glass-medium p-8 rounded-[26px] text-center max-w-md space-y-3">
+          <AlertCircle size={32} className="mx-auto text-rose-300" />
+          <h3 className="text-lg font-semibold text-white">Weather Data Unavailable</h3>
+          <p className="text-sm text-white/75">{error || t('weather_load_error')}</p>
+        </div>
+      </div>
+    );
   }
 
   const weatherLabel = data.current.weatherLabel || WEATHER_CODE_MAP[data.current.weatherCode] || 'Weather';
-  const irrigationClass =
-    data.decisions.irrigationRecommendation.status === 'hold'
-      ? 'border-red-200 bg-red-500/20 backdrop-blur-md border border-red-500/30 text-red-900 dark:text-red-300 text-red-800'
-      : data.decisions.irrigationRecommendation.status === 'increase'
-      ? 'border-amber-200 bg-amber-50 text-amber-800'
-      : 'border-emerald-200 bg-emerald-50 text-emerald-800';
 
   return (
-    <div className="mx-auto max-w-6xl animate-fade-in space-y-6">
-      <div className="flex flex-wrap items-center justify-between gap-4">
-        <h1 className="text-3xl font-bold font-display text-gray-900 dark:text-white drop-shadow-sm">{t('weather_forecast')}</h1>
-        <RippleButton
-          type="button"
-          onClick={() => setDetailedView((prev) => !prev)}
-          variant="secondary" className="text-sm px-4 py-2"
-        >
-          {detailedView
-            ? language === 'te'
-              ? 'సరళ దృశ్యం'
-              : 'Simple View'
-            : language === 'te'
-            ? 'వివర దృశ్యం'
-            : 'Detailed View'}
-        </RippleButton>
-      </div>
+    <div
+      className="relative -m-4 md:-m-6 lg:-m-8 p-4 md:p-8 lg:p-10 min-h-[calc(100vh-4rem)] bg-no-repeat bg-cover text-white rounded-2xl overflow-hidden font-sans"
+      style={{
+        backgroundImage: `linear-gradient(90deg, rgba(4,16,24,0.28) 0%, rgba(4,16,24,0.14) 50%, rgba(4,16,24,0.04) 100%), radial-gradient(ellipse at 30% 40%, rgba(6,26,35,0.30) 0%, rgba(4,15,22,0.72) 100%), url('/assets/storm-background.jpg')`,
+        backgroundPosition: 'center 25%',
+        backgroundAttachment: 'fixed',
+        backgroundSize: 'cover',
+      }}
+    >
+      <div className="relative z-10 mx-auto max-w-6xl space-y-8 animate-fade-in">
+        {/* ═══ Header Action Row ═══ */}
+        <div className="flex flex-wrap items-center justify-between gap-4 pb-2 border-b border-white/10">
+          <div>
+            <div className="aurora-glass-pill mb-1.5">
+              <span>Agri-Weather Engine</span>
+            </div>
+            <h1 className="text-2xl md:text-3xl font-semibold text-white/95 tracking-tight">
+              {t('weather_forecast')}
+            </h1>
+          </div>
 
-      {isOffline && (
-        <div className="glass-card border-blue-200 bg-blue-500/20 backdrop-blur-md border border-blue-500/30 text-blue-900 dark:text-blue-300/80 p-4 text-sm text-blue-800">
-          {language === 'te'
-            ? 'ఆఫ్‌లైన్ మోడ్ అందుబాటులో ఉంది. చివరిసారి సింక్ అయిన డేటా ఉపయోగించబడుతుంది.'
-            : 'Offline mode enabled. Last synced advisory is used in low-network areas.'}
+          <button
+            type="button"
+            onClick={() => setDetailedView((prev) => !prev)}
+            className="aurora-glass-button text-xs sm:text-sm font-medium"
+          >
+            <Layers size={15} />
+            <span>
+              {detailedView
+                ? language === 'te'
+                  ? 'సరళ దృశ్యం'
+                  : 'Simple View'
+                : language === 'te'
+                ? 'వివర దృశ్యం'
+                : 'Detailed View'}
+            </span>
+          </button>
         </div>
-      )}
 
-      {notice && <div className="glass-card border-blue-200 bg-blue-500/20 backdrop-blur-md border border-blue-500/30 text-blue-900 dark:text-blue-300/80 p-4 text-sm text-blue-800">{notice}</div>}
-      {error && <div className="glass-card border-amber-200 bg-amber-50/80 p-4 text-sm text-amber-800">{error}</div>}
-
-      <div className="grid gap-6 md:grid-cols-2">
-        <div className="glass-panel relative overflow-hidden bg-gradient-to-br from-blue-600 to-blue-800 p-8 text-white border-blue-400/30">
-          <div className="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-blue-400 blur-3xl opacity-30"></div>
-          <div className="mb-6 flex items-center gap-2 text-blue-100 relative z-10">
-            <LocateFixed size={18} />
-            <span className="text-sm font-medium">
-              {data.city} ({data.latitude.toFixed(2)}, {data.longitude.toFixed(2)})
+        {/* ═══ Status Banners (Offline / Notice / Error) ═══ */}
+        {isOffline && (
+          <div className="aurora-card p-4 flex items-center gap-3 border-amber-300/30 bg-amber-400/15 text-amber-100 text-sm">
+            <AlertCircle size={18} className="shrink-0 text-amber-300" />
+            <span>
+              {language === 'te'
+                ? 'ఆఫ్‌లైన్ మోడ్ అందుబాటులో ఉంది. చివరిసారి సింక్ అయిన డేటా ఉపయోగించబడుతుంది.'
+                : 'Offline mode enabled. Last synced advisory is used in low-network areas.'}
             </span>
           </div>
-          <p className="text-xl opacity-90 font-medium relative z-10">{weatherLabel}</p>
-          <h2 className="mb-2 text-6xl font-bold font-display tracking-tighter relative z-10">{data.current.tempC}°C</h2>
-          <p className="text-sm text-blue-100 relative z-10">
-            {t('feels_like')}: {data.current.feelsLikeC}°C | {t('last_updated')}: {new Date(data.fetchedAt).toLocaleTimeString()}
-          </p>
-
-          <div className="mt-8 grid grid-cols-2 gap-3 text-sm relative z-10">
-            <div className="rounded-xl bg-white/10 backdrop-blur-sm p-3 border border-white/10">
-              <Thermometer className="mb-1 text-blue-200" size={20} />
-              <div className="text-blue-100">{t('humidity')}</div>
-              <div className="font-semibold text-lg">{data.current.humidity}%</div>
-            </div>
-            <div className="rounded-xl bg-white/10 backdrop-blur-sm p-3 border border-white/10">
-              <Wind className="mb-1 text-blue-200" size={20} />
-              <div className="text-blue-100">{t('wind_speed')}</div>
-              <div className="font-semibold text-lg">{data.current.windKmph} km/h</div>
-            </div>
-            <div className="rounded-xl bg-white/10 backdrop-blur-sm p-3 border border-white/10">
-              <CloudRain className="mb-1 text-blue-200" size={20} />
-              <div className="text-blue-100">{t('rain_chance')}</div>
-              <div className="font-semibold text-lg">{data.forecast.rainChance24h}%</div>
-            </div>
-            <div className="rounded-xl bg-white/10 backdrop-blur-sm p-3 border border-white/10">
-              <Droplets className="mb-1 text-blue-200" size={20} />
-              <div className="text-blue-100">Rain (24h)</div>
-              <div className="font-semibold text-lg">{data.forecast.rainMm24h} mm</div>
-            </div>
-          </div>
-        </div>
-
-        <div className="glass-panel border-emerald-200/50 bg-emerald-50/40 p-8">
-          <h2 className="mb-2 text-2xl font-bold font-display text-emerald-900">
-            {language === 'te' ? 'ఈ రోజు ఏమి చేయాలి?' : 'What to do today'}
-          </h2>
-          <p className="mb-6 text-sm text-emerald-700">
-            {language === 'te'
-              ? 'ఇది ప్రత్యక్ష వాతావరణ డేటా ఆధారంగా రూపొందించిన చర్యల జాబితా.'
-              : 'Action checklist generated from real-time weather and farm context.'}
-          </p>
-          <ul className="space-y-3 text-emerald-900 font-medium">
-            {data.decisions.todayActions.map((item) => (
-              <li key={item} className="flex gap-3">
-                <div className="mt-1 h-2 w-2 rounded-full bg-emerald-500 shrink-0"></div>
-                <span>{item}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </div>
-
-      <div className="grid gap-6 md:grid-cols-3">
-        <div className={`glass-card p-6 ${irrigationClass}`}>
-          <h3 className="mb-2 font-bold font-display text-lg">{language === 'te' ? 'పారుదల సూచన' : 'Irrigation Recommendation'}</h3>
-          <p className="text-sm opacity-90">{data.decisions.irrigationRecommendation.message}</p>
-        </div>
-
-        <div className="glass-card border-orange-200/50 bg-orange-50/50 p-6 text-orange-900">
-          <h3 className="mb-2 font-bold font-display text-lg">{language === 'te' ? 'ఉష్ణోగ్రత రక్షణ అలర్ట్' : 'Heat Protection Alert'}</h3>
-          {data.decisions.heatAlert ? (
-            <>
-              <p className="text-sm font-medium">{data.decisions.heatAlert.message}</p>
-              <ul className="mt-3 space-y-2 text-sm opacity-90">
-                {data.decisions.heatAlert.protectionTips.map((tip) => (
-                  <li key={tip} className="flex gap-2"><div className="mt-1.5 h-1.5 w-1.5 rounded-full bg-orange-500 shrink-0"></div>{tip}</li>
-                ))}
-              </ul>
-            </>
-          ) : (
-            <p className="text-sm opacity-90">{language === 'te' ? 'ఈరోజు తీవ్రమైన వేడి ప్రమాదం లేదు.' : 'No severe heat stress risk today.'}</p>
-          )}
-        </div>
-
-        <div className="glass-card border-indigo-200/50 bg-indigo-50/50 p-6 text-indigo-900">
-          <h3 className="mb-2 font-bold font-display text-lg">{language === 'te' ? 'విత్తనాల విత్తే సమయం' : 'Sowing Window Prediction'}</h3>
-          <p className="text-sm font-medium">{data.decisions.sowingWindow.message}</p>
-          {data.decisions.sowingWindow.bestDays.length > 0 && (
-            <div className="mt-4 inline-flex rounded-lg bg-indigo-100/50 px-3 py-1.5 text-xs font-bold text-indigo-800">
-              {language === 'te' ? 'సరైన రోజులు:' : 'Suggested days:'} {data.decisions.sowingWindow.bestDays.join(', ')}
-            </div>
-          )}
-        </div>
-      </div>
-
-      {data.decisions.alerts.length > 0 && (
-        <div className="glass-card border-red-200/60 bg-red-500/20 backdrop-blur-md border border-red-500/30 text-red-900 dark:text-red-300/60 p-6 text-red-900">
-          <h3 className="mb-3 flex items-center gap-2 font-bold font-display text-lg">
-            <AlertTriangle size={20} className="text-red-600" />
-            {language === 'te' ? 'సృష్టించిన అలర్ట్లు' : 'Generated Alerts'}
-          </h3>
-          <ul className="space-y-2 text-sm font-medium">
-            {data.decisions.alerts.map((item) => (
-              <li key={`${item.title}-${item.message}`} className="flex gap-3">
-                  <div className="mt-1.5 h-1.5 w-1.5 rounded-full bg-red-500/20 backdrop-blur-md border border-red-500/30 text-red-900 dark:text-red-3000 shrink-0"></div>
-                  <span><strong className="text-red-800">{item.title}:</strong> {item.message}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-
-      <div className="glass-panel border-emerald-200/40 bg-emerald-50/30 p-6 text-[#21452a]">
-        <h3 className="mb-3 font-bold font-display text-lg flex items-center gap-2">
-          <BotMessageSquare size={20} className="text-emerald-600" />
-          {language === 'te' ? 'AI వాతావరణ సూచన' : 'AI weather-aware suggestion'}
-        </h3>
-        {aiAdviceLoading ? (
-          <div className="flex gap-2 items-center text-emerald-600">
-            <div className="w-4 h-4 rounded-full border-2 border-emerald-500 border-t-transparent animate-spin"></div>
-            <p className="text-sm font-medium">{language === 'te' ? 'AI సూచన సిద్ధమవుతుంది...' : 'Preparing AI suggestion...'}</p>
-          </div>
-        ) : aiAdvice ? (
-          <p className="whitespace-pre-wrap text-sm leading-relaxed font-medium">{aiAdvice}</p>
-        ) : (
-          <p className="text-sm opacity-80">
-            {language === 'te'
-              ? 'AI సూచన లభించలేదు. సిస్టమ్ వాతావరణ నియమాలనే ఉపయోగిస్తోంది.'
-              : 'AI suggestion unavailable right now. Weather decision rules are still active.'}
-          </p>
         )}
-      </div>
 
-      {detailedView && (
-        <div className="glass-card p-6 border-gray-200">
-          <h3 className="mb-4 font-bold font-display text-lg text-gray-900 dark:text-white drop-shadow-sm">{language === 'te' ? 'వివరమైన అంచనా' : 'Detailed Forecast Context'}</h3>
-          <div className="grid gap-4 text-sm text-gray-700 dark:text-gray-300 font-medium md:grid-cols-2 lg:grid-cols-3">
-            <div className="bg-white/30 dark:bg-white/5 backdrop-blur-md border border-white/40 dark:border-white/10 shadow-[inset_0_2px_4px_rgba(255,255,255,0.4)]/50 p-3 rounded-lg border border-gray-100">
-                <p className="text-xs text-gray-400 mb-1">24h Rain Prob.</p>
-                <p className="text-gray-900 dark:text-white drop-shadow-sm">{data.forecast.rainChance24h}%</p>
+        {notice && (
+          <div className="aurora-card p-4 flex items-center gap-3 border-teal-300/30 bg-teal-400/15 text-teal-100 text-sm">
+            <Activity size={18} className="shrink-0 text-teal-300" />
+            <span>{notice}</span>
+          </div>
+        )}
+
+        {error && (
+          <div className="aurora-card p-4 flex items-center gap-3 border-amber-300/30 bg-amber-400/15 text-amber-100 text-sm">
+            <AlertTriangle size={18} className="shrink-0 text-amber-300" />
+            <span>{error}</span>
+          </div>
+        )}
+
+        {/* ═══ Main Weather Hero & Action Plan Grid ═══ */}
+        <div className="grid gap-6 lg:grid-cols-12 items-stretch">
+          {/* Main Current Weather Glass Card (Strongest glass tier) */}
+          <div className="lg:col-span-6 flex">
+            <div className="aurora-glass-strong w-full p-7 md:p-8 flex flex-col justify-between relative overflow-hidden">
+              <div>
+                {/* Location header */}
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center gap-2 text-white/85 text-[15px] font-medium tracking-wide">
+                    <MapPin size={16} className="text-emerald-300 shrink-0" />
+                    <span className="truncate max-w-[240px]">
+                      {data.city} ({data.latitude.toFixed(2)}, {data.longitude.toFixed(2)})
+                    </span>
+                  </div>
+                  <span className="text-xs text-white/50 tracking-tight">
+                    {new Date(data.fetchedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                  </span>
+                </div>
+
+                {/* Condition label */}
+                <p className="text-lg text-white/80 font-medium tracking-normal mb-1">{weatherLabel}</p>
+
+                {/* Big Temperature */}
+                <div className="my-3 flex items-baseline font-medium tracking-tight text-white drop-shadow-md leading-none">
+                  <span className="text-6xl sm:text-7xl lg:text-[84px] tracking-tighter">{data.current.tempC}</span>
+                  <span className="text-4xl sm:text-5xl font-light ml-1 opacity-90">°</span>
+                  <span className="text-3xl sm:text-4xl font-light ml-1.5 opacity-75">C</span>
+                </div>
+
+                <p className="text-xs sm:text-sm text-white/70">
+                  {t('feels_like')}: {data.current.feelsLikeC}°C &bull; Min: {data.forecast.minTemp}°C / Max: {data.forecast.maxTemp}°C
+                </p>
+              </div>
+
+              {/* 4 Weather Metrics Bar */}
+              <div className="mt-8 pt-5 border-t border-white/15 grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-center">
+                <div className="aurora-glass-light p-2.5 rounded-xl flex flex-col items-center gap-1">
+                  <div className="flex items-center gap-1 text-[12px] text-white/65">
+                    <Thermometer size={13} className="text-amber-200 opacity-80" />
+                    <span>{t('humidity')}</span>
+                  </div>
+                  <span className="text-[15px] font-semibold text-white/95">{data.current.humidity}%</span>
+                </div>
+
+                <div className="aurora-glass-light p-2.5 rounded-xl flex flex-col items-center gap-1">
+                  <div className="flex items-center gap-1 text-[12px] text-white/65">
+                    <Wind size={13} className="text-cyan-200 opacity-80" />
+                    <span>{t('wind_speed')}</span>
+                  </div>
+                  <span className="text-[15px] font-semibold text-white/95">{data.current.windKmph} km/h</span>
+                </div>
+
+                <div className="aurora-glass-light p-2.5 rounded-xl flex flex-col items-center gap-1">
+                  <div className="flex items-center gap-1 text-[12px] text-white/65">
+                    <CloudRain size={13} className="text-sky-200 opacity-80" />
+                    <span>{t('rain_chance')}</span>
+                  </div>
+                  <span className="text-[15px] font-semibold text-white/95">{data.forecast.rainChance24h}%</span>
+                </div>
+
+                <div className="aurora-glass-light p-2.5 rounded-xl flex flex-col items-center gap-1">
+                  <div className="flex items-center gap-1 text-[12px] text-white/65">
+                    <Droplets size={13} className="text-blue-200 opacity-80" />
+                    <span>Rain (24h)</span>
+                  </div>
+                  <span className="text-[15px] font-semibold text-white/95">{data.forecast.rainMm24h} mm</span>
+                </div>
+              </div>
             </div>
-            <div className="bg-white/30 dark:bg-white/5 backdrop-blur-md border border-white/40 dark:border-white/10 shadow-[inset_0_2px_4px_rgba(255,255,255,0.4)]/50 p-3 rounded-lg border border-gray-100">
-                <p className="text-xs text-gray-400 mb-1">24h Expected Rainfall</p>
-                <p className="text-gray-900 dark:text-white drop-shadow-sm">{data.forecast.rainMm24h} mm</p>
-            </div>
-            <div className="bg-white/30 dark:bg-white/5 backdrop-blur-md border border-white/40 dark:border-white/10 shadow-[inset_0_2px_4px_rgba(255,255,255,0.4)]/50 p-3 rounded-lg border border-gray-100">
-                <p className="text-xs text-gray-400 mb-1">7-Day Rainfall Outlook</p>
-                <p className="text-gray-900 dark:text-white drop-shadow-sm">{data.forecast.rainMm7d} mm</p>
-            </div>
-            <div className="bg-white/30 dark:bg-white/5 backdrop-blur-md border border-white/40 dark:border-white/10 shadow-[inset_0_2px_4px_rgba(255,255,255,0.4)]/50 p-3 rounded-lg border border-gray-100">
-                <p className="text-xs text-gray-400 mb-1">Daily Temp Range</p>
-                <p className="text-gray-900 dark:text-white drop-shadow-sm">{data.forecast.minTemp}°C to {data.forecast.maxTemp}°C</p>
-            </div>
-            <div className="bg-white/30 dark:bg-white/5 backdrop-blur-md border border-white/40 dark:border-white/10 shadow-[inset_0_2px_4px_rgba(255,255,255,0.4)]/50 p-3 rounded-lg border border-gray-100">
-                <p className="text-xs text-gray-400 mb-1">Data Source</p>
-                <p className="text-gray-900 dark:text-white drop-shadow-sm">{data.source}</p>
-            </div>
-            <div className="bg-white/30 dark:bg-white/5 backdrop-blur-md border border-white/40 dark:border-white/10 shadow-[inset_0_2px_4px_rgba(255,255,255,0.4)]/50 p-3 rounded-lg border border-gray-100">
-                <p className="text-xs text-gray-400 mb-1">Primary Crop</p>
-                <p className="text-gray-900 dark:text-white drop-shadow-sm">{crop || (language === 'te' ? 'సెట్ కాలేదు' : 'Not set')}</p>
+          </div>
+
+          {/* Action Checklist / What To Do Today (Medium glass tier) */}
+          <div className="lg:col-span-6 flex">
+            <div className="aurora-glass-medium w-full p-7 md:p-8 flex flex-col justify-between rounded-[26px]">
+              <div>
+                <div className="flex items-center gap-2 mb-2">
+                  <div className="p-2 rounded-xl bg-emerald-400/20 text-emerald-200 border border-emerald-300/30">
+                    <CheckCircle2 size={18} />
+                  </div>
+                  <h2 className="text-xl font-semibold text-white/95 tracking-tight">
+                    {language === 'te' ? 'ఈ రోజు ఏమి చేయాలి?' : 'What to do today'}
+                  </h2>
+                </div>
+                <p className="text-xs sm:text-sm text-white/70 mb-5">
+                  {language === 'te'
+                    ? 'ఇది ప్రత్యక్ష వాతావరణ డేటా ఆధారంగా రూపొందించిన చర్యల జాబితా.'
+                    : 'Action checklist generated from real-time weather and farm context.'}
+                </p>
+
+                <ul className="space-y-3 text-sm text-white/88">
+                  {data.decisions.todayActions.map((item, idx) => (
+                    <li key={idx} className="flex items-start gap-3">
+                      <div className="mt-1.5 h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.7)] shrink-0" />
+                      <span className="leading-relaxed">{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
           </div>
         </div>
-      )}
 
-      <div className="glass-card p-6 border-gray-200">
-        <h3 className="mb-2 font-bold font-display text-lg text-gray-900 dark:text-white drop-shadow-sm">{t('manager_alert_setup')}</h3>
-        <p className="mb-4 text-sm text-gray-600 dark:text-gray-400">{t('manager_alert_setup_hint')}</p>
-        <div className="flex flex-col gap-3 md:flex-row max-w-2xl">
-          <input
-            value={webhookInput}
-            onChange={(event) => setWebhookInput(event.target.value)}
-            placeholder="https://your-webhook-url"
-            className="glass-input flex-1"
-          />
-          <RippleButton
-            type="button"
-            onClick={() => localStorage.setItem('managerWebhookUrl', webhookInput.trim())}
-            variant="primary" className="whitespace-nowrap"
-          >
-            {t('save_webhook')}
-          </RippleButton>
+        {/* ═══ 3 Agricultural Decision Cards ═══ */}
+        <div className="grid gap-6 md:grid-cols-3">
+          {/* Irrigation Card */}
+          <div className="aurora-glass-medium p-6 rounded-[24px] flex flex-col justify-between">
+            <div>
+              <div className="flex items-center justify-between mb-3">
+                <span className="aurora-label">Irrigation</span>
+                <span
+                  className={`px-2.5 py-0.5 rounded-full text-xs font-semibold uppercase ${
+                    data.decisions.irrigationRecommendation.status === 'hold'
+                      ? 'aurora-badge-danger'
+                      : data.decisions.irrigationRecommendation.status === 'increase'
+                      ? 'aurora-badge-warning'
+                      : 'aurora-badge-success'
+                  }`}
+                >
+                  {data.decisions.irrigationRecommendation.status}
+                </span>
+              </div>
+              <h3 className="text-base font-semibold text-white/95 mb-2">
+                {language === 'te' ? 'పారుదల సూచన' : 'Irrigation Recommendation'}
+              </h3>
+              <p className="text-xs sm:text-sm text-white/75 leading-relaxed">
+                {data.decisions.irrigationRecommendation.message}
+              </p>
+            </div>
+          </div>
+
+          {/* Heat Protection Card */}
+          <div className="aurora-glass-medium p-6 rounded-[24px] flex flex-col justify-between">
+            <div>
+              <div className="flex items-center justify-between mb-3">
+                <span className="aurora-label">Thermal Index</span>
+                <span
+                  className={`px-2.5 py-0.5 rounded-full text-xs font-semibold uppercase ${
+                    data.decisions.heatAlert ? 'aurora-badge-warning' : 'aurora-badge-info'
+                  }`}
+                >
+                  {data.decisions.heatAlert ? data.decisions.heatAlert.severity : 'Normal'}
+                </span>
+              </div>
+              <h3 className="text-base font-semibold text-white/95 mb-2">
+                {language === 'te' ? 'ఉష్ణోగ్రత రక్షణ అలర్ట్' : 'Heat Protection Alert'}
+              </h3>
+              {data.decisions.heatAlert ? (
+                <div className="space-y-2">
+                  <p className="text-xs sm:text-sm text-white/85 font-medium">{data.decisions.heatAlert.message}</p>
+                  <ul className="space-y-1.5 text-xs text-white/70">
+                    {data.decisions.heatAlert.protectionTips.map((tip, idx) => (
+                      <li key={idx} className="flex items-center gap-2">
+                        <span className="h-1.5 w-1.5 rounded-full bg-amber-400" />
+                        <span>{tip}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ) : (
+                <p className="text-xs sm:text-sm text-white/75">
+                  {language === 'te' ? 'ఈరోజు తీవ్రమైన వేడి ప్రమాదం లేదు.' : 'No severe heat stress risk today.'}
+                </p>
+              )}
+            </div>
+          </div>
+
+          {/* Sowing Window Card */}
+          <div className="aurora-glass-medium p-6 rounded-[24px] flex flex-col justify-between">
+            <div>
+              <div className="flex items-center justify-between mb-3">
+                <span className="aurora-label">Planting Window</span>
+                <span
+                  className={`px-2.5 py-0.5 rounded-full text-xs font-semibold uppercase ${
+                    data.decisions.sowingWindow.status === 'good'
+                      ? 'aurora-badge-success'
+                      : data.decisions.sowingWindow.status === 'watch'
+                      ? 'aurora-badge-warning'
+                      : 'aurora-badge-danger'
+                  }`}
+                >
+                  {data.decisions.sowingWindow.status}
+                </span>
+              </div>
+              <h3 className="text-base font-semibold text-white/95 mb-2">
+                {language === 'te' ? 'విత్తనాల విత్తే సమయం' : 'Sowing Window Prediction'}
+              </h3>
+              <p className="text-xs sm:text-sm text-white/75 leading-relaxed">
+                {data.decisions.sowingWindow.message}
+              </p>
+              {data.decisions.sowingWindow.bestDays.length > 0 && (
+                <div className="mt-3 flex flex-wrap items-center gap-1.5">
+                  <span className="text-xs text-white/60 mr-1">
+                    {language === 'te' ? 'సరైన రోజులు:' : 'Suggested days:'}
+                  </span>
+                  {data.decisions.sowingWindow.bestDays.map((day, idx) => (
+                    <span key={idx} className="aurora-glass-pill text-[11px] text-emerald-200">
+                      {day}
+                    </span>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* ═══ Generated Alerts (if active) ═══ */}
+        {data.decisions.alerts.length > 0 && (
+          <div className="aurora-glass-medium p-6 rounded-[24px] border-rose-400/30">
+            <h3 className="mb-3 flex items-center gap-2 text-base font-semibold text-rose-200">
+              <AlertTriangle size={18} className="text-rose-300" />
+              <span>{language === 'te' ? 'సృష్టించిన అలర్ట్లు' : 'Generated Weather Alerts'}</span>
+            </h3>
+            <ul className="space-y-2 text-sm">
+              {data.decisions.alerts.map((item, idx) => (
+                <li key={idx} className="flex items-start gap-2.5 text-white/90">
+                  <span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-rose-400 shrink-0" />
+                  <span>
+                    <strong className="text-rose-200 font-semibold">{item.title}:</strong> {item.message}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        {/* ═══ AI Weather Advisory Banner ═══ */}
+        <div className="aurora-glass-medium p-6 md:p-7 rounded-[26px]">
+          <div className="flex items-center gap-3 mb-3">
+            <div className="p-2.5 rounded-2xl bg-teal-400/20 text-teal-200 border border-teal-300/30">
+              <BotMessageSquare size={22} />
+            </div>
+            <div>
+              <h3 className="text-base sm:text-lg font-semibold text-white/95">
+                {language === 'te' ? 'AI వాతావరణ సూచన' : 'AI Weather-Aware Agricultural Advisory'}
+              </h3>
+              <p className="text-xs text-white/60">Dynamic field insights tailored to current microclimate</p>
+            </div>
+          </div>
+
+          {aiAdviceLoading ? (
+            <div className="flex items-center gap-2.5 text-teal-200 py-2">
+              <div className="w-4 h-4 rounded-full border-2 border-teal-300 border-t-transparent animate-spin" />
+              <p className="text-sm font-medium">
+                {language === 'te' ? 'AI సూచన సిద్ధమవుతుంది...' : 'Generating agricultural recommendation...'}
+              </p>
+            </div>
+          ) : aiAdvice ? (
+            <p className="whitespace-pre-wrap text-sm leading-relaxed text-white/85 font-normal">{aiAdvice}</p>
+          ) : (
+            <p className="text-sm text-white/70">
+              {language === 'te'
+                ? 'AI సూచన లభించలేదు. సిస్టమ్ వాతావరణ నియమాలనే ఉపయోగిస్తోంది.'
+                : 'AI suggestion unavailable right now. Weather decision rules are still active.'}
+            </p>
+          )}
+        </div>
+
+        {/* ═══ Detailed Forecast Context (when toggled) ═══ */}
+        {detailedView && (
+          <div className="aurora-glass-medium p-6 md:p-7 rounded-[26px] space-y-4">
+            <h3 className="text-base font-semibold text-white/95">
+              {language === 'te' ? 'వివరమైన అంచనా' : 'Detailed Forecast Context'}
+            </h3>
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              <div className="aurora-glass-light p-3.5 rounded-xl">
+                <p className="text-xs text-white/55 mb-0.5">24h Rain Prob.</p>
+                <p className="text-base font-semibold text-white/95">{data.forecast.rainChance24h}%</p>
+              </div>
+              <div className="aurora-glass-light p-3.5 rounded-xl">
+                <p className="text-xs text-white/55 mb-0.5">24h Expected Rainfall</p>
+                <p className="text-base font-semibold text-white/95">{data.forecast.rainMm24h} mm</p>
+              </div>
+              <div className="aurora-glass-light p-3.5 rounded-xl">
+                <p className="text-xs text-white/55 mb-0.5">7-Day Rainfall Outlook</p>
+                <p className="text-base font-semibold text-white/95">{data.forecast.rainMm7d} mm</p>
+              </div>
+              <div className="aurora-glass-light p-3.5 rounded-xl">
+                <p className="text-xs text-white/55 mb-0.5">Daily Temp Range</p>
+                <p className="text-base font-semibold text-white/95">
+                  {data.forecast.minTemp}°C to {data.forecast.maxTemp}°C
+                </p>
+              </div>
+              <div className="aurora-glass-light p-3.5 rounded-xl">
+                <p className="text-xs text-white/55 mb-0.5">Data Source</p>
+                <p className="text-base font-semibold text-white/95">{data.source}</p>
+              </div>
+              <div className="aurora-glass-light p-3.5 rounded-xl">
+                <p className="text-xs text-white/55 mb-0.5">Primary Crop</p>
+                <p className="text-base font-semibold text-white/95">
+                  {crop || (language === 'te' ? 'సెట్ కాలేదు' : 'Not set')}
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* ═══ Manager Webhook Alert Setup ═══ */}
+        <div className="aurora-glass-medium p-6 md:p-7 rounded-[26px]">
+          <h3 className="text-base font-semibold text-white/95 mb-1">{t('manager_alert_setup')}</h3>
+          <p className="text-xs sm:text-sm text-white/65 mb-4">{t('manager_alert_setup_hint')}</p>
+          <div className="flex flex-col gap-3 sm:flex-row max-w-2xl">
+            <input
+              value={webhookInput}
+              onChange={(event) => setWebhookInput(event.target.value)}
+              placeholder="https://your-webhook-url"
+              className="aurora-glass-input flex-1 text-sm"
+            />
+            <button
+              type="button"
+              onClick={() => localStorage.setItem('managerWebhookUrl', webhookInput.trim())}
+              className="aurora-glass-button-primary whitespace-nowrap text-xs sm:text-sm"
+            >
+              {t('save_webhook')}
+            </button>
+          </div>
         </div>
       </div>
     </div>
   );
 }
+

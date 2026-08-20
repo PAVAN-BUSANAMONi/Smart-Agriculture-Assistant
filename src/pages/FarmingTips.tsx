@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useLanguage } from '../contexts/LanguageContext';
-import { Lightbulb, Sprout, ChevronDown, ChevronUp } from 'lucide-react';
+import { Lightbulb, Sprout, ChevronDown, ChevronUp, Search } from 'lucide-react';
 import { CROP_IMAGES } from '../utils/cropImages';
 
 type TipItem = {
@@ -50,73 +50,201 @@ const TIP_DATA: TipItem[] = [
 export function FarmingTips() {
   const { t, language } = useLanguage();
   const [expanded, setExpanded] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState<'all' | 'field' | 'fruit' | 'flower'>('all');
 
   const labels = {
-    sowing: language === 'te' ? 'విత్తడం/నాటడం' : 'Sowing/Planting',
-    irrigation: language === 'te' ? 'నీటి నిర్వహణ' : 'Irrigation',
-    fertilizer: language === 'te' ? 'ఎరువులు' : 'Fertilizer',
-    protection: language === 'te' ? 'వ్యాధి/పురుగు నియంత్రణ' : 'Protection',
+    sowing: language === 'te' ? 'విత్తడం/నాటడం' : 'Sowing & Planting',
+    irrigation: language === 'te' ? 'నీటి నిర్వహణ' : 'Irrigation Guide',
+    fertilizer: language === 'te' ? 'ఎరువులు & పోషణ' : 'Fertilizer & Nutrition',
+    protection: language === 'te' ? 'వ్యాధి/పురుగు రక్షణ' : 'Crop Protection',
     total: language === 'te' ? 'మొత్తం పంటలు' : 'Total Crops',
   };
 
+  const filteredCrops = useMemo(() => {
+    return TIP_DATA.filter((crop) => {
+      const cropName = (t(crop.key) || crop.key).toLowerCase();
+      const matchSearch =
+        !searchQuery.trim() ||
+        cropName.includes(searchQuery.toLowerCase().trim()) ||
+        crop.key.toLowerCase().includes(searchQuery.toLowerCase().trim());
+      const matchCategory = selectedCategory === 'all' || crop.category === selectedCategory;
+      return matchSearch && matchCategory;
+    });
+  }, [searchQuery, selectedCategory, t]);
+
   return (
-    <div className="mx-auto max-w-5xl animate-fade-in p-4 space-y-6">
-      <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
-        <h1 className="flex items-center gap-3 text-3xl font-bold font-display text-gray-900 dark:text-white drop-shadow-sm">
-          <div className="bg-amber-100 p-2.5 rounded-xl text-amber-500 shadow-sm">
-            <Lightbulb size={28} />
+    <div
+      className="relative -m-4 md:-m-6 lg:-m-8 p-4 md:p-8 lg:p-10 min-h-[calc(100vh-4rem)] flex flex-col bg-no-repeat bg-cover text-white rounded-2xl overflow-hidden font-sans"
+      style={{
+        backgroundImage: `linear-gradient(90deg, rgba(4,16,24,0.28) 0%, rgba(4,16,24,0.14) 50%, rgba(4,16,24,0.04) 100%), radial-gradient(ellipse at 30% 40%, rgba(6,26,35,0.30) 0%, rgba(4,15,22,0.72) 100%), url('/assets/storm-background.jpg')`,
+        backgroundPosition: 'center 25%',
+        backgroundAttachment: 'fixed',
+        backgroundSize: 'cover',
+      }}
+    >
+      <div className="relative z-10 mx-auto max-w-6xl w-full flex-1 space-y-7 animate-fade-in">
+        {/* ═══ Header Section ═══ */}
+        <div className="flex flex-wrap items-center justify-between gap-4 pb-2 border-b border-white/10">
+          <div>
+            <div className="aurora-glass-pill mb-1.5">
+              <span>Agronomic Practices & Advisory</span>
+            </div>
+            <h1 className="text-2xl md:text-3xl font-semibold text-white/95 tracking-tight flex items-center gap-2.5">
+              <Lightbulb size={24} className="text-amber-300" />
+              <span>{t('farming_tips')}</span>
+            </h1>
           </div>
-          {t('farming_tips')}
-        </h1>
-        <div className="glass-panel py-1.5 px-4 rounded-full border-amber-200/50 bg-amber-50/50 text-amber-800 font-semibold text-sm">
-          {labels.total}: {TIP_DATA.length}
+
+          <div className="flex items-center gap-3">
+            <span className="aurora-badge-info text-xs px-3.5 py-1.5 rounded-full font-semibold">
+              {labels.total}: {filteredCrops.length} of {TIP_DATA.length}
+            </span>
+          </div>
         </div>
-      </div>
 
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {TIP_DATA.map((crop) => (
-          <article 
-            key={crop.key} 
-            className={`glass-card p-0 flex flex-col overflow-hidden cursor-pointer transition-all duration-300 border-amber-100/50 hover:shadow-lg ${expanded === crop.key ? 'ring-2 ring-amber-400 scale-[1.02]' : 'hover:scale-[1.02]'}`}
-            onClick={() => setExpanded(expanded === crop.key ? null : crop.key)}
-          >
-            <div className="h-40 w-full relative">
-              <img 
-                src={CROP_IMAGES[crop.key.toLowerCase()] || CROP_IMAGES.default} 
-                alt={t(crop.key)}
-                className="w-full h-full object-cover"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end p-4">
-                <div className="flex w-full items-center justify-between">
-                  <h4 className="text-xl font-bold font-display text-white drop-shadow-md">{t(crop.key)}</h4>
-                  <span className="rounded-full bg-white/20 backdrop-blur-md border border-white/40 px-2 py-0.5 text-xs font-bold text-white uppercase tracking-wider shadow-sm">
-                    {crop.category}
-                  </span>
-                </div>
-              </div>
-            </div>
+        {/* ═══ Search & Category Filter Surface (Strong Glass) ═══ */}
+        <div className="aurora-glass-strong p-4 sm:p-5 rounded-[24px] flex flex-col md:flex-row gap-4 items-center justify-between">
+          <div className="relative w-full md:max-w-xs">
+            <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-white/50" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search crops or advisory..."
+              className="aurora-glass-input pl-10 text-xs py-2.5 w-full"
+            />
+          </div>
 
-            <div className="p-5 bg-white/50 backdrop-blur-sm flex-1 flex flex-col">
-              <div className="flex justify-between items-center mb-2">
-                <span className="text-sm font-semibold text-amber-900 flex items-center gap-2">
-                  <Sprout size={16} className="text-emerald-600" />
-                  View Farming Guide
-                </span>
-                {expanded === crop.key ? <ChevronUp size={20} className="text-amber-600" /> : <ChevronDown size={20} className="text-amber-600" />}
-              </div>
+          {/* Category Toggle Pills */}
+          <div className="flex flex-wrap items-center gap-2 w-full md:w-auto">
+            {(
+              [
+                { id: 'all', label: language === 'te' ? 'అన్నీ' : 'All Crops' },
+                { id: 'field', label: language === 'te' ? 'క్షేత్ర పంటలు' : 'Field Crops' },
+                { id: 'fruit', label: language === 'te' ? 'పండ్ల తోటలు' : 'Fruits' },
+                { id: 'flower', label: language === 'te' ? 'పూల పంటలు' : 'Flowers' },
+              ] as const
+            ).map((cat) => (
+              <button
+                key={cat.id}
+                type="button"
+                onClick={() => setSelectedCategory(cat.id)}
+                className={`py-1.5 px-3.5 rounded-xl text-xs font-semibold transition-all duration-200 border ${
+                  selectedCategory === cat.id
+                    ? 'bg-emerald-500/25 border-emerald-400/40 text-emerald-200 shadow-sm'
+                    : 'bg-white/5 border-white/15 text-white/65 hover:bg-white/10'
+                }`}
+              >
+                {cat.label}
+              </button>
+            ))}
+          </div>
+        </div>
 
-              <div className={`overflow-hidden transition-all duration-500 ease-in-out ${expanded === crop.key ? 'max-h-[500px] opacity-100 mt-2' : 'max-h-0 opacity-0'}`}>
-                <div className="space-y-4 animate-fade-in text-gray-800 dark:text-gray-200 text-sm font-medium border-t border-amber-100/50 pt-4">
-                  <div className="flex gap-3"><div className="w-1.5 h-1.5 rounded-full bg-emerald-500 mt-1.5 shrink-0"></div><p><strong className="text-gray-900 dark:text-white drop-shadow-sm">{labels.sowing}:</strong> {crop.sowing[language]}</p></div>
-                  <div className="flex gap-3"><div className="w-1.5 h-1.5 rounded-full bg-blue-500/20 backdrop-blur-md border border-blue-500/30 text-blue-900 dark:text-blue-3000 mt-1.5 shrink-0"></div><p><strong className="text-gray-900 dark:text-white drop-shadow-sm">{labels.irrigation}:</strong> {crop.irrigation[language]}</p></div>
-                  <div className="flex gap-3"><div className="w-1.5 h-1.5 rounded-full bg-amber-500 mt-1.5 shrink-0"></div><p><strong className="text-gray-900 dark:text-white drop-shadow-sm">{labels.fertilizer}:</strong> {crop.fertilizer[language]}</p></div>
-                  <div className="flex gap-3"><div className="w-1.5 h-1.5 rounded-full bg-rose-500 mt-1.5 shrink-0"></div><p><strong className="text-gray-900 dark:text-white drop-shadow-sm">{labels.protection}:</strong> {crop.protection[language]}</p></div>
-                </div>
-              </div>
-            </div>
-          </article>
-        ))}
+        {/* ═══ Crop Advisory Cards Grid ═══ */}
+        {filteredCrops.length > 0 ? (
+          <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3 items-start">
+            {filteredCrops.map((crop) => {
+              const isExpanded = expanded === crop.key;
+              return (
+                <article
+                  key={crop.key}
+                  onClick={() => setExpanded(isExpanded ? null : crop.key)}
+                  className={`aurora-glass-medium rounded-[24px] overflow-hidden cursor-pointer transition-all duration-300 border border-white/15 hover:border-emerald-400/40 hover:bg-white/15 ${
+                    isExpanded ? 'ring-1 ring-emerald-400/50 shadow-lg' : ''
+                  }`}
+                >
+                  {/* Image Banner */}
+                  <div className="h-36 w-full relative overflow-hidden bg-black/40">
+                    <img
+                      src={CROP_IMAGES[crop.key.toLowerCase()] || CROP_IMAGES.default}
+                      alt={t(crop.key)}
+                      className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-500"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#04121b] via-[#04121b]/40 to-transparent flex items-end p-4">
+                      <div className="flex w-full items-center justify-between">
+                        <h4 className="text-xl font-semibold text-white/95 tracking-tight drop-shadow-md">
+                          {t(crop.key)}
+                        </h4>
+                        <span className="aurora-glass-pill text-[10px] font-bold uppercase tracking-wider text-white/80">
+                          {crop.category}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Body Content & Accordion Toggle */}
+                  <div className="p-4 sm:p-5 space-y-3">
+                    <div className="flex items-center justify-between text-xs text-emerald-300 font-semibold">
+                      <span className="flex items-center gap-1.5">
+                        <Sprout size={15} />
+                        <span>View Agronomy Protocol</span>
+                      </span>
+                      {isExpanded ? (
+                        <ChevronUp size={18} className="text-white/70" />
+                      ) : (
+                        <ChevronDown size={18} className="text-white/70" />
+                      )}
+                    </div>
+
+                    {/* Expandable Protocol Breakdown */}
+                    <div
+                      className={`overflow-hidden transition-all duration-300 ease-in-out ${
+                        isExpanded ? 'max-h-[600px] opacity-100 pt-2 border-t border-white/10' : 'max-h-0 opacity-0'
+                      }`}
+                    >
+                      <div className="space-y-3 text-xs leading-relaxed">
+                        {/* Sowing */}
+                        <div className="aurora-glass-light p-3 rounded-xl space-y-1">
+                          <div className="flex items-center gap-2 font-semibold text-emerald-300">
+                            <span className="h-2 w-2 rounded-full bg-emerald-400 shrink-0" />
+                            <span>{labels.sowing}</span>
+                          </div>
+                          <p className="text-white/80 pl-4">{crop.sowing[language]}</p>
+                        </div>
+
+                        {/* Irrigation */}
+                        <div className="aurora-glass-light p-3 rounded-xl space-y-1">
+                          <div className="flex items-center gap-2 font-semibold text-sky-300">
+                            <span className="h-2 w-2 rounded-full bg-sky-400 shrink-0" />
+                            <span>{labels.irrigation}</span>
+                          </div>
+                          <p className="text-white/80 pl-4">{crop.irrigation[language]}</p>
+                        </div>
+
+                        {/* Fertilizer */}
+                        <div className="aurora-glass-light p-3 rounded-xl space-y-1">
+                          <div className="flex items-center gap-2 font-semibold text-amber-300">
+                            <span className="h-2 w-2 rounded-full bg-amber-400 shrink-0" />
+                            <span>{labels.fertilizer}</span>
+                          </div>
+                          <p className="text-white/80 pl-4">{crop.fertilizer[language]}</p>
+                        </div>
+
+                        {/* Protection */}
+                        <div className="aurora-glass-light p-3 rounded-xl space-y-1">
+                          <div className="flex items-center gap-2 font-semibold text-rose-300">
+                            <span className="h-2 w-2 rounded-full bg-rose-400 shrink-0" />
+                            <span>{labels.protection}</span>
+                          </div>
+                          <p className="text-white/80 pl-4">{crop.protection[language]}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </article>
+              );
+            })}
+          </div>
+        ) : (
+          <div className="aurora-glass-medium p-12 text-center rounded-[26px] text-sm text-white/60 space-y-2">
+            <Sprout size={32} className="mx-auto text-white/40 mb-2" />
+            <p className="font-semibold text-white/90">No crops matched your search or category filter</p>
+            <p className="text-xs text-white/50">Try switching categories or clearing the search query.</p>
+          </div>
+        )}
       </div>
     </div>
   );
-}
+}

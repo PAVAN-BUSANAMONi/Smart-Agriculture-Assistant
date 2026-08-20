@@ -275,3 +275,453 @@ h1, h2, h3, h4, h5, h6 {
 .animate-float {
   animation: float 3s ease-in-out infinite;
 }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   AURORA DESIGN LANGUAGE — Phase 9
+   Shared visual tokens + utility classes for the liquid-glass UI.
+   Consumed by page redesigns in Phase 10+. Does NOT affect existing pages
+   until they explicitly adopt these classes.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* ─── 1. COLOR SYSTEM ─── */
+:root {
+  /* Core palette */
+  --aurora-bg:            #04121b;
+  --aurora-ink:           #ffffff;
+  --aurora-ink-primary:   rgba(255,255,255, 0.97);
+  --aurora-ink-secondary: rgba(255,255,255, 0.75);
+  --aurora-ink-muted:     rgba(255,255,255, 0.60);
+  --aurora-ink-subtle:    rgba(255,255,255, 0.45);
+
+  /* Glass fills */
+  --aurora-glass:         rgba(255,255,255, 0.155);
+  --aurora-glass-border:  rgba(255,255,255, 0.20);
+
+  /* Glass tiers — fill */
+  --aurora-glass-strong:  rgba(255,255,255, 0.22);
+  --aurora-glass-medium:  rgba(255,255,255, 0.13);
+  --aurora-glass-light:   rgba(255,255,255, 0.09);
+
+  /* Glass tiers — blur */
+  --aurora-blur-strong:   blur(26px) saturate(118%);
+  --aurora-blur-medium:   blur(22px) saturate(115%);
+  --aurora-blur-light:    blur(18px) saturate(112%);
+
+  /* Glass borders per tier */
+  --aurora-border-strong: rgba(255,255,255, 0.22);
+  --aurora-border-medium: rgba(255,255,255, 0.18);
+  --aurora-border-light:  rgba(255,255,255, 0.15);
+
+  /* Radii */
+  --aurora-radius-sm:     14px;
+  --aurora-radius-md:     22px;
+  --aurora-radius-lg:     26px;
+  --aurora-radius-pill:   9999px;
+
+  /* Inset specular */
+  --aurora-inset-strong:  inset 0 1px 1px 0 rgba(255,255,255, 0.40);
+  --aurora-inset-medium:  inset 0 1px 1px 0 rgba(255,255,255, 0.25);
+  --aurora-inset-light:   inset 0 1px 0 0 rgba(255,255,255, 0.18);
+
+  /* Easings */
+  --aurora-ease-out:      cubic-bezier(0.16, 1, 0.3, 1);
+  --aurora-ease-soft:     cubic-bezier(0.22, 0.61, 0.36, 1);
+
+  /* Semantic accents (keep agriculture identity) */
+  --aurora-accent-success:  rgba(74, 222, 128, 0.25);
+  --aurora-accent-warning:  rgba(251, 191, 36, 0.25);
+  --aurora-accent-danger:   rgba(248, 113, 113, 0.25);
+  --aurora-accent-info:     rgba(96, 165, 250, 0.25);
+}
+
+
+/* ─── 2. GLASS UTILITY CLASSES ─── */
+
+.aurora-glass-strong {
+  background: linear-gradient(180deg,
+    rgba(255,255,255, 0.20)   0%,
+    rgba(255,255,255, 0.258) 24%,
+    rgba(255,255,255, 0.252) 78%,
+    rgba(255,255,255, 0.232) 100%
+  );
+  backdrop-filter: var(--aurora-blur-strong);
+  -webkit-backdrop-filter: var(--aurora-blur-strong);
+  border: 1px solid var(--aurora-border-strong);
+  border-radius: var(--aurora-radius-lg);
+  box-shadow: var(--aurora-inset-strong), 0 20px 40px -15px rgba(0,0,0, 0.35);
+}
+
+.aurora-glass-medium {
+  background: var(--aurora-glass-medium);
+  backdrop-filter: var(--aurora-blur-medium);
+  -webkit-backdrop-filter: var(--aurora-blur-medium);
+  border: 1px solid var(--aurora-border-medium);
+  border-radius: var(--aurora-radius-md);
+  box-shadow: var(--aurora-inset-medium);
+}
+
+.aurora-glass-light {
+  background: var(--aurora-glass-light);
+  backdrop-filter: var(--aurora-blur-light);
+  -webkit-backdrop-filter: var(--aurora-blur-light);
+  border: 1px solid var(--aurora-border-light);
+  border-radius: var(--aurora-radius-sm);
+  box-shadow: var(--aurora-inset-light);
+}
+
+
+/* ─── 3. SPECULAR TOP HIGHLIGHT (reusable pseudo) ─── */
+
+.aurora-glass-strong::before,
+.aurora-glass-medium::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 1px;
+  pointer-events: none;
+  z-index: 1;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(255,255,255, 0.35) 50%,
+    transparent 100%
+  );
+}
+
+
+/* ─── 4. GLASS SHEEN ANIMATION (opt-in via .aurora-sheen) ─── */
+
+@keyframes aurora-sheen-sweep {
+  0%   { transform: translateX(-140%) skewX(-16deg); }
+  100% { transform: translateX(300%)  skewX(-16deg); }
+}
+
+.aurora-sheen {
+  position: relative;
+  overflow: hidden;
+}
+
+.aurora-sheen::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+  width: 36%;
+  background: linear-gradient(
+    100deg,
+    transparent 0%,
+    rgba(255,255,255, 0.14) 45%,
+    rgba(255,255,255, 0.17) 50%,
+    rgba(255,255,255, 0.14) 55%,
+    transparent 100%
+  );
+  transform: translateX(-140%) skewX(-16deg);
+  animation: aurora-sheen-sweep 1.15s var(--aurora-ease-soft) 2.55s 1 both;
+}
+
+
+/* ─── 5. AURORA BACKGROUND UTILITY ─── */
+
+.aurora-stage {
+  background-color: var(--aurora-bg);
+  background-image: url('/assets/storm-background.jpg');
+  background-size: cover;
+  background-position: center 25%;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  color: var(--aurora-ink);
+}
+
+/* Vignette overlay — add as child: <div class="aurora-vignette"></div> */
+.aurora-vignette {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  background:
+    linear-gradient(105deg,
+      rgba(4,16,24, 0.28) 0%,
+      rgba(4,16,24, 0.14) 40%,
+      rgba(4,16,24, 0.04) 78%,
+      transparent 100%
+    ),
+    linear-gradient(180deg,
+      rgba(4,16,24, 0.10) 0%,
+      transparent 20%
+    ),
+    linear-gradient(0deg,
+      rgba(4,16,24, 0.06) 0%,
+      transparent 15%
+    );
+}
+
+
+/* ─── 6. AURORA BUTTONS ─── */
+
+.aurora-glass-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 22px;
+  border-radius: var(--aurora-radius-pill);
+  background: rgba(255,255,255, 0.15);
+  backdrop-filter: blur(16px) saturate(112%);
+  -webkit-backdrop-filter: blur(16px) saturate(112%);
+  border: 1px solid rgba(255,255,255, 0.22);
+  color: var(--aurora-ink);
+  font-weight: 500;
+  font-size: 14px;
+  letter-spacing: -0.01em;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.25s var(--aurora-ease-out);
+  box-shadow: var(--aurora-inset-light);
+}
+.aurora-glass-button:hover {
+  background: rgba(255,255,255, 0.24);
+  transform: translateY(-1px);
+}
+.aurora-glass-button:active {
+  transform: scale(0.97);
+}
+
+/* Primary action button — slightly brighter */
+.aurora-glass-button-primary {
+  background: rgba(255,255,255, 0.22);
+  border: 1px solid rgba(255,255,255, 0.28);
+  font-weight: 600;
+  box-shadow: var(--aurora-inset-medium);
+}
+.aurora-glass-button-primary:hover {
+  background: rgba(255,255,255, 0.30);
+}
+
+/* Danger variant — keeps semantic red tint */
+.aurora-glass-button-danger {
+  background: rgba(239, 68, 68, 0.20);
+  border: 1px solid rgba(239, 68, 68, 0.30);
+  color: rgba(252, 165, 165, 1);
+}
+.aurora-glass-button-danger:hover {
+  background: rgba(239, 68, 68, 0.30);
+}
+
+
+/* ─── 7. AURORA PILL (tag / chip) ─── */
+
+.aurora-glass-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 14px;
+  border-radius: var(--aurora-radius-pill);
+  background: rgba(255,255,255, 0.12);
+  backdrop-filter: blur(14px) saturate(110%);
+  -webkit-backdrop-filter: blur(14px) saturate(110%);
+  border: 1px solid rgba(255,255,255, 0.18);
+  color: var(--aurora-ink-secondary);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+
+/* ─── 8. AURORA INPUTS ─── */
+
+.aurora-glass-input {
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: var(--aurora-radius-sm);
+  background: rgba(255,255,255, 0.08);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255, 0.16);
+  color: var(--aurora-ink);
+  font-size: 15px;
+  font-weight: 400;
+  outline: none;
+  transition: all 0.25s var(--aurora-ease-out);
+}
+.aurora-glass-input::placeholder {
+  color: var(--aurora-ink-muted);
+}
+.aurora-glass-input:focus {
+  background: rgba(255,255,255, 0.12);
+  border-color: rgba(255,255,255, 0.30);
+  box-shadow: 0 0 0 3px rgba(255,255,255, 0.08);
+}
+
+/* Textarea variant */
+textarea.aurora-glass-input {
+  min-height: 100px;
+  resize: vertical;
+}
+
+/* Select variant */
+select.aurora-glass-input {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none'%3E%3Cpath d='M1 1l5 5 5-5' stroke='rgba(255,255,255,.6)' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 36px;
+}
+
+
+/* ─── 9. AURORA CARD (reusable glass card with hover) ─── */
+
+.aurora-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--aurora-radius-md);
+  background: var(--aurora-glass-medium);
+  backdrop-filter: var(--aurora-blur-medium);
+  -webkit-backdrop-filter: var(--aurora-blur-medium);
+  border: 1px solid var(--aurora-border-medium);
+  box-shadow: var(--aurora-inset-medium);
+  color: var(--aurora-ink);
+  transition: all 0.25s var(--aurora-ease-out);
+}
+.aurora-card:hover {
+  background: rgba(255,255,255, 0.16);
+  transform: translateY(-1px);
+}
+
+/* Specular top line on cards */
+.aurora-card::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 1px;
+  pointer-events: none;
+  z-index: 1;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(255,255,255, 0.28) 50%,
+    transparent 100%
+  );
+}
+
+
+/* ─── 10. INTERACTIVE STATES ─── */
+
+.aurora-interactive {
+  cursor: pointer;
+  transition: all 0.25s var(--aurora-ease-out);
+}
+.aurora-interactive:hover {
+  transform: translateY(-1px);
+}
+.aurora-interactive:active {
+  transform: scale(0.97);
+}
+
+/* Focus-visible for keyboard nav */
+.aurora-focusable:focus-visible {
+  outline: 2px solid rgba(255,255,255, 0.95);
+  outline-offset: 2px;
+}
+
+
+/* ─── 11. TYPOGRAPHY HELPERS ─── */
+
+.aurora-text-primary   { color: var(--aurora-ink-primary); }
+.aurora-text-secondary { color: var(--aurora-ink-secondary); }
+.aurora-text-muted     { color: var(--aurora-ink-muted); }
+.aurora-text-subtle    { color: var(--aurora-ink-subtle); }
+
+.aurora-heading {
+  font-family: 'Inter Tight', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  color: var(--aurora-ink-primary);
+}
+
+.aurora-label {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--aurora-ink-muted);
+}
+
+
+/* ─── 12. SCROLLBAR (dark glass variant) ─── */
+
+.aurora-stage ::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.aurora-stage ::-webkit-scrollbar-track {
+  background: transparent;
+}
+.aurora-stage ::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255, 0.15);
+  border-radius: 100px;
+}
+.aurora-stage ::-webkit-scrollbar-thumb:hover {
+  background: rgba(255,255,255, 0.25);
+}
+
+
+/* ─── 13. SEMANTIC STATUS GLASS BADGES ─── */
+
+.aurora-badge-success {
+  background: var(--aurora-accent-success);
+  border: 1px solid rgba(74, 222, 128, 0.30);
+  color: rgba(134, 239, 172, 1);
+}
+.aurora-badge-warning {
+  background: var(--aurora-accent-warning);
+  border: 1px solid rgba(251, 191, 36, 0.30);
+  color: rgba(253, 224, 71, 1);
+}
+.aurora-badge-danger {
+  background: var(--aurora-accent-danger);
+  border: 1px solid rgba(248, 113, 113, 0.30);
+  color: rgba(252, 165, 165, 1);
+}
+.aurora-badge-info {
+  background: var(--aurora-accent-info);
+  border: 1px solid rgba(96, 165, 250, 0.30);
+  color: rgba(147, 197, 253, 1);
+}
+
+
+/* ─── 14. REDUCED MOTION ─── */
+
+@media (prefers-reduced-motion: reduce) {
+  /* Kill decorative animations globally */
+  .aurora-sheen::after {
+    animation: none !important;
+    display: none;
+  }
+  .aurora-interactive,
+  .aurora-glass-button,
+  .aurora-card,
+  .aurora-glass-input {
+    transition: none !important;
+  }
+  .aurora-interactive:hover,
+  .aurora-card:hover,
+  .aurora-glass-button:hover {
+    transform: none !important;
+  }
+}
+
+
+/* ─── 15. RESPONSIVE DEFAULTS ─── */
+/* No layout changes — only ensure glass blur degrades on weaker GPUs */
+
+@supports not (backdrop-filter: blur(1px)) {
+  .aurora-glass-strong,
+  .aurora-glass-medium,
+  .aurora-glass-light,
+  .aurora-card,
+  .aurora-glass-button,
+  .aurora-glass-input,
+  .aurora-glass-pill {
+    background: rgba(10, 30, 45, 0.85) !important;
+  }
+}

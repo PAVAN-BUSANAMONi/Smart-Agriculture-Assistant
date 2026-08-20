@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useLanguage } from '../contexts/LanguageContext';
-import { Calculator, Sparkles, Sprout, LoaderCircle, Droplets, Leaf } from 'lucide-react';
+import { Calculator, Sparkles, Sprout, LoaderCircle, Droplets, Leaf, ShieldAlert, Award } from 'lucide-react';
 import { api } from '../services/api';
 
 export function FertilizerCalc() {
@@ -26,7 +26,7 @@ export function FertilizerCalc() {
         land: parseFloat(land),
         crop,
         soilType,
-        farmingType
+        farmingType,
       });
       setResult(plan);
     } catch (err: any) {
@@ -37,175 +37,241 @@ export function FertilizerCalc() {
   };
 
   return (
-    <div className="mx-auto max-w-5xl animate-fade-in p-4 space-y-8">
-      <div className="text-center space-y-4 mb-10">
-        <div className="inline-flex items-center justify-center bg-gradient-to-br from-green-400 to-emerald-600 p-4 rounded-3xl shadow-xl shadow-green-500/20 transform hover:scale-105 transition-transform duration-300">
-          <Sparkles className="text-white w-10 h-10 animate-pulse" />
-        </div>
-        <h1 className="text-4xl md:text-5xl font-extrabold font-display bg-clip-text text-transparent bg-gradient-to-r from-emerald-600 via-green-500 to-teal-400 tracking-tight">
-          AI Fertilizer Schedule
-        </h1>
-        <p className="text-gray-600 dark:text-gray-400 max-w-xl mx-auto font-medium text-lg">
-          Get a hyper-personalized, eco-friendly fertilizer plan powered by Gemini AI. 🌿✨
-        </p>
-      </div>
+    <div
+      className="relative -m-4 md:-m-6 lg:-m-8 p-4 md:p-8 lg:p-10 min-h-[calc(100vh-4rem)] flex flex-col bg-no-repeat bg-cover text-white rounded-2xl overflow-hidden font-sans"
+      style={{
+        backgroundImage: `linear-gradient(90deg, rgba(4,16,24,0.28) 0%, rgba(4,16,24,0.14) 50%, rgba(4,16,24,0.04) 100%), radial-gradient(ellipse at 30% 40%, rgba(6,26,35,0.30) 0%, rgba(4,15,22,0.72) 100%), url('/assets/storm-background.jpg')`,
+        backgroundPosition: 'center 25%',
+        backgroundAttachment: 'fixed',
+        backgroundSize: 'cover',
+      }}
+    >
+      <div className="relative z-10 mx-auto max-w-6xl w-full flex-1 space-y-7 animate-fade-in">
+        {/* ═══ Header Section ═══ */}
+        <div className="flex flex-wrap items-center justify-between gap-4 pb-2 border-b border-white/10">
+          <div>
+            <div className="aurora-glass-pill mb-1.5">
+              <span>Nutrient & Fertilizer Intelligence</span>
+            </div>
+            <h1 className="text-2xl md:text-3xl font-semibold text-white/95 tracking-tight flex items-center gap-2.5">
+              <Calculator size={24} className="text-emerald-300" />
+              <span>AI Fertilizer Schedule</span>
+            </h1>
+          </div>
 
-      <div className="grid lg:grid-cols-12 gap-8">
-        <div className="lg:col-span-4 space-y-6">
-          <div className="bg-white/40 backdrop-blur-xl rounded-3xl p-6 shadow-2xl border border-white/60 relative overflow-hidden group hover:border-emerald-200 transition-colors">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-300/20 rounded-full blur-3xl -mr-10 -mt-10 group-hover:bg-emerald-400/30 transition-all"></div>
-            
-            <div className="space-y-5 relative z-10">
-              {error && <div className="text-red-500 text-sm font-bold bg-red-500/20 backdrop-blur-md border border-red-500/30 text-red-900 dark:text-red-300 p-3 rounded-xl border border-red-100">{error}</div>}
+          <div className="text-xs text-white/60">
+            Precision crop nutrition & split dose scheduling
+          </div>
+        </div>
+
+        {/* ═══ Main 2-Column Grid: Inputs Workspace vs Fertilizer Plan Results ═══ */}
+        <div className="grid gap-6 lg:grid-cols-12 items-start">
+          {/* Inputs Workspace (4 cols on lg) */}
+          <div className="lg:col-span-4 aurora-glass-strong p-6 sm:p-7 rounded-[26px] space-y-5">
+            <div>
+              <h2 className="text-base font-semibold text-white/95">Field & Crop Parameters</h2>
+              <p className="text-xs text-white/65">Specify your acreage and crop to calculate exact fertilizer doses</p>
+            </div>
+
+            <div className="space-y-4">
+              {error && (
+                <div className="aurora-card p-3 border-rose-400/30 bg-rose-500/15 text-rose-200 text-xs">
+                  {error}
+                </div>
+              )}
 
               <div>
-                <label className="mb-2 block text-sm font-bold text-gray-800 dark:text-gray-200 uppercase tracking-wider">Land Size (Acres) 🏞️</label>
-                <input 
+                <label className="aurora-label mb-1.5 block">Land Size (Acres)</label>
+                <input
                   type="number"
-                  className="w-full bg-white/70 border-0 ring-1 ring-gray-200 focus:ring-2 focus:ring-emerald-500 rounded-2xl p-4 text-gray-900 dark:text-white drop-shadow-sm font-semibold shadow-inner transition-all"
+                  className="aurora-glass-input text-xs py-2.5 w-full"
                   value={land}
                   onChange={(e) => setLand(e.target.value)}
-                  placeholder="e.g. 5"
+                  placeholder="e.g. 2.5"
+                  min="0.1"
+                  step="0.1"
                 />
               </div>
 
               <div>
-                <label className="mb-2 block text-sm font-bold text-gray-800 dark:text-gray-200 uppercase tracking-wider">Crop Type 🌱</label>
-                <select 
-                  className="w-full bg-white/70 border-0 ring-1 ring-gray-200 focus:ring-2 focus:ring-emerald-500 rounded-2xl p-4 text-gray-900 dark:text-white drop-shadow-sm font-semibold shadow-inner transition-all appearance-none"
+                <label className="aurora-label mb-1.5 block">Crop Type</label>
+                <select
+                  className="aurora-glass-input text-xs py-2.5 w-full"
                   value={crop}
                   onChange={(e) => setCrop(e.target.value)}
                 >
-                  <option value="">-- Select Crop --</option>
-                  <option value="Rice">Rice 🌾</option>
-                  <option value="Cotton">Cotton ☁️</option>
-                  <option value="Maize">Maize 🌽</option>
-                  <option value="Wheat">Wheat 🍞</option>
-                  <option value="Tomato">Tomato 🍅</option>
+                  <option value="" className="bg-[#04121b] text-white">-- Select Crop --</option>
+                  <option value="Rice" className="bg-[#04121b] text-white">Rice</option>
+                  <option value="Cotton" className="bg-[#04121b] text-white">Cotton</option>
+                  <option value="Maize" className="bg-[#04121b] text-white">Maize</option>
+                  <option value="Wheat" className="bg-[#04121b] text-white">Wheat</option>
+                  <option value="Tomato" className="bg-[#04121b] text-white">Tomato</option>
                 </select>
               </div>
 
               <div>
-                <label className="mb-2 block text-sm font-bold text-gray-800 dark:text-gray-200 uppercase tracking-wider">Soil Type 🪨</label>
-                <select 
-                  className="w-full bg-white/70 border-0 ring-1 ring-gray-200 focus:ring-2 focus:ring-emerald-500 rounded-2xl p-4 text-gray-900 dark:text-white drop-shadow-sm font-semibold shadow-inner transition-all appearance-none"
+                <label className="aurora-label mb-1.5 block">Soil Texture</label>
+                <select
+                  className="aurora-glass-input text-xs py-2.5 w-full"
                   value={soilType}
                   onChange={(e) => setSoilType(e.target.value)}
                 >
-                  <option value="Loam">Loam</option>
-                  <option value="Clay">Clay</option>
-                  <option value="Sandy">Sandy</option>
-                  <option value="Silt">Silt</option>
+                  <option value="Loam" className="bg-[#04121b] text-white">Loam</option>
+                  <option value="Clay" className="bg-[#04121b] text-white">Clay</option>
+                  <option value="Sandy" className="bg-[#04121b] text-white">Sandy</option>
+                  <option value="Silt" className="bg-[#04121b] text-white">Silt</option>
                 </select>
               </div>
 
               <div>
-                <label className="mb-2 block text-sm font-bold text-gray-800 dark:text-gray-200 uppercase tracking-wider">Farming Style 🚜</label>
-                <div className="grid grid-cols-2 gap-3">
-                  <button 
+                <label className="aurora-label mb-1.5 block">Farming Practice</label>
+                <div className="grid grid-cols-2 gap-2">
+                  <button
+                    type="button"
                     onClick={() => setFarmingType('Organic')}
-                    className={`py-3 rounded-xl font-bold transition-all ${farmingType === 'Organic' ? 'bg-[#4eb69c]/20 backdrop-blur-md border border-[#4eb69c]/30 text-[#111] dark:text-[#4eb69c]0 text-white shadow-lg shadow-green-500/30' : 'bg-gray-100 text-gray-600 dark:text-gray-400 hover:bg-gray-200'}`}
+                    className={`py-2 rounded-xl text-xs font-semibold transition-all duration-200 border ${
+                      farmingType === 'Organic'
+                        ? 'bg-emerald-500/25 border-emerald-400/40 text-emerald-200 shadow-sm'
+                        : 'bg-white/5 border-white/15 text-white/60 hover:bg-white/10'
+                    }`}
                   >
                     Organic 🌿
                   </button>
-                  <button 
+                  <button
+                    type="button"
                     onClick={() => setFarmingType('Chemical')}
-                    className={`py-3 rounded-xl font-bold transition-all ${farmingType === 'Chemical' ? 'bg-blue-500/20 backdrop-blur-md border border-blue-500/30 text-blue-900 dark:text-blue-3000 text-white shadow-lg shadow-blue-500/30' : 'bg-gray-100 text-gray-600 dark:text-gray-400 hover:bg-gray-200'}`}
+                    className={`py-2 rounded-xl text-xs font-semibold transition-all duration-200 border ${
+                      farmingType === 'Chemical'
+                        ? 'bg-cyan-500/25 border-cyan-400/40 text-cyan-200 shadow-sm'
+                        : 'bg-white/5 border-white/15 text-white/60 hover:bg-white/10'
+                    }`}
                   >
                     Chemical 🧪
                   </button>
                 </div>
               </div>
 
-              <button 
-                onClick={calculate}
-                disabled={loading}
-                className="w-full py-4 mt-2 rounded-2xl text-lg font-bold shadow-xl shadow-emerald-500/25 bg-gradient-to-r from-emerald-500 to-green-500 text-white hover:from-emerald-400 hover:to-green-400 transform hover:-translate-y-1 transition-all disabled:opacity-70 disabled:transform-none flex items-center justify-center gap-2"
-              >
-                {loading ? <LoaderCircle className="animate-spin" size={24} /> : <Sparkles size={24} />}
-                {loading ? 'AI Analyzing Soil...' : 'Generate Plan'}
-              </button>
+              <div className="pt-2">
+                <button
+                  type="button"
+                  onClick={calculate}
+                  disabled={loading}
+                  className="w-full aurora-glass-button-primary text-xs sm:text-sm font-semibold py-3 flex items-center justify-center gap-2"
+                >
+                  {loading ? (
+                    <>
+                      <LoaderCircle className="animate-spin" size={16} />
+                      <span>AI Analyzing Soil Needs...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Sparkles size={16} className="text-emerald-300" />
+                      <span>Generate Nutrient Plan</span>
+                    </>
+                  )}
+                </button>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div className="lg:col-span-8">
-          {result && !loading && (
-            <div className="bg-white/60 backdrop-blur-xl rounded-3xl p-6 md:p-8 shadow-2xl border border-white/80 relative overflow-hidden animate-slide-up">
-              
-              <div className="flex flex-col md:flex-row items-center justify-between gap-6 mb-10 pb-8 border-b border-gray-200/60">
-                <div>
-                  <h3 className="text-3xl font-extrabold font-display text-gray-900 dark:text-white drop-shadow-sm mb-2">Your AI Schedule</h3>
-                  <p className="text-emerald-700 font-semibold flex items-center gap-2">
-                    <Leaf size={18} /> Model: {result.sourceModel}
-                  </p>
-                </div>
-                
-                <div className="flex flex-col items-center bg-gradient-to-b from-green-50 to-emerald-100 p-4 rounded-3xl border border-emerald-200/50 shadow-inner min-w-[140px]">
-                  <div className="text-sm font-bold text-emerald-800 uppercase tracking-widest mb-1">Eco Score</div>
-                  <div className="text-5xl font-black text-emerald-600 font-display flex items-baseline">
-                    {result.sustainabilityScore} <span className="text-2xl text-emerald-400">/100</span>
+          {/* Results Surface (8 cols on lg) */}
+          <div className="lg:col-span-8 space-y-6">
+            {result && !loading ? (
+              <div className="aurora-glass-strong p-6 sm:p-8 rounded-[26px] space-y-6 animate-fade-in">
+                {/* Result Header Bar */}
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-5 border-b border-white/10">
+                  <div>
+                    <span className="aurora-label text-emerald-300">Custom Dosage Schedule</span>
+                    <h3 className="text-2xl sm:text-3xl font-semibold text-white/95 tracking-tight mt-0.5">
+                      Agronomic Application Plan
+                    </h3>
+                    <p className="text-xs text-white/65 flex items-center gap-1.5 mt-1">
+                      <Leaf size={14} className="text-emerald-300" />
+                      <span>Model: {result.sourceModel}</span>
+                    </p>
+                  </div>
+
+                  <div className="flex items-center gap-3 aurora-glass-medium px-4 py-2.5 rounded-2xl border border-emerald-400/30">
+                    <Award size={20} className="text-emerald-300" />
+                    <div>
+                      <div className="text-[10px] uppercase font-bold text-white/60">Sustainability Score</div>
+                      <div className="text-2xl font-bold text-emerald-300 leading-none mt-0.5">
+                        {result.sustainabilityScore}
+                        <span className="text-xs font-normal text-white/50">/100</span>
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              <div className="space-y-6 relative z-10">
-                {result.phases?.map((phase: any, idx: number) => (
-                  <div key={idx} className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
-                    <div className="flex justify-between items-end mb-5">
-                      <h4 className="text-xl font-bold text-gray-900 dark:text-white drop-shadow-sm">{phase.phaseName}</h4>
-                      <span className="text-sm font-bold text-white bg-gray-900 py-1.5 px-4 rounded-full">{phase.timing}</span>
-                    </div>
-                    
-                    <div className="grid gap-3">
-                      {phase.fertilizers?.map((fert: any, fIdx: number) => (
-                        <div key={fIdx} className="flex flex-col md:flex-row md:items-center gap-4 bg-white/30 dark:bg-white/5 backdrop-blur-md border border-white/40 dark:border-white/10 shadow-[inset_0_2px_4px_rgba(255,255,255,0.4)]/80 p-4 rounded-2xl border border-gray-100">
-                          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-teal-400 to-emerald-500 flex items-center justify-center shadow-lg shadow-emerald-500/20 shrink-0">
-                            <Droplets className="text-white" size={24} />
-                          </div>
-                          <div className="flex-grow">
-                            <div className="flex flex-wrap items-baseline gap-2 mb-1">
-                              <h5 className="font-bold text-lg text-gray-900 dark:text-white drop-shadow-sm">{fert.name}</h5>
-                              <span className="text-emerald-600 font-bold bg-emerald-100 px-2 py-0.5 rounded-md text-sm">{fert.amount}</span>
+                {/* Application Phases List */}
+                <div className="space-y-4">
+                  {result.phases?.map((phase: any, idx: number) => (
+                    <div key={idx} className="aurora-glass-medium p-5 rounded-[22px] space-y-3">
+                      <div className="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-white/10">
+                        <h4 className="text-base font-semibold text-white/95">{phase.phaseName}</h4>
+                        <span className="aurora-badge-info text-xs px-3 py-1 rounded-full font-semibold">
+                          {phase.timing}
+                        </span>
+                      </div>
+
+                      <div className="grid gap-2.5">
+                        {phase.fertilizers?.map((fert: any, fIdx: number) => (
+                          <div
+                            key={fIdx}
+                            className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 aurora-glass-light p-3.5 rounded-xl"
+                          >
+                            <div className="flex items-center gap-3">
+                              <div className="p-2 rounded-xl bg-white/10 text-emerald-300 shrink-0">
+                                <Droplets size={18} />
+                              </div>
+                              <div>
+                                <h5 className="text-sm font-semibold text-white/90">{fert.name}</h5>
+                                <p className="text-xs text-white/70 leading-relaxed">{fert.instructions}</p>
+                              </div>
                             </div>
-                            <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{fert.instructions}</p>
+
+                            <span className="aurora-badge-success text-xs px-3 py-1 rounded-lg font-bold self-start sm:self-center shrink-0">
+                              {fert.amount}
+                            </span>
                           </div>
-                        </div>
-                      ))}
+                        ))}
+                      </div>
                     </div>
+                  ))}
+                </div>
+
+                {/* Soil Health Tips */}
+                {result.soilHealthTips && result.soilHealthTips.length > 0 && (
+                  <div className="aurora-glass-medium p-5 rounded-[22px] border-amber-300/30 space-y-2.5">
+                    <h4 className="text-sm font-semibold text-amber-200 flex items-center gap-2">
+                      <Sprout size={16} className="text-amber-300" />
+                      <span>Soil Health & Best Practices</span>
+                    </h4>
+                    <ul className="space-y-1.5 text-xs text-white/85">
+                      {result.soilHealthTips.map((tip: string, idx: number) => (
+                        <li key={idx} className="flex items-start gap-2">
+                          <span className="h-1.5 w-1.5 rounded-full bg-amber-400 mt-1.5 shrink-0" />
+                          <span>{tip}</span>
+                        </li>
+                      ))}
+                    </ul>
                   </div>
-                ))}
+                )}
               </div>
-
-              {result.soilHealthTips && result.soilHealthTips.length > 0 && (
-                <div className="mt-8 bg-amber-50 p-6 rounded-3xl border border-amber-200/50">
-                  <h4 className="text-lg font-bold text-amber-900 mb-4 flex items-center gap-2">
-                    <Sprout size={20} className="text-amber-600" /> Pro Soil Tips
-                  </h4>
-                  <ul className="space-y-3">
-                    {result.soilHealthTips.map((tip: string, idx: number) => (
-                      <li key={idx} className="flex items-start gap-3 text-amber-800 font-medium">
-                        <span className="text-amber-500 font-black mt-0.5">•</span> {tip}
-                      </li>
-                    ))}
-                  </ul>
+            ) : (
+              <div className="aurora-glass-medium p-12 text-center rounded-[26px] text-sm text-white/65 space-y-3 min-h-[420px] flex flex-col items-center justify-center">
+                <div className="p-4 rounded-full bg-white/10 text-emerald-300 mb-1 border border-white/15">
+                  <Calculator size={36} />
                 </div>
-              )}
-
-            </div>
-          )}
-
-          {!result && !loading && (
-             <div className="h-full min-h-[400px] rounded-3xl border-2 border-dashed border-gray-200 flex flex-col items-center justify-center text-center p-8 bg-white/20 backdrop-blur-sm">
-                <div className="w-24 h-24 bg-white/30 dark:bg-white/5 backdrop-blur-md border border-white/40 dark:border-white/10 shadow-[inset_0_2px_4px_rgba(255,255,255,0.4)] rounded-full flex items-center justify-center mb-6 shadow-inner">
-                  <Calculator size={48} className="text-gray-300" />
-                </div>
-                <h3 className="text-2xl font-bold text-gray-400 font-display">Ready for Analysis</h3>
-                <p className="text-gray-400 mt-2 font-medium max-w-sm">Enter your farm details on the left to let Gemini AI generate your custom schedule.</p>
-             </div>
-          )}
+                <h3 className="text-lg font-semibold text-white/90">Ready for Soil Nutrient Analysis</h3>
+                <p className="text-xs text-white/60 max-w-sm mx-auto">
+                  Enter your land size and crop choice to generate a custom fertilizer schedule with split application instructions.
+                </p>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>
   );
-}
+}

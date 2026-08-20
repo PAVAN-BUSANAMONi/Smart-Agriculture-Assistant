@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { useLanguage } from '../contexts/LanguageContext';
-import { LineChart, IndianRupee } from 'lucide-react';
+import { LineChart, IndianRupee, TrendingUp, TrendingDown, Sparkles, Percent, DollarSign, Sprout, AlertCircle } from 'lucide-react';
 import { createAlert } from '../utils/alertEngine';
 
 type CropUnit = {
@@ -43,83 +43,195 @@ export function ProfitEstimator() {
     summary.net > 0
       ? language === 'te'
         ? 'ప్రస్తుత ధర వద్ద విక్రయించవచ్చు. ధరల ట్రెండ్ పెరుగుతోంది.'
-        : 'You can sell at current modal price. Trend is supportive.'
+        : 'You can sell at current modal price. Market trend is supportive.'
       : language === 'te'
       ? 'వెంటనే విక్రయించకుండా, నిల్వ/గ్రేడింగ్ లేదా మార్కెట్ టైమింగ్ పరిశీలించండి.'
       : 'Avoid distress sale now. Consider grading/storage and market timing.';
 
   return (
-    <div className="mx-auto max-w-4xl animate-fade-in p-4 space-y-6">
-      <h1 className="mb-6 flex items-center gap-3 text-3xl font-bold font-display text-gray-900 dark:text-white drop-shadow-sm">
-        <div className="bg-emerald-100 p-2.5 rounded-xl text-emerald-600 shadow-sm">
-          <LineChart size={28} />
-        </div>
-        {language === 'te' ? 'లాభ అంచనా వ్యవస్థ' : 'Profit Estimation System'}
-      </h1>
-
-      <div className="grid gap-6 md:grid-cols-2">
-        <div className="space-y-4 glass-card p-6 h-max">
+    <div
+      className="relative -m-4 md:-m-6 lg:-m-8 p-4 md:p-8 lg:p-10 min-h-[calc(100vh-4rem)] flex flex-col bg-no-repeat bg-cover text-white rounded-2xl overflow-hidden font-sans"
+      style={{
+        backgroundImage: `linear-gradient(90deg, rgba(4,16,24,0.28) 0%, rgba(4,16,24,0.14) 50%, rgba(4,16,24,0.04) 100%), radial-gradient(ellipse at 30% 40%, rgba(6,26,35,0.30) 0%, rgba(4,15,22,0.72) 100%), url('/assets/storm-background.jpg')`,
+        backgroundPosition: 'center 25%',
+        backgroundAttachment: 'fixed',
+        backgroundSize: 'cover',
+      }}
+    >
+      <div className="relative z-10 mx-auto max-w-6xl w-full flex-1 space-y-7 animate-fade-in">
+        {/* ═══ Header Section ═══ */}
+        <div className="flex flex-wrap items-center justify-between gap-4 pb-2 border-b border-white/10">
           <div>
-            <label className="mb-1.5 block text-sm font-semibold font-display text-gray-800 dark:text-gray-200">{t('select_crop')}</label>
-            <select value={crop} onChange={(event) => setCrop(event.target.value)} className="glass-input w-full">
-              {CROP_UNITS.map((item) => (
-                <option key={item.key} value={item.key}>
-                  {t(item.key)}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div>
-            <label className="mb-1.5 block text-sm font-semibold font-display text-gray-800 dark:text-gray-200">{t('land_size')}</label>
-            <input value={acres} onChange={(event) => setAcres(event.target.value)} className="glass-input w-full" type="number" min="0" step="0.1" />
-          </div>
-          <div>
-            <label className="mb-1.5 block text-sm font-semibold font-display text-gray-800 dark:text-gray-200">{language === 'te' ? 'ఎకరాకు మొత్తం ఖర్చు (₹)' : 'Total Cost Per Acre (₹)'}</label>
-            <input value={costPerAcre} onChange={(event) => setCostPerAcre(event.target.value)} className="glass-input w-full" type="number" min="0" />
-          </div>
-          <div>
-            <label className="mb-1.5 block text-sm font-semibold font-display text-gray-800 dark:text-gray-200">{language === 'te' ? 'మార్కెట్ ధర సర్దుబాటు (₹/క్వింటాల్)' : 'Market Price Adjustment (₹/Qtl)'}</label>
-            <input value={markup} onChange={(event) => setMarkup(event.target.value)} className="glass-input w-full" type="number" />
-          </div>
-        </div>
-
-        <div className="glass-panel relative overflow-hidden bg-gradient-to-br from-emerald-50/80 to-green-100/80 p-6 shadow-md border-emerald-200/50">
-          <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-emerald-400 blur-3xl opacity-20"></div>
-          <h2 className="mb-5 text-2xl font-extrabold font-display text-emerald-950 relative z-10">{language === 'te' ? 'ఆదాయం అంచనా' : 'Revenue Projection'}</h2>
-          <div className="space-y-3 text-sm relative z-10 font-medium">
-            <p className="flex items-center justify-between rounded-xl bg-white/60 backdrop-blur-sm p-3 shadow-sm border border-emerald-100/50"><span>{language === 'te' ? 'అంచనా ధర' : 'Estimated Price'}</span><strong className="text-base text-gray-900 dark:text-white drop-shadow-sm">₹{summary.adjustedPrice.toLocaleString()}</strong></p>
-            <p className="flex items-center justify-between rounded-xl bg-white/60 backdrop-blur-sm p-3 shadow-sm border border-emerald-100/50"><span>{language === 'te' ? 'స్థూల ఆదాయం' : 'Gross Income'}</span><strong className="text-base text-gray-900 dark:text-white drop-shadow-sm">₹{summary.gross.toLocaleString()}</strong></p>
-            <p className="flex items-center justify-between rounded-xl bg-white/60 backdrop-blur-sm p-3 shadow-sm border border-emerald-100/50"><span>{language === 'te' ? 'మొత్తం ఖర్చు' : 'Total Cost'}</span><strong className="text-base text-gray-900 dark:text-white drop-shadow-sm">₹{summary.totalCost.toLocaleString()}</strong></p>
-            <div className="flex items-center justify-between rounded-xl bg-white/80 backdrop-blur-sm p-4 shadow-sm border border-emerald-200/60 my-2">
-              <span className="font-bold font-display text-gray-900 dark:text-white drop-shadow-sm">{language === 'te' ? 'నికర లాభం' : 'Net Profit'}</span>
-              <strong className={`text-xl font-extrabold ${summary.net >= 0 ? 'text-emerald-700' : 'text-rose-700'}`}>₹{summary.net.toLocaleString()}</strong>
+            <div className="aurora-glass-pill mb-1.5">
+              <span>Farm Economics & Financial Advisory</span>
             </div>
-            <p className="flex items-center justify-between rounded-xl bg-white/60 backdrop-blur-sm p-3 shadow-sm border border-emerald-100/50"><span>ROI</span><strong className="text-base text-gray-900 dark:text-white drop-shadow-sm">{summary.roi.toFixed(1)}%</strong></p>
+            <h1 className="text-2xl md:text-3xl font-semibold text-white/95 tracking-tight flex items-center gap-2.5">
+              <LineChart size={24} className="text-emerald-300" />
+              <span>{language === 'te' ? 'లాభ అంచనా వ్యవస్థ' : 'Profit Estimation System'}</span>
+            </h1>
           </div>
 
-          <div className="relative z-10 mt-6 pt-5 border-t border-emerald-200/50">
-            <p className="mb-4 text-sm font-semibold text-emerald-900 flex items-start gap-2 bg-emerald-50/50 p-3 rounded-xl border border-emerald-200/50">
-              <div className="mt-1 h-2 w-2 rounded-full bg-emerald-500 shrink-0"></div>
-              {recommendSale}
-            </p>
+          <div className="text-xs text-white/60">
+            Real-time revenue forecast, production cost model & ROI telemetry
+          </div>
+        </div>
 
-            <button
-              type="button"
-              onClick={() =>
-                createAlert({
-                  type: 'market',
-                  level: summary.net > 0 ? 'low' : 'medium',
-                  message: `${t(crop)}: ${recommendSale}`,
-                })
-              }
-              className="w-full glass-button py-3 text-base shadow-md disabled:opacity-50 flex items-center justify-center gap-2"
-            >
-              <IndianRupee size={18} />
-              {language === 'te' ? 'లాభ అలర్ట్ సేవ్ చేయండి' : 'Save Profit Alert'}
-            </button>
+        {/* ═══ Main 2-Column Grid: Inputs Workspace vs Revenue Projection ═══ */}
+        <div className="grid gap-6 lg:grid-cols-12 items-start">
+          {/* Left Column: Farm & Production Inputs (5 cols on lg) */}
+          <div className="lg:col-span-5 aurora-glass-strong p-6 sm:p-7 rounded-[26px] space-y-5">
+            <div>
+              <h2 className="text-base font-semibold text-white/95">Farm & Production Parameters</h2>
+              <p className="text-xs text-white/65">Define your crop scale and input costs to calculate farm returns</p>
+            </div>
+
+            <div className="space-y-4">
+              <div>
+                <label className="aurora-label mb-1.5 block">{t('select_crop')}</label>
+                <select
+                  value={crop}
+                  onChange={(event) => setCrop(event.target.value)}
+                  className="aurora-glass-input text-xs py-2.5 w-full"
+                >
+                  {CROP_UNITS.map((item) => (
+                    <option key={item.key} value={item.key} className="bg-[#04121b] text-white">
+                      {t(item.key)}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="aurora-label mb-1.5 block">{t('land_size')} (Acres)</label>
+                <input
+                  value={acres}
+                  onChange={(event) => setAcres(event.target.value)}
+                  className="aurora-glass-input text-xs py-2.5 w-full"
+                  type="number"
+                  min="0"
+                  step="0.1"
+                  placeholder="e.g. 2.0"
+                />
+              </div>
+
+              <div>
+                <label className="aurora-label mb-1.5 block">
+                  {language === 'te' ? 'ఎకరాకు మొత్తం ఖర్చు (₹)' : 'Total Cost Per Acre (₹)'}
+                </label>
+                <input
+                  value={costPerAcre}
+                  onChange={(event) => setCostPerAcre(event.target.value)}
+                  className="aurora-glass-input text-xs py-2.5 w-full"
+                  type="number"
+                  min="0"
+                  placeholder="e.g. 25000"
+                />
+              </div>
+
+              <div>
+                <label className="aurora-label mb-1.5 block">
+                  {language === 'te' ? 'మార్కెట్ ధర సర్దుబాటు (₹/క్వింటాల్)' : 'Market Price Adjustment (₹/Qtl)'}
+                </label>
+                <input
+                  value={markup}
+                  onChange={(event) => setMarkup(event.target.value)}
+                  className="aurora-glass-input text-xs py-2.5 w-full"
+                  type="number"
+                  placeholder="e.g. 100 or -50"
+                />
+              </div>
+
+              {/* Crop Baseline Telemetry */}
+              <div className="aurora-glass-light p-3.5 rounded-xl space-y-1.5 text-xs text-white/75 border border-white/10">
+                <div className="flex justify-between items-center">
+                  <span className="text-white/50">Benchmark Yield:</span>
+                  <span className="font-semibold text-white/90">{selected.avgYieldQPerAcre} qtl / acre</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-white/50">Base Modal Mandi Price:</span>
+                  <span className="font-semibold text-white/90">₹{selected.modalPrice.toLocaleString()} / qtl</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Right Column: Financial Summary & Projections (7 cols on lg) */}
+          <div className="lg:col-span-7 aurora-glass-strong p-6 sm:p-8 rounded-[26px] space-y-6 border border-emerald-400/25">
+            <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-white/10">
+              <div>
+                <span className="aurora-label text-emerald-300">Financial Summary</span>
+                <h3 className="text-2xl font-semibold text-white/95 tracking-tight">
+                  {language === 'te' ? 'ఆదాయం అంచనా' : 'Revenue & Profit Forecast'}
+                </h3>
+              </div>
+
+              <div className="flex items-center gap-2 aurora-glass-medium px-3.5 py-1.5 rounded-full border border-emerald-400/30">
+                <Percent size={14} className="text-emerald-300" />
+                <span className="text-xs font-bold text-emerald-300">
+                  ROI: {summary.roi.toFixed(1)}%
+                </span>
+              </div>
+            </div>
+
+            {/* Financial Telemetry Rows */}
+            <div className="space-y-3 text-xs sm:text-sm">
+              <div className="flex items-center justify-between aurora-glass-light p-3.5 rounded-xl">
+                <span className="text-white/75">{language === 'te' ? 'అంచనా ధర' : 'Adjusted Unit Price'}</span>
+                <span className="font-semibold text-white/95">₹{summary.adjustedPrice.toLocaleString()} <span className="text-[10.5px] font-normal text-white/50">/ qtl</span></span>
+              </div>
+
+              <div className="flex items-center justify-between aurora-glass-light p-3.5 rounded-xl">
+                <span className="text-white/75">{language === 'te' ? 'స్థూల ఆదాయం' : 'Gross Revenue (Yield × Price)'}</span>
+                <span className="font-semibold text-white/95">₹{summary.gross.toLocaleString()}</span>
+              </div>
+
+              <div className="flex items-center justify-between aurora-glass-light p-3.5 rounded-xl">
+                <span className="text-white/75">{language === 'te' ? 'మొత్తం ఖర్చు' : 'Total Production Cost (Acres × Cost)'}</span>
+                <span className="font-semibold text-white/95">₹{summary.totalCost.toLocaleString()}</span>
+              </div>
+
+              {/* Net Profit Hero Display */}
+              <div className="aurora-glass-medium p-5 rounded-[22px] border border-emerald-400/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 my-2">
+                <div>
+                  <span className="text-[11px] uppercase tracking-wider font-bold text-white/60">
+                    {language === 'te' ? 'నికర లాభం' : 'Net Farm Profit'}
+                  </span>
+                  <div className="text-xs text-white/70 mt-0.5">After all input & operational deductions</div>
+                </div>
+
+                <div className={`text-3xl sm:text-4xl font-bold tracking-tight font-display flex items-baseline ${
+                  summary.net >= 0 ? 'text-emerald-300' : 'text-rose-300'
+                }`}>
+                  ₹{summary.net.toLocaleString()}
+                </div>
+              </div>
+            </div>
+
+            {/* Advisory Note & Save Profit Alert Action */}
+            <div className="space-y-4 pt-3 border-t border-white/10">
+              <div className="aurora-glass-light p-4 rounded-xl flex items-start gap-3 text-xs text-white/85 leading-relaxed">
+                <div className={`h-2 w-2 rounded-full mt-1.5 shrink-0 ${summary.net >= 0 ? 'bg-emerald-400' : 'bg-rose-400'}`} />
+                <span>{recommendSale}</span>
+              </div>
+
+              <button
+                type="button"
+                onClick={() =>
+                  createAlert({
+                    type: 'market',
+                    level: summary.net > 0 ? 'low' : 'medium',
+                    message: `${t(crop)}: ${recommendSale}`,
+                  })
+                }
+                className="w-full aurora-glass-button-primary text-xs sm:text-sm font-semibold py-3 flex items-center justify-center gap-2"
+              >
+                <IndianRupee size={16} className="text-emerald-300" />
+                <span>{language === 'te' ? 'లాభ అలర్ట్ సేవ్ చేయండి' : 'Save Profit Alert'}</span>
+              </button>
+            </div>
           </div>
         </div>
       </div>
     </div>
   );
-}
+}

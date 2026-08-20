@@ -6,29 +6,46 @@ export function BottomNav() {
   const location = useLocation();
 
   const navItems = [
-    { icon: <Sprout size={24} />, label: 'Home', path: '/' },
-    { icon: <CloudRain size={24} />, label: 'Weather', path: '/weather' },
-    { icon: <BotMessageSquare size={24} />, label: 'AI', path: '/ai-assistant' },
-    { icon: <UserRound size={24} />, label: 'Profile', path: '/profile' },
+    { icon: <Sprout size={20} />, label: 'Home', path: '/' },
+    { icon: <CloudRain size={20} />, label: 'Weather', path: '/weather' },
+    { icon: <BotMessageSquare size={20} />, label: 'AI', path: '/ai-assistant' },
+    { icon: <UserRound size={20} />, label: 'Profile', path: '/profile' },
   ];
 
   return (
-    <div className="md:hidden fixed bottom-6 left-4 right-4 rounded-[30px] bg-white/10 dark:bg-black/20 backdrop-blur-3xl border border-white/40 dark:border-white/10 flex justify-around items-center h-[72px] z-50 shadow-[0_8px_32px_rgba(0,0,0,0.2),inset_0_2px_4px_rgba(255,255,255,0.6)]">
+    <nav
+      aria-label="Mobile Navigation Dock"
+      className="md:hidden fixed bottom-4 left-3.5 right-3.5 rounded-[26px] bg-[#04121b]/80 backdrop-blur-[24px] saturate(120%) border border-white/20 flex justify-around items-center h-[66px] z-50 shadow-[0_12px_36px_rgba(0,0,0,0.50),inset_0_1px_1px_rgba(255,255,255,0.30)]"
+    >
       {navItems.map((item) => {
-        const isActive = location.pathname === item.path || (item.path === '/' && location.pathname === '/dashboard');
+        const isActive =
+          location.pathname === item.path || (item.path === '/' && location.pathname === '/dashboard');
         return (
           <button
             key={item.path}
+            type="button"
             onClick={() => navigate(item.path)}
-            className={`flex flex-col items-center justify-center w-full h-full space-y-1 transition-all ${isActive ? 'text-[#111] dark:text-white translate-y-[-2px] drop-shadow-md' : 'text-gray-700 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-300 drop-shadow-sm'}`}
+            className={`flex flex-col items-center justify-center w-full h-full space-y-1 active:scale-95 transition-all duration-200 focus-visible:outline-2 focus-visible:outline-white/90 focus-visible:outline-offset-2 ${
+              isActive ? 'text-white font-semibold' : 'text-white/60 hover:text-white/90'
+            }`}
+            aria-current={isActive ? 'page' : undefined}
           >
-            <div className={isActive ? 'bg-gradient-to-br from-[#4eb69c]/80 to-[#235e4f]/80 text-white p-2 rounded-full shadow-[inset_0_2px_4px_rgba(255,255,255,0.6),0_4px_8px_rgba(35,94,79,0.3)]' : 'p-2'}>
-                {item.icon}
+            <div
+              className={`flex items-center justify-center transition-all duration-200 ${
+                isActive
+                  ? 'bg-white/20 border border-white/30 text-emerald-300 p-1.5 rounded-full shadow-[inset_0_1px_1px_rgba(255,255,255,0.40)] backdrop-blur-md scale-105'
+                  : 'p-1.5 text-white/70'
+              }`}
+            >
+              {item.icon}
             </div>
-            <span className="text-[10px] font-black">{item.label}</span>
+            <span className={`text-[10px] tracking-tight ${isActive ? 'font-semibold text-white' : 'font-normal text-white/60'}`}>
+              {item.label}
+            </span>
           </button>
         );
       })}
-    </div>
+    </nav>
   );
 }
+

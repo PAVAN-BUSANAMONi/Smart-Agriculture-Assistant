@@ -1,9 +1,8 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Loader2, MapPin, RefreshCcw, TrendingDown, TrendingUp } from 'lucide-react';
+import { Loader2, MapPin, RefreshCcw, TrendingDown, TrendingUp, DollarSign, Store, Sparkles, ChevronRight, BarChart3 } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { api, MarketIntelligenceResponse, MarketQueryHistoryItem } from '../services/api';
 import { createAlert } from '../utils/alertEngine';
-import { RippleButton } from '../components/ui/RippleButton';
 
 const COMMODITIES = ['rice', 'cotton', 'chilli', 'soybean', 'maize', 'onion', 'turmeric', 'banana'];
 
@@ -37,14 +36,33 @@ function TrendVisualization({ data }: { data: MarketIntelligenceResponse['trendS
     .join(' ');
 
   return (
-    <div className="w-full overflow-x-auto rounded-xl border border-indigo-200/50 bg-indigo-50/50 backdrop-blur-sm p-5 shadow-sm">
-      <svg viewBox={`0 0 ${width} ${height}`} className="min-w-[620px] w-full drop-shadow-sm" role="img" aria-label="Price trend chart">
-        <polyline fill="none" stroke="#4f46e5" strokeWidth="3" points={points} />
-        <polyline fill="none" stroke="#f59e0b" strokeWidth="3" strokeDasharray="6 6" points={predicted} />
+    <div className="w-full overflow-x-auto rounded-[24px] aurora-glass-medium p-5 shadow-sm space-y-3">
+      <div className="flex items-center justify-between px-1">
+        <span className="aurora-label flex items-center gap-1.5 text-cyan-300">
+          <BarChart3 size={14} /> Price Volatility & Forecast Trajectory
+        </span>
+        <span className="text-[11px] text-white/50">Historical vs 7-Day Projection</span>
+      </div>
+
+      <svg viewBox={`0 0 ${width} ${height}`} className="min-w-[580px] w-full" role="img" aria-label="Price trend chart">
+        <defs>
+          <linearGradient id="gridGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="rgba(255,255,255,0.08)" />
+            <stop offset="100%" stopColor="rgba(255,255,255,0.01)" />
+          </linearGradient>
+        </defs>
+        <rect x="0" y="0" width={width} height={height} fill="url(#gridGrad)" rx="12" />
+        <polyline fill="none" stroke="#38bdf8" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" points={points} />
+        <polyline fill="none" stroke="#fbbf24" strokeWidth="2.5" strokeDasharray="6 6" strokeLinecap="round" points={predicted} />
       </svg>
-      <div className="mt-4 flex items-center justify-center gap-6 text-sm font-semibold text-gray-800 dark:text-gray-200">
-        <span className="inline-flex items-center gap-2"><span className="h-2.5 w-2.5 rounded-full bg-indigo-600 shadow-sm" /> Historical avg</span>
-        <span className="inline-flex items-center gap-2"><span className="h-2.5 w-2.5 rounded-full bg-amber-500 shadow-sm" /> Predicted</span>
+
+      <div className="flex items-center justify-center gap-6 text-xs font-medium text-white/80 pt-1">
+        <span className="inline-flex items-center gap-2">
+          <span className="h-2.5 w-2.5 rounded-full bg-sky-400 shadow-[0_0_8px_rgba(56,189,248,0.6)]" /> Historical avg
+        </span>
+        <span className="inline-flex items-center gap-2">
+          <span className="h-2.5 w-2.5 rounded-full bg-amber-400 shadow-[0_0_8px_rgba(251,191,36,0.6)]" /> Predicted trend
+        </span>
       </div>
     </div>
   );
@@ -126,186 +144,339 @@ export function MarketPrices() {
   }, []);
 
   return (
-    <div className="mx-auto max-w-5xl animate-fade-in p-4 space-y-6">
-      <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
-        <h1 className="flex items-center gap-3 text-3xl font-bold font-display text-gray-900 dark:text-white drop-shadow-sm">
-          <div className="bg-indigo-100 p-2.5 rounded-xl text-indigo-600 shadow-sm">
-            <TrendingUp size={28} />
+    <div
+      className="relative -m-4 md:-m-6 lg:-m-8 p-4 md:p-8 lg:p-10 min-h-[calc(100vh-4rem)] flex flex-col bg-no-repeat bg-cover text-white rounded-2xl overflow-hidden font-sans"
+      style={{
+        backgroundImage: `linear-gradient(90deg, rgba(4,16,24,0.28) 0%, rgba(4,16,24,0.14) 50%, rgba(4,16,24,0.04) 100%), radial-gradient(ellipse at 30% 40%, rgba(6,26,35,0.30) 0%, rgba(4,15,22,0.72) 100%), url('/assets/storm-background.jpg')`,
+        backgroundPosition: 'center 25%',
+        backgroundAttachment: 'fixed',
+        backgroundSize: 'cover',
+      }}
+    >
+      <div className="relative z-10 mx-auto max-w-6xl w-full flex-1 space-y-7 animate-fade-in">
+        {/* ═══ Header Section ═══ */}
+        <div className="flex flex-wrap items-center justify-between gap-4 pb-2 border-b border-white/10">
+          <div>
+            <div className="aurora-glass-pill mb-1.5">
+              <span>Mandi Price & Profit Arbitrage</span>
+            </div>
+            <h1 className="text-2xl md:text-3xl font-semibold text-white/95 tracking-tight flex items-center gap-2.5">
+              <TrendingUp size={24} className="text-emerald-300" />
+              <span>{title}</span>
+            </h1>
           </div>
-          {title}
-        </h1>
-        <RippleButton
-          type="button"
-          onClick={refreshData}
-          variant="secondary"
-        >
-          {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <RefreshCcw size={16} />}
-          {language === 'te' ? 'రిఫ్రెష్' : 'Refresh'}
-        </RippleButton>
-      </div>
 
-      <div className="mb-6 grid gap-4 glass-card p-5 md:grid-cols-4">
-        <label className="text-sm font-semibold font-display text-gray-800 dark:text-gray-200">
-          {t('commodity')}
-          <select value={commodity} onChange={(event) => setCommodity(event.target.value)} className="glass-input mt-1.5 w-full">
-            {COMMODITIES.map((item) => (
-              <option key={item} value={item}>{t(item)}</option>
-            ))}
-          </select>
-        </label>
-        <label className="text-sm font-semibold font-display text-gray-800 dark:text-gray-200">
-          {language === 'te' ? 'భూమి (ఎకరాలు)' : 'Land (acres)'}
-          <input className="glass-input mt-1.5 w-full" type="number" min="0.2" step="0.1" value={areaAcres} onChange={(event) => setAreaAcres(event.target.value)} />
-        </label>
-        <label className="text-sm font-semibold font-display text-gray-800 dark:text-gray-200">
-          {language === 'te' ? 'ఎకరాకు ఖర్చు (₹)' : 'Cost per acre (₹)'}
-          <input className="glass-input mt-1.5 w-full" type="number" min="1000" value={costPerAcre} onChange={(event) => setCostPerAcre(event.target.value)} />
-        </label>
-        <div className="flex items-end">
-          <RippleButton type="button" onClick={refreshData} variant="primary" className="w-full py-2.5">
-            {language === 'te' ? 'లాభం చూసి మార్కెట్ ఎంచుకోండి' : 'Get Best Market'}
-          </RippleButton>
+          <button
+            type="button"
+            onClick={refreshData}
+            disabled={loading}
+            className="aurora-glass-button text-xs py-2 px-3.5 flex items-center gap-2"
+          >
+            {loading ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <RefreshCcw size={14} />}
+            <span>{language === 'te' ? 'రిఫ్రెష్' : 'Refresh Data'}</span>
+          </button>
         </div>
-      </div>
 
-      {error && <p className="mb-6 rounded-lg border border-red-200 bg-red-500/20 backdrop-blur-md border border-red-500/30 text-red-900 dark:text-red-300 px-4 py-3 text-sm text-red-700">{error}</p>}
-
-      {marketData && (
-        <div className="space-y-6">
-          <div className="grid gap-4 md:grid-cols-3">
-            <div className="glass-panel relative overflow-hidden bg-gradient-to-br from-emerald-50/80 to-green-100/80 p-5 shadow-md border-emerald-200/50">
-              <div className="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-emerald-400 blur-3xl opacity-20"></div>
-              <p className="text-xs font-bold uppercase tracking-wider text-emerald-800 relative z-10">{language === 'te' ? 'సూచించిన మార్కెట్' : 'Best Market'}</p>
-              <p className="mt-2 text-3xl font-extrabold font-display text-emerald-950 relative z-10">{marketData.bestMarket?.market || '-'}</p>
-              <p className="text-base font-semibold text-emerald-800 relative z-10 mt-1">₹{marketData.bestMarket?.modalPrice.toLocaleString() || '-'} / qtl</p>
-              <p className="mt-3 inline-flex rounded-lg bg-emerald-600/10 px-3 py-1 text-sm font-bold text-emerald-900 border border-emerald-600/20 relative z-10">{language === 'te' ? 'అంచనా నికర లాభం' : 'Estimated net profit'}: ₹{marketData.bestMarket?.economics.netProfit.toLocaleString() || '-'}</p>
-            </div>
-
-            <div className="glass-panel relative overflow-hidden bg-gradient-to-br from-blue-50/80 to-indigo-100/80 p-5 shadow-md border-blue-200/50">
-              <div className="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-blue-400 blur-3xl opacity-20"></div>
-              <p className="text-xs font-bold uppercase tracking-wider text-blue-800 relative z-10">{language === 'te' ? '7-రోజుల అంచనా ధర' : '7-Day Predicted Price'}</p>
-              <p className="mt-2 text-3xl font-extrabold font-display text-blue-950 relative z-10">₹{marketData.futurePrediction.toLocaleString()} <span className="text-lg text-blue-800 font-medium">/ qtl</span></p>
-              <p className="mt-3 text-sm font-medium text-blue-800/80 relative z-10">{language === 'te' ? 'ట్రెండ్ ఆధారిత ప్రాథమిక అంచనా' : 'Basic model based prediction'}</p>
-            </div>
-
-            <div className="glass-panel p-5 shadow-md bg-white/50">
-              <p className="text-xs font-bold uppercase tracking-wider text-indigo-700">{language === 'te' ? 'ప్రస్తుత లొకేషన్' : 'Current Location'}</p>
-              <p className="mt-2 text-lg font-bold font-display text-indigo-950">
-                <span className="inline-flex items-center gap-1.5"><MapPin size={18} className="text-indigo-500" /> {location ? `${location.lat.toFixed(3)}, ${location.lng.toFixed(3)}` : '-'}</span>
-              </p>
-              <p className="mt-3 inline-flex rounded-lg bg-indigo-50 px-3 py-1 text-sm font-bold text-indigo-900 border border-indigo-100">{language === 'te' ? `సగటు దిగుబడి: ${marketData.yieldQPerAcre} క్వింటాళ్లు/ఎకరం` : `Avg yield: ${marketData.yieldQPerAcre} qtl/acre`}</p>
-            </div>
-          </div>
-
-          <TrendVisualization data={marketData.trendSeries} />
-
-          <div className="glass-card p-6">
-            <h2 className="text-xl font-bold font-display text-gray-900 dark:text-white drop-shadow-sm">{language === 'te' ? 'ఈరోజు ఏమి చేయాలి?' : 'What to do today?'}</h2>
-            <ul className="mt-4 space-y-3 text-sm text-gray-900 dark:text-white drop-shadow-sm font-medium">
-              {marketData.insights.map((line, index) => (
-                <li key={index} className="rounded-xl bg-white/30 dark:bg-white/5 backdrop-blur-md border border-white/40 dark:border-white/10 shadow-[inset_0_2px_4px_rgba(255,255,255,0.4)]/50 border border-gray-100 px-4 py-3 shadow-sm">{line}</li>
+        {/* ═══ Filter Input Surface (Strong Glass) ═══ */}
+        <div className="aurora-glass-strong p-5 sm:p-6 rounded-[26px] grid gap-4 sm:grid-cols-2 md:grid-cols-4 items-end">
+          <div>
+            <label className="aurora-label mb-1.5 block">{t('commodity')}</label>
+            <select
+              value={commodity}
+              onChange={(event) => setCommodity(event.target.value)}
+              className="aurora-glass-input text-xs py-2.5 w-full"
+            >
+              {COMMODITIES.map((item) => (
+                <option key={item} value={item} className="bg-[#04121b] text-white">
+                  {t(item)}
+                </option>
               ))}
-            </ul>
+            </select>
           </div>
 
-          <div className="glass-card p-6">
-            <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
-              <h2 className="text-xl font-bold font-display text-gray-900 dark:text-white drop-shadow-sm">{language === 'te' ? 'టాప్ మార్కెట్లు' : 'Top Markets'}</h2>
-              <RippleButton type="button" onClick={() => setDetailed((prev) => !prev)} variant="secondary" className="text-xs px-3 py-1.5">
-                {detailed ? (language === 'te' ? 'సరళ వీక్షణ' : 'Simple View') : (language === 'te' ? 'వివరాలు చూపించు' : 'Show Details')}
-              </RippleButton>
-            </div>
+          <div>
+            <label className="aurora-label mb-1.5 block">
+              {language === 'te' ? 'భూమి (ఎకరాలు)' : 'Land (acres)'}
+            </label>
+            <input
+              className="aurora-glass-input text-xs py-2.5 w-full"
+              type="number"
+              min="0.2"
+              step="0.1"
+              value={areaAcres}
+              onChange={(event) => setAreaAcres(event.target.value)}
+            />
+          </div>
 
-            <div className="space-y-4">
-              {topMarkets.map((item) => (
-                <div key={item.market} className="rounded-2xl border border-gray-100 bg-white/40 p-4 shadow-sm hover:shadow-md transition-shadow">
-                  <div className="flex flex-wrap justify-between items-start gap-2 mb-2">
-                    <p className="font-bold font-display text-lg text-gray-900 dark:text-white drop-shadow-sm">{item.market}{item.recommended && <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-200">{language === 'te' ? 'ఉత్తమ ఎంపిక' : 'Best Choice'}</span>}</p>
-                    <p className="text-sm font-medium text-gray-600 dark:text-gray-400 bg-gray-100/50 px-2.5 py-1 rounded-lg border border-gray-200/50">{item.distanceKm ? `${item.distanceKm} km` : (language === 'te' ? 'దూరం లేదు' : 'No distance data')}</p>
-                  </div>
-                  <p className="text-base font-bold text-gray-900 dark:text-white drop-shadow-sm mb-2">₹{item.modalPrice.toLocaleString()} <span className="text-sm font-medium text-gray-600 dark:text-gray-400">/ qtl</span></p>
-                  
-                  <div className="flex flex-wrap gap-4 items-center bg-white/30 dark:bg-white/5 backdrop-blur-md border border-white/40 dark:border-white/10 shadow-[inset_0_2px_4px_rgba(255,255,255,0.4)]/50 rounded-xl p-3 border border-gray-100">
-                    <div className="text-sm font-semibold">
-                      {item.trend7d >= 0 ? <span className="inline-flex items-center gap-1 text-emerald-700"><TrendingUp size={16} /> {item.trend7d}%</span> : <span className="inline-flex items-center gap-1 text-rose-700"><TrendingDown size={16} /> {item.trend7d}%</span>}
-                    </div>
-                    <div className="w-px h-4 bg-gray-300"></div>
-                    <div className="text-sm font-bold text-gray-900 dark:text-white drop-shadow-sm">
-                      <span className="text-gray-600 dark:text-gray-400 font-medium mr-1">{language === 'te' ? 'అంచనా నికర లాభం' : 'Net profit'}:</span> ₹{item.economics.netProfit.toLocaleString()}
-                    </div>
-                  </div>
+          <div>
+            <label className="aurora-label mb-1.5 block">
+              {language === 'te' ? 'ఎకరాకు ఖర్చు (₹)' : 'Cost per acre (₹)'}
+            </label>
+            <input
+              className="aurora-glass-input text-xs py-2.5 w-full"
+              type="number"
+              min="1000"
+              value={costPerAcre}
+              onChange={(event) => setCostPerAcre(event.target.value)}
+            />
+          </div>
 
-                  {detailed && (
-                    <div className="mt-4 grid gap-3 md:grid-cols-2 text-sm text-gray-800 dark:text-gray-200 font-medium bg-indigo-50/30 p-3 rounded-xl border border-indigo-100/50">
-                      <p><span className="text-gray-600 dark:text-gray-400">{language === 'te' ? 'అంచనా 7రోజుల ధర' : 'Predicted 7-day price'}:</span> ₹{item.predictedPrice7d.toLocaleString()}</p>
-                      <p><span className="text-gray-600 dark:text-gray-400">{language === 'te' ? 'గ్రాస్ ఆదాయం' : 'Gross income'}:</span> ₹{item.economics.grossIncome.toLocaleString()}</p>
-                      <p><span className="text-gray-600 dark:text-gray-400">{language === 'te' ? 'మొత్తం ఖర్చు' : 'Total cost'}:</span> ₹{item.economics.totalCost.toLocaleString()}</p>
-                    </div>
-                  )}
+          <div>
+            <button
+              type="button"
+              onClick={refreshData}
+              disabled={loading}
+              className="w-full aurora-glass-button-primary text-xs sm:text-sm font-semibold py-2.5 flex items-center justify-center gap-2"
+            >
+              <Sparkles size={15} className="text-emerald-300" />
+              <span>{language === 'te' ? 'లాభం చూసి మార్కెట్ ఎంచుకోండి' : 'Get Best Market'}</span>
+            </button>
+          </div>
+        </div>
+
+        {error && (
+          <div className="aurora-card p-3.5 border-rose-400/30 bg-rose-500/15 text-rose-200 text-xs">
+            {error}
+          </div>
+        )}
+
+        {/* ═══ Market Analytics Workspace ═══ */}
+        {marketData && (
+          <div className="space-y-6">
+            {/* 3 Overview Metric Cards */}
+            <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3">
+              {/* Best Market */}
+              <div className="aurora-glass-strong p-6 rounded-[24px] border-emerald-400/30 space-y-2 relative overflow-hidden">
+                <span className="aurora-label text-emerald-300">
+                  {language === 'te' ? 'సూచించిన మార్కెట్' : 'Recommended Mandi'}
+                </span>
+                <p className="text-2xl sm:text-3xl font-semibold text-white/95 tracking-tight">
+                  {marketData.bestMarket?.market || '-'}
+                </p>
+                <p className="text-sm font-semibold text-emerald-300">
+                  ₹{marketData.bestMarket?.modalPrice.toLocaleString() || '-'} <span className="text-xs font-normal text-white/60">/ qtl</span>
+                </p>
+                <div className="pt-2">
+                  <span className="aurora-badge-success text-xs px-3 py-1 rounded-full font-bold">
+                    {language === 'te' ? 'అంచనా నికర లాభం' : 'Est. Net Profit'}: ₹{marketData.bestMarket?.economics.netProfit.toLocaleString() || '-'}
+                  </span>
                 </div>
-              ))}
+              </div>
+
+              {/* 7-Day Predicted Price */}
+              <div className="aurora-glass-strong p-6 rounded-[24px] border-cyan-400/30 space-y-2 relative overflow-hidden">
+                <span className="aurora-label text-cyan-300">
+                  {language === 'te' ? '7-రోజుల అంచనా ధర' : '7-Day Price Projection'}
+                </span>
+                <p className="text-2xl sm:text-3xl font-semibold text-white/95 tracking-tight">
+                  ₹{marketData.futurePrediction.toLocaleString()}{' '}
+                  <span className="text-xs font-normal text-white/60">/ qtl</span>
+                </p>
+                <p className="text-xs text-white/70 pt-1">
+                  {language === 'te' ? 'ట్రెండ్ ఆధారిత ప్రాథమిక అంచనా' : 'Time-series machine learning model'}
+                </p>
+              </div>
+
+              {/* Current Location & Yield */}
+              <div className="aurora-glass-medium p-6 rounded-[24px] space-y-2 sm:col-span-2 md:col-span-1">
+                <span className="aurora-label text-white/65">
+                  {language === 'te' ? 'ప్రస్తుత లొకేషన్' : 'Geolocation Context'}
+                </span>
+                <p className="text-base font-semibold text-white/90 flex items-center gap-1.5">
+                  <MapPin size={16} className="text-cyan-300" />
+                  <span>{location ? `${location.lat.toFixed(3)}, ${location.lng.toFixed(3)}` : 'Hyderabad, TG'}</span>
+                </p>
+                <div className="pt-2">
+                  <span className="aurora-badge-info text-xs px-3 py-1 rounded-full font-semibold">
+                    {language === 'te' ? `సగటు దిగుబడి: ${marketData.yieldQPerAcre} క్వి/ఎకరం` : `Avg Yield: ${marketData.yieldQPerAcre} qtl/acre`}
+                  </span>
+                </div>
+              </div>
             </div>
 
-            {detailed && (
-              <div className="mt-4 overflow-x-auto">
-                <table className="w-full border-collapse text-sm">
-                  <thead>
-                    <tr className="border-b border-gray-200 bg-white/30 dark:bg-white/5 backdrop-blur-md border border-white/40 dark:border-white/10 shadow-[inset_0_2px_4px_rgba(255,255,255,0.4)] text-left">
-                      <th className="p-2">{t('market')}</th>
-                      <th className="p-2">{t('price')}</th>
-                      <th className="p-2">{t('trend')}</th>
-                      <th className="p-2">{language === 'te' ? 'అంచనా' : 'Prediction'}</th>
-                      <th className="p-2">{language === 'te' ? 'నెట్ లాభం' : 'Net Profit'}</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {marketData.markets.map((item) => (
-                      <tr key={item.market} className="border-b border-gray-100">
-                        <td className="p-2">{item.market}</td>
-                        <td className="p-2">₹{item.modalPrice.toLocaleString()}</td>
-                        <td className="p-2">{item.trend7d}%</td>
-                        <td className="p-2">₹{item.predictedPrice7d.toLocaleString()}</td>
-                        <td className={`p-2 font-semibold ${item.economics.netProfit >= 0 ? 'text-[#2a6d5d] dark:text-[#4eb69c]' : 'text-red-700'}`}>
-                          ₹{item.economics.netProfit.toLocaleString()}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
-          </div>
+            {/* Price Trend Chart */}
+            <TrendVisualization data={marketData.trendSeries} />
 
-          <div className="glass-card p-6">
-            <h2 className="text-xl font-bold font-display text-gray-900 dark:text-white drop-shadow-sm">{language === 'te' ? 'ఇటీవలి మార్కెట్ ప్రశ్నలు' : 'Recent Market Queries'}</h2>
-            {history.length === 0 ? (
-              <p className="mt-4 text-sm font-medium text-gray-600 dark:text-gray-400">{language === 'te' ? 'ఇప్పటికీ హిస్టరీ లేదు.' : 'No history yet.'}</p>
-            ) : (
-              <ul className="mt-4 space-y-3 text-sm font-medium text-gray-900 dark:text-white drop-shadow-sm">
-                {history.slice(0, 5).map((item) => (
-                  <li key={item.id} className="rounded-xl bg-white/30 dark:bg-white/5 backdrop-blur-md border border-white/40 dark:border-white/10 shadow-[inset_0_2px_4px_rgba(255,255,255,0.4)]/50 border border-gray-100 px-4 py-3 flex flex-wrap justify-between items-center gap-3">
-                    <span>
-                      <span className="font-bold text-gray-900 dark:text-white drop-shadow-sm">{t(item.commodity)}</span>
-                      <span className="text-gray-400 mx-2">•</span>
-                      <span>{item.bestMarket || '-'}</span>
-                    </span>
-                    <span className="flex items-center gap-3">
-                      <span className="bg-emerald-50 text-emerald-700 px-2 py-1 rounded-lg border border-emerald-100">₹{item.bestNetProfit?.toLocaleString() || 0}</span>
-                      <span className="text-xs text-gray-400">{new Date(item.createdAt).toLocaleString()}</span>
-                    </span>
+            {/* Actionable Today Insights */}
+            <div className="aurora-glass-medium p-6 rounded-[24px] space-y-3">
+              <h2 className="text-base font-semibold text-white/95 flex items-center gap-2 pb-2 border-b border-white/10">
+                <Sparkles size={16} className="text-emerald-300" />
+                <span>{language === 'te' ? 'ఈరోజు ఏమి చేయాలి?' : 'What to Do Today'}</span>
+              </h2>
+              <ul className="space-y-2 text-xs sm:text-sm text-white/85">
+                {marketData.insights.map((line, index) => (
+                  <li key={index} className="aurora-glass-light p-3 rounded-xl flex items-start gap-2.5">
+                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 mt-2 shrink-0" />
+                    <span className="leading-relaxed">{line}</span>
                   </li>
                 ))}
               </ul>
-            )}
-          </div>
-        </div>
-      )}
+            </div>
 
-      {!loading && !marketData && !error && (
-        <div className="mt-6 glass-panel border-dashed border-gray-300 p-12 text-center text-gray-600 dark:text-gray-400 bg-white/30 dark:bg-white/5 backdrop-blur-md border border-white/40 dark:border-white/10 shadow-[inset_0_2px_4px_rgba(255,255,255,0.4)]/30">
-          {language === 'te' ? 'మార్కెట్ డేటా మరియు లాభాల అంచనా కోసం పైనున్న ఫారం నింపండి.' : 'Fill out the form above to get market intelligence and profit estimates.'}
-        </div>
-      )}
+            {/* Top Markets List & Detailed View */}
+            <div className="aurora-glass-strong p-6 sm:p-7 rounded-[26px] space-y-5">
+              <div className="flex flex-wrap items-center justify-between gap-3 pb-2 border-b border-white/10">
+                <div>
+                  <h2 className="text-base font-semibold text-white/95">
+                    {language === 'te' ? 'టాప్ మార్కెట్లు' : 'Top Performing Mandis'}
+                  </h2>
+                  <p className="text-xs text-white/60">Ranked by net financial return after transportation costs</p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setDetailed((prev) => !prev)}
+                  className="aurora-glass-button text-xs py-1.5 px-3.5"
+                >
+                  {detailed
+                    ? language === 'te' ? 'సరళ వీక్షణ' : 'Simple View'
+                    : language === 'te' ? 'వివరాలు చూపించు' : 'Show Full Breakdown'}
+                </button>
+              </div>
+
+              <div className="space-y-3.5">
+                {topMarkets.map((item) => (
+                  <div
+                    key={item.market}
+                    className="aurora-glass-medium p-5 rounded-[22px] space-y-3 hover:bg-white/15 transition-all duration-200"
+                  >
+                    <div className="flex flex-wrap justify-between items-start gap-2">
+                      <div className="flex items-center gap-2">
+                        <h4 className="text-lg font-semibold text-white/95">{item.market}</h4>
+                        {item.recommended && (
+                          <span className="aurora-badge-success text-[10.5px] px-2 py-0.5 rounded-full font-bold">
+                            {language === 'te' ? 'ఉత్తమ ఎంపిక' : 'Optimal'}
+                          </span>
+                        )}
+                      </div>
+                      <span className="aurora-glass-pill text-[11px]">
+                        {item.distanceKm ? `${item.distanceKm} km away` : 'Regional Hub'}
+                      </span>
+                    </div>
+
+                    <div className="flex flex-wrap gap-4 items-center pt-1 text-xs">
+                      <div>
+                        <span className="text-white/60 block text-[10.5px]">Modal Price</span>
+                        <span className="text-sm font-semibold text-white">₹{item.modalPrice.toLocaleString()} <span className="text-[10px] font-normal text-white/50">/ qtl</span></span>
+                      </div>
+
+                      <div className="w-px h-6 bg-white/10" />
+
+                      <div>
+                        <span className="text-white/60 block text-[10.5px]">7-Day Trend</span>
+                        <span className={`font-semibold flex items-center gap-1 ${item.trend7d >= 0 ? 'text-emerald-300' : 'text-rose-300'}`}>
+                          {item.trend7d >= 0 ? <TrendingUp size={13} /> : <TrendingDown size={13} />}
+                          {item.trend7d}%
+                        </span>
+                      </div>
+
+                      <div className="w-px h-6 bg-white/10" />
+
+                      <div>
+                        <span className="text-white/60 block text-[10.5px]">Estimated Net Profit</span>
+                        <span className="text-sm font-semibold text-emerald-300">₹{item.economics.netProfit.toLocaleString()}</span>
+                      </div>
+                    </div>
+
+                    {detailed && (
+                      <div className="mt-3 pt-3 border-t border-white/10 grid gap-2 sm:grid-cols-3 text-xs text-white/75 aurora-glass-light p-3 rounded-xl animate-fade-in">
+                        <p>
+                          <span className="text-white/50">Predicted 7d:</span> ₹{item.predictedPrice7d.toLocaleString()}
+                        </p>
+                        <p>
+                          <span className="text-white/50">Gross Income:</span> ₹{item.economics.grossIncome.toLocaleString()}
+                        </p>
+                        <p>
+                          <span className="text-white/50">Total Cost:</span> ₹{item.economics.totalCost.toLocaleString()}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+
+              {detailed && (
+                <div className="mt-4 overflow-x-auto aurora-glass-medium p-4 rounded-2xl animate-fade-in">
+                  <table className="w-full text-xs text-left">
+                    <thead>
+                      <tr className="border-b border-white/10 text-white/60 pb-2">
+                        <th className="p-2.5 font-medium">{t('market')}</th>
+                        <th className="p-2.5 font-medium">{t('price')}</th>
+                        <th className="p-2.5 font-medium">{t('trend')}</th>
+                        <th className="p-2.5 font-medium">{language === 'te' ? 'అంచనా' : 'Prediction'}</th>
+                        <th className="p-2.5 font-medium">{language === 'te' ? 'నెట్ లాభం' : 'Net Profit'}</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-white/5">
+                      {marketData.markets.map((item) => (
+                        <tr key={item.market} className="text-white/85 hover:bg-white/5">
+                          <td className="p-2.5 font-medium">{item.market}</td>
+                          <td className="p-2.5">₹{item.modalPrice.toLocaleString()}</td>
+                          <td className={`p-2.5 ${item.trend7d >= 0 ? 'text-emerald-300' : 'text-rose-300'}`}>
+                            {item.trend7d}%
+                          </td>
+                          <td className="p-2.5">₹{item.predictedPrice7d.toLocaleString()}</td>
+                          <td className={`p-2.5 font-semibold ${item.economics.netProfit >= 0 ? 'text-emerald-300' : 'text-rose-300'}`}>
+                            ₹{item.economics.netProfit.toLocaleString()}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </div>
+
+            {/* Recent Queries Stream */}
+            <aside className="aurora-glass-medium p-5 rounded-[24px] space-y-3">
+              <h2 className="text-sm font-semibold text-white/95 pb-2 border-b border-white/10">
+                {language === 'te' ? 'ఇటీవలి మార్కెట్ ప్రశ్నలు' : 'Recent Market Queries'}
+              </h2>
+              {history.length === 0 ? (
+                <p className="text-xs text-white/50 py-3 text-center">
+                  {language === 'te' ? 'ఇప్పటికీ హిస్టరీ లేదు.' : 'No search history recorded yet.'}
+                </p>
+              ) : (
+                <ul className="space-y-2 text-xs">
+                  {history.slice(0, 5).map((item) => (
+                    <li
+                      key={item.id}
+                      className="aurora-glass-light p-3 rounded-xl flex flex-wrap justify-between items-center gap-2"
+                    >
+                      <div className="flex items-center gap-2">
+                        <span className="font-semibold text-white/95 capitalize">{t(item.commodity)}</span>
+                        <span className="text-white/30">•</span>
+                        <span className="text-white/70">{item.bestMarket || '-'}</span>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <span className="aurora-badge-success text-[10.5px] px-2 py-0.5 rounded-md font-bold">
+                          ₹{item.bestNetProfit?.toLocaleString() || 0}
+                        </span>
+                        <span className="text-[11px] text-white/50">
+                          {new Date(item.createdAt).toLocaleString(undefined, {
+                            month: 'short',
+                            day: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit',
+                          })}
+                        </span>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </aside>
+          </div>
+        )}
+
+        {!loading && !marketData && !error && (
+          <div className="aurora-glass-medium p-12 text-center rounded-[26px] text-sm text-white/60">
+            {language === 'te'
+              ? 'మార్కెట్ డేటా మరియు లాభాల అంచనా కోసం పైనున్న ఫారం నింపండి.'
+              : 'Fill out the commodity and land parameters above to calculate real-time mandi prices and net profit forecasts.'}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
+
